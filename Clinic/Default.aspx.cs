@@ -13,6 +13,7 @@ namespace Clinic
         {
             Response.Redirect("portal/login.aspx");
             Response.Write("No File Found Error");
+            Response.Write("No File Found Error");
         }
     }
 }
