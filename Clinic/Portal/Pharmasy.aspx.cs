@@ -460,7 +460,7 @@ namespace ZMTClinics
             string cs = ConfigurationManager.ConnectionStrings["KTConnectionString"].ConnectionString;
             using (SqlConnection con = new SqlConnection(cs))
             {
-                SqlCommand cmd = new SqlCommand("MED_GetPatientServices", con);
+                SqlCommand cmd = new SqlCommand("MED_GetPatientPharmacy", con);
                 SqlDataAdapter da = new SqlDataAdapter(cmd);
                 cmd.CommandType = CommandType.StoredProcedure;
                 con.Open();

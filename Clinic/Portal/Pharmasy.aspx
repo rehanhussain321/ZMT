@@ -240,27 +240,43 @@
 		
 			</div>
                 <div class="col-md-10 col-md-offset-1" id="search">
-                       <asp:GridView ID="gvPatients" runat="server" CssClass="footable large-only" style="font-size:12px;color:white;" OnSelectedIndexChanged="gvPatients_SelectedIndexChanged"  DataKeyNames="Registration_No" OnRowDataBound="gvPatients_RowDataBound" AutoGenerateColumns="false" EmptyDataText="No Record(s) Found" AutoGenerateSelectButton="True" ForeColor="White">
+                       <asp:GridView ID="gvPatients" runat="server" CssClass="footable large-only" style="font-size:12px;color:white;" OnSelectedIndexChanged="gvPatients_SelectedIndexChanged"  DataKeyNames="Registration_No" OnRowDataBound="gvPatients_RowDataBound" AutoGenerateColumns="False" EmptyDataText="No Record(s) Found" AutoGenerateSelectButton="True" ForeColor="White">
                             <Columns>
-                                <asp:BoundField DataField ="Registration_No" HeaderText="MrNo" HeaderStyle-CssClass="align-left" HeaderStyle-BackColor="#fd8d68" >
-                                    <ItemStyle HorizontalAlign="Left" />
-                                </asp:BoundField>
-                                <asp:BoundField DataField="Registration_Date" HeaderText="Registration Date" HeaderStyle-CssClass="align-center" HeaderStyle-BackColor="#fd8d68"  ControlStyle-BackColor="Violet">
+                                <asp:BoundField DataField="Ticket_Date" HeaderText="Ticket Date" HeaderStyle-CssClass="align-center" HeaderStyle-BackColor="#fd8d68"  ControlStyle-BackColor="Violet">
+<ControlStyle BackColor="Violet"></ControlStyle>
+
+<HeaderStyle BackColor="#FD8D68" CssClass="align-center"></HeaderStyle>
+
                                     <ItemStyle HorizontalAlign ="Center" />
                                 </asp:BoundField>
+                                <asp:BoundField DataField="Ticket_Number" HeaderText="Ticket#" HeaderStyle-CssClass="align-right" HeaderStyle-BackColor="#fd8d68">
+<HeaderStyle BackColor="#FD8D68" CssClass="align-right"></HeaderStyle>
+
+                                    <ItemStyle HorizontalAlign ="Right" />
+                                </asp:BoundField>
+                                <asp:BoundField DataField ="Registration_No" HeaderText="MrNo" HeaderStyle-CssClass="align-left" HeaderStyle-BackColor="#fd8d68" >
+<HeaderStyle BackColor="#FD8D68" CssClass="align-left"></HeaderStyle>
+
+                                    <ItemStyle HorizontalAlign="Left" />
+                                </asp:BoundField>
                                 <asp:BoundField DataField="First_Name" HeaderText="First Name" HeaderStyle-CssClass="align-left" HeaderStyle-BackColor="#fd8d68">
+<HeaderStyle BackColor="#FD8D68" CssClass="align-left"></HeaderStyle>
+
                                     <ItemStyle HorizontalAlign ="Left" />
                                 </asp:BoundField>
                                 <asp:BoundField DataField="Father_Name" HeaderText="Father Name" HeaderStyle-CssClass="align-left" HeaderStyle-BackColor="#fd8d68">
+<HeaderStyle BackColor="#FD8D68" CssClass="align-left"></HeaderStyle>
+
                                     <ItemStyle HorizontalAlign ="Left" />
                                 </asp:BoundField>
-                                <asp:BoundField DataField="CNIC_No" HeaderText="CNIC Number" HeaderStyle-CssClass="align-right" HeaderStyle-BackColor="#fd8d68">
-                                    <ItemStyle HorizontalAlign ="Right" />
-                                </asp:BoundField>
                                 <asp:BoundField DataField="Age" HeaderText="Age" HeaderStyle-CssClass="align-left" HeaderStyle-BackColor="#fd8d68">
+<HeaderStyle BackColor="#FD8D68" CssClass="align-left"></HeaderStyle>
+
                                     <ItemStyle HorizontalAlign ="Left" />
                                 </asp:BoundField>
                                 <asp:BoundField DataField="Mobile_1" HeaderText="Mobile#1" HeaderStyle-CssClass="align-left" HeaderStyle-BackColor="#fd8d68">
+<HeaderStyle BackColor="#FD8D68" CssClass="align-left"></HeaderStyle>
+
                                     <ItemStyle HorizontalAlign ="Left" />
                                 </asp:BoundField>
                                 <asp:BoundField DataField="sys_PatientSno" HeaderText="Patient Sno" HeaderStyle-CssClass="align-left" HeaderStyle-BackColor="#fd8d68">
