@@ -4,7 +4,7 @@
 
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head runat="server">
-    <title>ZMT Clinics::Patient Info</title>
+    <title>ZMT Clinics::Pharmacy</title>
     <link rel="stylesheet" href="../assets/js/jquery-ui/css/no-theme/jquery-ui-1.10.3.custom.min.css"/>
 	<link rel="stylesheet" href="../assets/css/font-icons/entypo/css/entypo.css"/>
 	<link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Noto+Sans:400,700,400italic"/>
@@ -17,7 +17,7 @@
     <link href="../style/calendar-win2k-1.css" rel="stylesheet" />
     <script src="../assets/js/jquery-1.11.0.min.js"></script>
     <script src="../assets/js/jquery-1.11.0.min.js"></script>
-
+    
     <script src="dist/jquery.inputmask.bundle.min.js"></script>
     <link rel="stylesheet" href="http://code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css">
     <script src="http://code.jquery.com/ui/1.10.4/jquery-ui.js" type="text/javascript"></script>
@@ -50,6 +50,7 @@
            $(".datepicker").datepicker({ format: 'dd/mm/yyyy', autoclose: true, todayBtn: 'linked' })
        });
 </script>--%>
+    
     <style>
         .hideCol
         {
@@ -92,10 +93,10 @@
     <script type = "text/javascript">
         function Confirm() {
             if (confirm("Do you want to print slip?")) {
-                window.location.href = 'reciept.aspx';
+                window.location.href = 'PharmacyReciept.aspx';
             } else {
                 //alert('No');
-                window.location.href = 'service.aspx';
+                window.location.href = 'Pharmasy.aspx';
                 return false;
             }
         }
@@ -466,7 +467,7 @@
                 <div class="panel panel-primary" data-collapsed="0" id="ServiceAddedPanel">
                     <div class="panel-heading" style="background-color:#2E3192; color:whitesmoke;">
                     <div class="panel-title" style="font-family:Arial;">
-                        Medicin Detail
+                        Medicine Detail
                     </div>
                         <div class="panel-options">
 							<a href="#" data-rel="collapse"><i class="entypo-down-open"></i></a>
@@ -484,6 +485,7 @@
                                             <asp:ListItem Text="Select Medicine Unit" Value="0"></asp:ListItem>
 								</asp:DropDownList>
                                 <asp:RequiredFieldValidator ID="RequiredFieldValidatorService" runat="server" ControlToValidate="ddlMedicine" ErrorMessage="Select Service" ValidationGroup="Service Selection" Font-Bold="True" Font-Names="Arial Black" Font-Size="10pt" ForeColor="Red"></asp:RequiredFieldValidator>
+                               
                             </div>
                             </div>
                         <div class="col-md-3">
@@ -592,6 +594,7 @@
             <asp:Label ID="lblDeptCode" runat="server" Text=""></asp:Label>
             <asp:Label ID="lblLocationCode" runat="server" Text=""></asp:Label>
             <asp:Label ID="lblsysTicketMasterNo" runat="server" Text=""></asp:Label>
+            <asp:Label runat="server" CssClass="hideCol" ID="lblTicketNo"></asp:Label> 
         </div>
         </div>
    

@@ -1,10 +1,10 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="reciept.aspx.cs" Inherits="ZMTClinics.reciept_copy" %>
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="PharmacyReciept.aspx.cs" Inherits="Clinic.Portal.PharmacyReciept" %>
 
 <!DOCTYPE html>
 
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head runat="server">
-    <title>Reciept</title>
+    <title>Pharmasy Reciept</title>
     <link rel="stylesheet" href="../assets/js/jquery-ui/css/no-theme/jquery-ui-1.10.3.custom.min.css"/>
 	<link rel="stylesheet" href="../assets/css/font-icons/entypo/css/entypo.css"/>
 	<link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Noto+Sans:400,700,400italic"/>
@@ -14,6 +14,8 @@
    <script src="../assets/js/jquery-1.11.0.min.js"></script>
     <script src="../assets/js/jquery-1.11.0.min.js"></script>
     <script src="../Scripts/bootstrap.min.js"></script>
+    
+
     <style type="text/css" media="print">
        @page{
            size:auto;
@@ -33,17 +35,26 @@
       @media print {
 	    .page-break	{ display: block; page-break-before: always; }
       }
+      .hideCol
+        {
+          display:none;
+            }
+        .text-right{
+            text-align:right;
+            
+            
+        }
     </style>
     <script>
         function myFunction() {
             document.getElementById('btnPrint').style.visibility = "hidden";
             document.getElementById('btnBack').style.visibility = "hidden";
-            document.getElementById('chkRemove').style.visibility = "hidden";
-            document.getElementById('lblChk').style.visibility = "hidden";
-            document.getElementById('CheckNursing').style.visibility = "hidden";
-            document.getElementById('CheckPayment').style.visibility = "hidden";
-            document.getElementById('lblNursingHide').style.visibility = "hidden";
-            document.getElementById('lblPaymentHide').style.visibility = "hidden";
+           // document.getElementById('chkRemove').style.visibility = "hidden";
+           // document.getElementById('lblChk').style.visibility = "hidden";
+           // document.getElementById('CheckNursing').style.visibility = "hidden";
+           // document.getElementById('CheckPayment').style.visibility = "hidden";
+           // document.getElementById('lblNursingHide').style.visibility = "hidden";
+           // document.getElementById('lblPaymentHide').style.visibility = "hidden";
             document.getElementById('CheckFooter').style.visibility = "hidden";
             document.getElementById('lblFooterHide').style.visibility = "hidden";
            // document.getElementById('gvServices_id6_h').style.visibility = "hidden";
@@ -61,13 +72,13 @@
             window.print();
             
         }
-        function showHide()
-        {
-            if (document.getElementById('CheckNursing').checked) {
-                document.getElementById('tblNursing').style.visibility = "hidden";
-            }
+        //function showHide()
+        //{
+        //    if (document.getElementById('CheckNursing').checked) {
+        //        document.getElementById('tblNursing').style.visibility = "hidden";
+        //    }
 
-        }
+        //}
 </script>
      <script type="text/javascript">
          $(function () {
@@ -121,7 +132,7 @@
             
         }
     </script>
-    <script>
+    <%--<script>
         $(function () {
             $("#CheckNursing").click(function () {
                 if ($(this).is(":checked")) {
@@ -131,8 +142,8 @@
                 }
             });
         }); 
-    </script>
-    <script>
+    </script>--%>
+   <%-- <script>
         $(function () {
             $("#CheckPayment").click(function () {
                 if ($(this).is(":checked")) {
@@ -142,7 +153,7 @@
                 }
             });
         });
-    </script>
+    </script>--%>
     <script>
         $(function () {
             $("#CheckFooter").click(function () {
@@ -230,14 +241,14 @@
     </style>
 </head>
 <body>
-    <form id="form1" runat="server">
+     <form id="form1" runat="server">
     <div>
     <div class="container">
         <div class="row" >
             <div class="col-md-6" id="print">
                 <table class="table" style="margin-top:2%;margin-left:1%;margin-right:1%;" >
                 <tr>
-                    <td style="color:black;font-weight:bold;"><asp:label runat="server" ID="lblClinic" style="font-weight:bolder;font-size:20px">ZMT Clinics</asp:label><br /><asp:label ID="lblClinicAddress" runat="server"></asp:label></td>
+                    <td style="color:black;font-weight:bold;"><asp:label runat="server" ID="lblClinic" style="font-weight:bolder;font-size:20px">ZMT Clinics</asp:label><br /><asp:label ID="lblClinicAddress" runat="server"></asp:label><br /><asp:Label runat="server" style="font-weight:bolder;font-size:10px">Pharmacy #:</asp:Label><asp:Label runat="server" ID="lblPharmacyNumber"></asp:Label></td>
                     <td style="text-align:right;color:black;font-weight:bold;" colspan="3"><asp:label runat="server" style="font-weight:bolder; font-size:16px">Token#</asp:label><asp:label runat="server" ID="lbltokenNo" style="font-weight:bolder; font-size:16px"></asp:label><br /><asp:Label runat="server">Dated:</asp:Label><asp:label runat="server" ID="lblDate"></asp:label></td>
                 </tr>
                 </table>
@@ -268,10 +279,10 @@
                 </tr>
                 </table>
 
-                 <table style="margin-left: 1%; margin-right: 1%; width: 100%" id="tblNursing" >
+                <%-- <table style="margin-left: 1%; margin-right: 1%; width: 100%" id="tblNursing" >
                 <%--<tr>
                       <td class="patientStyle" colspan="8" style="background-color:#808080" >Nursing Triage</td>
-                </tr>--%>
+                </tr>
 
                      
                 <tr >
@@ -290,7 +301,7 @@
                 <tr>
                     <td class="Complain">Chief Complain</td><td  colspan="6" class="NursingStyle" >&nbsp;</td>
                 </tr>
-                </table> 
+                </table> --%>
 
 
 
@@ -299,43 +310,31 @@
 
               
                 
-             <asp:GridView ID="gvServices" runat="server" AutoGenerateColumns="False" Width="100%" CellPadding="4" Font-Bold="True" Font-Size="10pt" ForeColor="Black" BackColor="Black" BorderColor="Black" BorderStyle="None" BorderWidth="1px" CellSpacing="2" OnRowDataBound="gvServices_RowDataBound" ShowFooter="True" style="margin-top:0px;padding-top:0px;font-size:16px;margin-left:1%;margin-right:1%;" OnRowDeleting="gvServices_RowDeleting">
+                         <asp:GridView ID="gvServiceDetail" runat="server" AutoGenerateColumns="False" Width="100%" CellPadding="4" Font-Bold="True" Font-Size="10pt" ForeColor="Black" BackColor="Black" BorderColor="Black" BorderStyle="None" BorderWidth="1px" CellSpacing="2"  ShowFooter="True" style="margin-top:0px;padding-top:0px;font-size:16px;margin-left:1%;margin-right:1%;" OnRowDeleting="gvServiceDetail_RowDeleting" OnRowDataBound="gvServiceDetail_RowDataBound" >
                 <Columns>
-                    <asp:TemplateField  ControlStyle-Width="0" Visible="false">
-                       <ItemTemplate  >
-                          <asp:CheckBox ID="chkRow" runat="server" onclick="HideColumn(this);" Visible="false" CssClass="hideCol"  />
-                       </ItemTemplate>
-
-                       <ControlStyle Width="0px"></ControlStyle>
-                    </asp:TemplateField>
-                    <asp:BoundField DataField="Service_Name" HeaderStyle-BackColor="Black" HeaderStyle-CssClass="align-left" HeaderStyle-Font-Bold="true" HeaderText=" Services" HeaderStyle-ForeColor="White">
+                    <asp:BoundField DataField ="sysIssueDetailNo" HeaderText="SNo"  HeaderStyle-BackColor="#599adb" >
+                                    <ItemStyle CssClass="hideCol" />
+                                     <HeaderStyle CssClass="hideCol" />
+                                     <FooterStyle CssClass="hideCol" />
+                                </asp:BoundField>
+                    <asp:BoundField DataField="Item_Name" HeaderStyle-BackColor="Black" HeaderStyle-CssClass="align-left" HeaderStyle-Font-Bold="true" HeaderText="ItemName" HeaderStyle-ForeColor="White">
                     <HeaderStyle BackColor="Black" CssClass="align-left" />
                     <ItemStyle HorizontalAlign="Left" CssClass="align-left" Font-Bold="false" />
                     </asp:BoundField>
-                    <asp:BoundField  DataField="Service_DetailName" HeaderStyle-BackColor="black" HeaderStyle-CssClass="align-left" HeaderStyle-Font-Bold="true" HeaderText="Service Detail" HeaderStyle-ForeColor="White">
+                    <asp:BoundField  DataField="Description" HeaderStyle-BackColor="black" HeaderStyle-CssClass="align-right" HeaderStyle-Font-Bold="true" HeaderText="Dosage" HeaderStyle-ForeColor="White">
                     <ControlStyle BackColor="white" />
-                    <HeaderStyle BackColor="Black" CssClass="align-left" />
-                    <ItemStyle HorizontalAlign="left" CssClass="align-left" Font-Bold="false" />
+                    <HeaderStyle BackColor="Black" CssClass="align-right" />
+                    <ItemStyle HorizontalAlign="right" CssClass="align-right" Font-Bold="false" />
                     </asp:BoundField>
-                    <asp:BoundField DataField="Qty" HeaderStyle-BackColor="Black" HeaderStyle-CssClass="align-right" HeaderText= "Qty" HeaderStyle-Font-Bold="true" HeaderStyle-ForeColor="White">
+                    <asp:BoundField DataField="Quantity_Required" HeaderStyle-BackColor="Black" HeaderStyle-CssClass="align-right" HeaderText= "Qty" HeaderStyle-Font-Bold="true" HeaderStyle-ForeColor="White">
                     <HeaderStyle BackColor="Black" CssClass="align-right"/>
                     <ItemStyle HorizontalAlign="right" Font-Bold="false" />
                     </asp:BoundField>
-                    <asp:BoundField DataField="Charges" HeaderStyle-BackColor="Black" HeaderStyle-CssClass="align-right" HeaderText=" Rate" HeaderStyle-Font-Bold="true" HeaderStyle-ForeColor="White">
-                    <HeaderStyle BackColor="Black" CssClass="align-right" />
-                    <ItemStyle HorizontalAlign="right" Font-Bold="false" />
+                    <asp:BoundField DataField="Unit_Name" HeaderStyle-BackColor="Black" HeaderStyle-CssClass="align-left" HeaderText=" Unit" HeaderStyle-Font-Bold="true" HeaderStyle-ForeColor="White">
+                    <HeaderStyle BackColor="Black" CssClass="align-left" />
+                    <ItemStyle HorizontalAlign="left" Font-Bold="false" />
                     </asp:BoundField>
-                    <asp:BoundField DataField="Amount" HeaderStyle-BackColor="Black" HeaderStyle-CssClass="align-right" HeaderText=" Amount" HeaderStyle-Font-Bold="true" HeaderStyle-ForeColor="White">
-                    <HeaderStyle BackColor="Black" CssClass="align-right" />
-                    <ItemStyle HorizontalAlign="Right" Font-Bold="false" />
-                    
-                    </asp:BoundField>
-                    <asp:CommandField           
-                        HeaderText="Remove"
-                        ControlStyle-CssClass=""
-                                                ShowDeleteButton="True" >
-                                       <HeaderStyle BackColor="Black" ForeColor="White"></HeaderStyle>
-                                </asp:CommandField>
+                   
                 </Columns>
                               <FooterStyle BackColor="#CCCCCC" HorizontalAlign="Right"/>
                               <HeaderStyle BackColor="Black" Font-Bold="True" ForeColor="White" />
@@ -346,16 +345,16 @@
                               <SortedAscendingHeaderStyle BackColor="#808080" />
                               <SortedDescendingCellStyle BackColor="#CAC9C9" />
                               <SortedDescendingHeaderStyle BackColor="#383838" />
-            </asp:GridView>
-            <table style="margin-left: 1%; margin-right: 1%; width: 100%;border-bottom:none;border-left:none;border-right:none;height:90%">
+            </asp:GridView> 
+          <!--  <table style="margin-left: 1%; margin-right: 1%; width: 100%;border-bottom:none;border-left:none;border-right:none;height:90%">
                 <tr>
                     <td style="border-bottom: none;color:black;font-size:50px;font-weight:bold;padding-top:1px;"><span>&#8478;</span></td>
                 </tr>
                 <tr>
-                    <td class="RxStyle"></td>
+                    <td></td>
                 </tr>
                 
-            </table>  
+            </table>  -->
             <table style="margin-top:480px;margin-left: 1%; margin-right: 1%; width: 100%;border-bottom:none;border-left:none;border-right:none;" id="tblFooter">
                 <tr>
                     <td style="text-align:center;"><asp:label ID="lblfooter" runat="server" style="text-align:center;font-weight:bold;">Computer genertated report doesn't requiered any signature</asp:label></td>
@@ -366,14 +365,14 @@
         <div id="page-break"></div>
          <div class="row">
         <div class="col-md-5 pull-right-md">
-            <asp:Button ID="btnPrint" runat="server" Text="Print" Class="btn btn-blue" OnClientClick ="myFunction()" OnClick="btnPrint_Click" /><br />
-            <asp:CheckBox ID="chkRemove" runat="server"/><asp:Label runat="server" ID="lblChk">Click on Button to enable/disable remove option</asp:Label><br />
-            <asp:CheckBox ID="CheckNursing" runat="server" /><asp:Label runat="server" ID="lblNursingHide">Click To Hide Nursing Triage</asp:Label><br />
-            <asp:CheckBox ID="CheckPayment" runat="server" /><asp:Label runat="server" ID="lblPaymentHide">Click To Hide Payment</asp:Label><br />
+            <asp:Button ID="btnPrint" runat="server" Text="Print" Class="btn btn-blue" OnClientClick ="myFunction()"  /><br />
+           <!-- <asp:CheckBox ID="chkRemove" runat="server"/><asp:Label runat="server" ID="lblChk">Click on Button to enable/disable remove option</asp:Label><br />-->
+          <!--  <asp:CheckBox ID="CheckNursing" runat="server" /><asp:Label runat="server" ID="lblNursingHide">Click To Hide Nursing Triage</asp:Label><br />
+            <asp:CheckBox ID="CheckPayment" runat="server" /><asp:Label runat="server" ID="lblPaymentHide">Click To Hide Payment</asp:Label><br />-->
             <asp:CheckBox ID="CheckFooter" runat="server"  /><asp:Label runat="server" ID="lblFooterHide" >Click To Enable Disable Footer Message</asp:Label>
         </div> 
         <div class="col-md-4 row ">
-           <a href="Patient.aspx"<asp:Button ID="btnBack" runat="server" Text="Back To Main" Class="btn btn-blue" />Back To Patient</a>
+           <a href="Pharmasy.aspx"<asp:Button ID="btnBack" runat="server" Text="Back To Main" Class="btn btn-blue" />Back To Patient</a>
         </div>   
         </div>
     </form>

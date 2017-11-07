@@ -9,7 +9,9 @@ using System.Web.UI.HtmlControls;
 using System.Web.UI.WebControls;
 using System.Web.UI.WebControls.WebParts;
 using System.Xml.Linq;
+using System.Web.Services;
 using System.Data.SqlClient;
+using System.Collections.Generic;
 using KT_Classes;
 using System.Drawing;
 using ZMTClinics.Class; 
@@ -28,7 +30,7 @@ namespace ZMTClinics
         Connection oConnection = new Connection();
         ConNew oConn = new ConNew();
         string constr = ConfigurationManager.ConnectionStrings["KTConnectionString"].ConnectionString;
-      
+        string sysTicketMasterNo;
 
         #region LOAD MENU
         private void LoadMenu()
@@ -189,9 +191,10 @@ namespace ZMTClinics
             //    if (chkPrint.Checked) {
             //        this.PrintReport();
             //    }
-            //    Session["SESSION_MRNO"] = lblPatientMrNo.Text;
-            //    Session["SESSION_TICKETNO"] = sysTicketMasterNo;
-            //    ShowPrintMessage();
+                sysTicketMasterNo = lblTicketNo.Text;
+                Session["SESSION_MRNO"] = lblPatientMrNo.Text;
+                Session["SESSION_TICKETNO"] = sysTicketMasterNo;
+                ShowPrintMessage();
 
             }
             catch (Exception ex)
@@ -211,6 +214,7 @@ namespace ZMTClinics
                 ServiceAdded.Visible = true;
             }
         }
+       
         private void PopulateClinic()
         {
 
@@ -258,7 +262,7 @@ namespace ZMTClinics
         private void PopulateMedicine()
         {
             SqlConnection con = new SqlConnection(constr);
-            SqlCommand cmd = new SqlCommand("Select sysItemCodeSno,Item_Code,Item_Name from STR_ItemSetup", con);
+            SqlCommand cmd = new SqlCommand("Select sysItemCodeSno,Item_Code,Item_Name from STR_ItemSetup ORDER BY Item_Name", con);
             cmd.CommandType = CommandType.Text;
             cmd.Connection = con;
             con.Open();
@@ -269,6 +273,7 @@ namespace ZMTClinics
             con.Close();
 
         }
+       
         private void getUserImage()
         {
             object img;
@@ -303,7 +308,7 @@ namespace ZMTClinics
             }
 
         }
-
+      
         private void GetGetDocumentNoByDocumentTypeCode()
         {
 
@@ -474,7 +479,7 @@ namespace ZMTClinics
         }
         protected void gvPatients_SelectedIndexChanged(object sender, EventArgs e)
         {
-            this.SetPatientDetail(gvPatients.SelectedRow.Cells[1].Text);
+            this.SetPatientDetail(gvPatients.SelectedRow.Cells[3].Text);
            // ViewState["T_Detail"] = T_Detail;
            // ReFreshGrid();
             btn_Submit.Text = "Update Pharmacy";

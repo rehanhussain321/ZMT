@@ -1762,6 +1762,7 @@
     <Content Include="Portal\nursing.aspx" />
     <Content Include="Portal\NursingReciept.aspx" />
     <Content Include="Portal\Patient.aspx" />
+    <Content Include="Portal\PharmacyReciept.aspx" />
     <Content Include="Portal\Pharmasy.aspx" />
     <Content Include="Portal\reciept.aspx" />
     <Content Include="Portal\Service.aspx" />
@@ -1884,6 +1885,13 @@
     </Compile>
     <Compile Include="Portal\Patient.aspx.designer.cs">
       <DependentUpon>Patient.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Portal\PharmacyReciept.aspx.cs">
+      <DependentUpon>PharmacyReciept.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Portal\PharmacyReciept.aspx.designer.cs">
+      <DependentUpon>PharmacyReciept.aspx</DependentUpon>
     </Compile>
     <Compile Include="Portal\Pharmasy.aspx.cs">
       <DependentUpon>Pharmasy.aspx</DependentUpon>
