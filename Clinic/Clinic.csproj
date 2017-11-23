@@ -1755,6 +1755,7 @@
     <Content Include="gridcss\footable.min" />
     <Content Include="Javascript\calendar-stripped.js.exclude" />
     <Content Include="Javascript\vssver2.scc" />
+    <None Include="Properties\PublishProfiles\ZMT.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Portal\Clinic.aspx" />
     <Content Include="Portal\grid.aspx" />
@@ -1803,7 +1804,9 @@
     <Content Include="style\calendar-win2k-1.css" />
     <Content Include="style\interface.css" />
     <Content Include="ViewSwitcher.ascx" />
-    <Content Include="Web.config" />
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="Bundle.config" />
     <None Include="Project_Readme.html" />
     <Content Include="Scripts\jquery-1.10.2.min.map" />

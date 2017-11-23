@@ -20,6 +20,7 @@ namespace Clinic.Portal
     {
         Connection oConn = new Connection();
         double viewCount = 0;
+        double viewCount_Days = 0;
 
         DataTable DT = new DataTable();
         DataTable T_Detail = new DataTable();
@@ -83,7 +84,7 @@ namespace Clinic.Portal
         private void GetPharmacyDetail(string sysTicketMasterNo)
         {
             Connection con = new Connection();
-            string _sql = " SELECT sysIssueDetailNo,A.sysIssueMasterNo,sysItemCodeSno,Document_No,dbo.Func_STR_sysItemCodeSNo_ItemName(sysItemCodeSno) Item_Name,Item_Location_Code,Description,Quantity_Required,Quantity_Issued,Machine_Code,Unit_Code,dbo.Func_GEN_UnitCode_UnitName(Unit_Code )Unit_Name ";
+            string _sql = " SELECT sysIssueDetailNo,A.sysIssueMasterNo,sysItemCodeSno,Document_No,dbo.Func_STR_sysItemCodeSNo_ItemName(sysItemCodeSno) Item_Name,Item_Location_Code,Description,Quantity_Required,Quantity_Issued,Machine_Code,Unit_Code,dbo.Func_GEN_UnitCode_UnitName(Unit_Code )Unit_Name,Days ";
             _sql += " FROM	STR_IssueMaster A Inner Join   STR_IssueDetail B On A.sysIssueMasterNo = B.sysIssueMasterNo Where A.Reference_No =  '" + sysTicketMasterNo + "' ";
             DT = con.GetDataTable(_sql);
             ViewState.Add("DT", DT);
@@ -114,8 +115,18 @@ namespace Clinic.Portal
             else if (e.Row.RowType == DataControlRowType.Footer)
             {
                 this.ViewState["viewCountSum"] = viewCount;
-                e.Row.Cells[3].Text = this.ViewState["viewCountSum"].ToString() + " Piece(s)";
-                e.Row.Cells[2].Text = "Total Qty.";
+                e.Row.Cells[4].Text = this.ViewState["viewCountSum"].ToString() + " Unit(s)";
+                e.Row.Cells[3].Text = "Total Qty.";
+            }
+            if (e.Row.RowType == DataControlRowType.DataRow)
+            {
+                viewCount_Days += Convert.ToDouble((DataBinder.Eval(e.Row.DataItem, "Days").Equals(DBNull.Value) ? 0 : DataBinder.Eval(e.Row.DataItem, "Days")));
+            }
+            else if (e.Row.RowType == DataControlRowType.Footer)
+            {
+                this.ViewState["viewCount_daysSum"] = viewCount_Days;
+                e.Row.Cells[2].Text = this.ViewState["viewCount_daysSum"].ToString() + " Day(s)";
+               // e.Row.Cells[3].Text = "Total Qty.";
             }
         }
     }

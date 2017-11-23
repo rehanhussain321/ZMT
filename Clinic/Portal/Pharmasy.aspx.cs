@@ -24,6 +24,7 @@ namespace ZMTClinics
         SqlDataAdapter d_Adapter = default(SqlDataAdapter);
         double viewCountSum = 0;
         double viewCount = 0;
+        double viewCount_Days = 0;
         DataTable T_Detail = new DataTable();
         int I_Count;
         string SAVE_BUTTON = "Save Pharmacy";
@@ -98,6 +99,7 @@ namespace ZMTClinics
                 this.CreateTable(); // Grid Temp Table
                 this.PopulateMedicine();
                 this.PopulateClinic();
+                this.PopulateDosage();
                 this.PopulateUnit();
                 // this.getUserImage();
                 //this.getUsername();
@@ -141,10 +143,10 @@ namespace ZMTClinics
             string _Select;
             if (!btn_Submit.Text.Equals("Update Pharmacy"))
             {
-                _Select = " SELECT sysIssueMasterNo,sysItemCodeSno,Item_Location_Code,Sub_Dept_Code,Description,Quantity_Required,Quantity_Issued,Unit_Code,Machine_Code,Replacement_Required		From STR_IssueDetail  Where sysIssueDetailNo is Null ";
+                _Select = " SELECT sysIssueMasterNo,sysItemCodeSno,Item_Location_Code,Sub_Dept_Code,Description,Days,Quantity_Required,Quantity_Issued,Unit_Code,Machine_Code,Replacement_Required,Dosage_Code		From STR_IssueDetail  Where sysIssueDetailNo is Null ";
             }
             else {
-                _Select = " SELECT sysIssueDetailNo,sysIssueMasterNo,sysItemCodeSno,Item_Location_Code,Sub_Dept_Code,Description,Quantity_Required,Quantity_Issued,Unit_Code,Machine_Code,Replacement_Required		From STR_IssueDetail  Where sysIssueMasterNo='" + lblHide.Text + "' ";
+                _Select = " SELECT sysIssueDetailNo,sysIssueMasterNo,sysItemCodeSno,Item_Location_Code,Sub_Dept_Code,Description,Days,Quantity_Required,Quantity_Issued,Unit_Code,Machine_Code,Replacement_Required,Dosage_Code		From STR_IssueDetail  Where sysIssueMasterNo='" + lblHide.Text + "' ";
             }
 
             d_Adapter = new SqlDataAdapter(_Select.ToString(), con);
@@ -159,21 +161,23 @@ namespace ZMTClinics
             foreach (GridViewRow l_dgRow in gvServiceDetail.Rows)
             {
                 string sysIssueDetailNo = gvServiceDetail.Rows[i].Cells[0].Text.Replace("&nbsp;", "0").ToString();
-                string _sysItemCodeSno = gvServiceDetail.Rows[i].Cells[7].Text.Replace("&nbsp;", "0").ToString();
+                string _sysItemCodeSno = gvServiceDetail.Rows[i].Cells[8].Text.Replace("&nbsp;", "0").ToString();
                 string _ItemLocationCode = "1";
                 string _SubDeptCode = "1";
                 string _Description = gvServiceDetail.Rows[i].Cells[3].Text.Replace("&nbsp;", "0").ToString();
-                string _QuantityRequired = gvServiceDetail.Rows[i].Cells[4].Text.Replace("&nbsp;", "0").ToString();
-                string _QuantityIssued = gvServiceDetail.Rows[i].Cells[4].Text.Replace("&nbsp;", "0").ToString();
+                string _QuantityRequired = gvServiceDetail.Rows[i].Cells[5].Text.Replace("&nbsp;", "0").ToString();
+                string _QuantityIssued = gvServiceDetail.Rows[i].Cells[5].Text.Replace("&nbsp;", "0").ToString();
                 string _UnitCode = gvServiceDetail.Rows[i].Cells[1].Text.Replace("&nbsp;", "0").ToString();
                 string _MachineCode = "1";
+                string _Days = gvServiceDetail.Rows[i].Cells[4].Text.Replace("&nbsp;", "0").ToString();
+                string _Dosage_Code = gvServiceDetail.Rows[i].Cells[9].Text.Replace("&nbsp;", "0").ToString();
                 Boolean _ReplacementRequired = true ;
                 if (!btn_Submit.Text.Equals("Update Pharmacy"))
                 {
-                    T_Detail.LoadDataRow(new object[] { sysIssueMasterNo, _sysItemCodeSno, _ItemLocationCode, _SubDeptCode, _Description, _QuantityRequired, _QuantityIssued, _UnitCode, _MachineCode, _ReplacementRequired }, LoadOption.Upsert);
+                    T_Detail.LoadDataRow(new object[] { sysIssueMasterNo, _sysItemCodeSno, _ItemLocationCode, _SubDeptCode, _Description,_Days, _QuantityRequired, _QuantityIssued, _UnitCode, _MachineCode, _ReplacementRequired,_Dosage_Code }, LoadOption.Upsert);
                 }
                 else {
-                    T_Detail.LoadDataRow(new object[] { sysIssueDetailNo,sysIssueMasterNo, _sysItemCodeSno, _ItemLocationCode, _SubDeptCode, _Description, _QuantityRequired, _QuantityIssued, _UnitCode, _MachineCode, _ReplacementRequired }, LoadOption.Upsert);
+                    T_Detail.LoadDataRow(new object[] { sysIssueDetailNo,sysIssueMasterNo, _sysItemCodeSno, _ItemLocationCode, _SubDeptCode, _Description,_Days, _QuantityRequired, _QuantityIssued, _UnitCode, _MachineCode, _ReplacementRequired,_Dosage_Code }, LoadOption.Upsert);
                 }
                 
                 i = i + 1;
@@ -270,6 +274,20 @@ namespace ZMTClinics
             ddlMedicine.DataTextField = "Item_Name";
             ddlMedicine.DataValueField = "sysItemCodeSno";
             ddlMedicine.DataBind();
+            con.Close();
+
+        }
+        private void PopulateDosage()
+        {
+            SqlConnection con = new SqlConnection(constr);
+            SqlCommand cmd = new SqlCommand("Select Code,Name from GEN_ListOfValues where Class = 'MED-Dosage'", con);
+            cmd.CommandType = CommandType.Text;
+            cmd.Connection = con;
+            con.Open();
+            ddDosage.DataSource = cmd.ExecuteReader();
+            ddDosage.DataTextField = "Name";
+            ddDosage.DataValueField = "Code";
+            ddDosage.DataBind();
             con.Close();
 
         }
@@ -451,7 +469,7 @@ namespace ZMTClinics
         private void GetPharmacyDetail(string sysTicketMasterNo)
         {
             Connection con = new Connection();
-            string _sql = " SELECT sysIssueDetailNo,A.sysIssueMasterNo,sysItemCodeSno,dbo.Func_STR_sysItemCodeSNo_ItemName(sysItemCodeSno) Item_Name,Item_Location_Code,Description,Quantity_Required,Quantity_Issued,Machine_Code,Unit_Code,dbo.Func_GEN_UnitCode_UnitName(Unit_Code )Unit_Name ";
+            string _sql = " SELECT sysIssueDetailNo,A.sysIssueMasterNo,sysItemCodeSno,dbo.Func_STR_sysItemCodeSNo_ItemName(sysItemCodeSno) Item_Name,Item_Location_Code,Description,Quantity_Required,Quantity_Issued,Machine_Code,Unit_Code,dbo.Func_GEN_UnitCode_UnitName(Unit_Code )Unit_Name,Days,Dosage_Code ";
             _sql += " FROM	STR_IssueMaster A Inner Join   STR_IssueDetail B On A.sysIssueMasterNo = B.sysIssueMasterNo Where A.Reference_No =  '" + sysTicketMasterNo + "' ";
             T_Detail = con.GetDataTable(_sql);
             ViewState.Add("T_Detail", T_Detail);
@@ -568,15 +586,17 @@ namespace ZMTClinics
 
             T_Detail.Columns.Add("sysIssueDetailNo", typeof(string));/*HardCode*/
             T_Detail.Columns.Add("sysIssueMasterNo", typeof(string));/*HardCode*/
-            T_Detail.Columns.Add("sysItemCodeSno", typeof(string));/*ddMedicin.SelectedValue*/
+            T_Detail.Columns.Add("sysItemCodeSno", typeof(string));/*ddMedicine.SelectedValue*/
             T_Detail.Columns.Add("Item_Name", typeof(string));/*ddMedicine.SelectedItem.Text*/
-            T_Detail.Columns.Add("Item_Location_Code", typeof(string));  /*Hard Code 1*/ 
-            T_Detail.Columns.Add("Description", typeof(string));/*User Enter Textbox in grid*/
+            T_Detail.Columns.Add("Item_Location_Code", typeof(string));  /*Hard Code 1*/
+            T_Detail.Columns.Add("Dosage_Code", typeof(string));/*Dosage dddosage.SelectedValue*/
+            T_Detail.Columns.Add("Description", typeof(string));/*Dosage dddosage.SelectedText*/
             T_Detail.Columns.Add("Quantity_Required", typeof(string));/*User Enter Textbox in grid*/
             T_Detail.Columns.Add("Quantity_Issued", typeof(string));/*User Enter Textbox in grid*/
             T_Detail.Columns.Add("Machine_Code", typeof(string));/*HardCode*/
             T_Detail.Columns.Add("Unit_Code", typeof(string));/*ddUnit.SelectedValue*/
             T_Detail.Columns.Add("Unit_Name", typeof(string));/*ddUnit.SelectedItem.text*/
+            T_Detail.Columns.Add("Days", typeof(string));/*dddays.SelectedItem.text*/
             gvServiceDetail.DataSource = T_Detail;
             ViewState.Add("T_Detail", T_Detail);
             gvServiceDetail.DataBind();
@@ -588,7 +608,7 @@ namespace ZMTClinics
             I_Count = Convert.ToInt32(ViewState["I_COUNT"]) + 1;
             Int16 i = default(Int16);
             
-            T_Detail.Rows.InsertAt(AddRow(I_Count.ToString(), ddlMedicine.SelectedValue.ToString(),   ddlMedicine.SelectedItem.Text.ToString(),txtPatientMedicineDosage.Text,txtQuantity.Text , ddUnit.SelectedValue.ToString(), ddUnit.SelectedItem.Text.ToString()), gvServiceDetail.Rows.Count + 1);
+            T_Detail.Rows.InsertAt(AddRow(I_Count.ToString(), ddlMedicine.SelectedValue.ToString(),ddlMedicine.SelectedItem.Text.ToString(),ddDosage.SelectedValue,ddDosage.SelectedItem.ToString(),txtQuantity.Text , ddUnit.SelectedValue.ToString(), ddUnit.SelectedItem.Text.ToString(),ddDays.SelectedItem.Text.ToString()), gvServiceDetail.Rows.Count + 1);
             ViewState["I_COUNT"] = Convert.ToInt16(I_Count + i).ToString();
             this.ReFreshGrid();
         
@@ -598,7 +618,7 @@ namespace ZMTClinics
             gvServiceDetail.DataSource = T_Detail;
             gvServiceDetail.DataBind();
         }
-        private DataRow AddRow(string sysIssueDetailNo, string sysItemCodeSno, string ItemName, string Description, string Quantity_Required, string Unit_Code, string Unit_Name)
+        private DataRow AddRow(string sysIssueDetailNo, string sysItemCodeSno, string ItemName,string Dosage_Code, string Description, string Quantity_Required, string Unit_Code, string Unit_Name,string days)
         {
             
             DataRow R_Row = default(DataRow);
@@ -606,13 +626,15 @@ namespace ZMTClinics
             R_Row["sysIssueDetailNo"] = sysIssueDetailNo;
             R_Row["sysItemCodeSno"] = sysItemCodeSno;
             R_Row["Item_Name"] = ItemName;
+            R_Row["Dosage_Code"] = Dosage_Code;
             R_Row["Description"] = Description;
             R_Row["Quantity_Required"] = Quantity_Required;
             R_Row["Unit_Code"] = Unit_Code;
             R_Row["Unit_Name"] = Unit_Name;
-            
+            R_Row["Days"] = days;
             return R_Row;
         }
+        
         protected void gvServiceDetail_RowDeleting(object sender, GridViewDeleteEventArgs e)
         {
             string User_Code;
@@ -640,8 +662,18 @@ namespace ZMTClinics
             else if (e.Row.RowType == DataControlRowType.Footer)
             {
                 this.ViewState["viewCountSum"] = viewCount;
-                e.Row.Cells[4].Text = this.ViewState["viewCountSum"].ToString() + " Pieces";
-                e.Row.Cells[3].Text = "Total Qty.";
+                e.Row.Cells[6].Text = this.ViewState["viewCountSum"].ToString() + " Units";
+                e.Row.Cells[5].Text = "Total Qty.";
+            }
+            if (e.Row.RowType == DataControlRowType.DataRow)
+            {
+                viewCount_Days += Convert.ToDouble((DataBinder.Eval(e.Row.DataItem, "Days").Equals(DBNull.Value) ? 0 : DataBinder.Eval(e.Row.DataItem, "Days")));
+            }
+            else if (e.Row.RowType == DataControlRowType.Footer)
+            {
+                this.ViewState["viewCount_daysSum"] = viewCount_Days;
+                e.Row.Cells[4].Text = this.ViewState["viewCount_daysSum"].ToString() + " Days";
+                //e.Row.Cells[5].Text = "Total Qty.";
             }
         }
         protected void gvPatientService_SelectedIndexChanged(object sender, EventArgs e)

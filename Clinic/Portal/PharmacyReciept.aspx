@@ -321,6 +321,10 @@
                     <HeaderStyle BackColor="Black" CssClass="align-left" />
                     <ItemStyle HorizontalAlign="Left" CssClass="align-left" Font-Bold="false" />
                     </asp:BoundField>
+                    <asp:BoundField DataField="Days" HeaderStyle-BackColor="Black" HeaderStyle-CssClass="align-left" HeaderStyle-Font-Bold="true" HeaderText="Days" HeaderStyle-ForeColor="White">
+                    <HeaderStyle BackColor="Black" CssClass="align-left" />
+                    <ItemStyle HorizontalAlign="Left" CssClass="align-left" Font-Bold="false" />
+                    </asp:BoundField>
                     <asp:BoundField  DataField="Description" HeaderStyle-BackColor="black" HeaderStyle-CssClass="align-right" HeaderStyle-Font-Bold="true" HeaderText="Dosage" HeaderStyle-ForeColor="White">
                     <ControlStyle BackColor="white" />
                     <HeaderStyle BackColor="Black" CssClass="align-right" />
@@ -372,7 +376,7 @@
             <asp:CheckBox ID="CheckFooter" runat="server"  /><asp:Label runat="server" ID="lblFooterHide" >Click To Enable Disable Footer Message</asp:Label>
         </div> 
         <div class="col-md-4 row ">
-           <a href="Pharmasy.aspx"<asp:Button ID="btnBack" runat="server" Text="Back To Main" Class="btn btn-blue" />Back To Patient</a>
+           <a href="Pharmasy.aspx"<asp:Button ID="btnBack" runat="server" Text="Back To Main" Class="btn btn-blue" />Back To Pharmacy</a>
         </div>   
         </div>
     </form>

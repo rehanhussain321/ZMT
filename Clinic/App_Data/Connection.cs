@@ -49,6 +49,8 @@ namespace ZMTClinics.Class
             string _return = cmd.ExecuteScalar().ToString();
             CloseConnection();
             return _return;
+
         }
+       
         }
 }
