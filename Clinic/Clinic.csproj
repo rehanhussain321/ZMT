@@ -1755,6 +1755,7 @@
     <Content Include="gridcss\footable.min" />
     <Content Include="Javascript\calendar-stripped.js.exclude" />
     <Content Include="Javascript\vssver2.scc" />
+    <None Include="Properties\PublishProfiles\ZMT.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Portal\Clinic.aspx" />
     <Content Include="Portal\grid.aspx" />
@@ -1762,6 +1763,7 @@
     <Content Include="Portal\nursing.aspx" />
     <Content Include="Portal\NursingReciept.aspx" />
     <Content Include="Portal\Patient.aspx" />
+    <Content Include="Portal\PharmacyReciept.aspx" />
     <Content Include="Portal\Pharmasy.aspx" />
     <Content Include="Portal\reciept.aspx" />
     <Content Include="Portal\Service.aspx" />
@@ -1802,7 +1804,9 @@
     <Content Include="style\calendar-win2k-1.css" />
     <Content Include="style\interface.css" />
     <Content Include="ViewSwitcher.ascx" />
-    <Content Include="Web.config" />
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="Bundle.config" />
     <None Include="Project_Readme.html" />
     <Content Include="Scripts\jquery-1.10.2.min.map" />
@@ -1884,6 +1888,13 @@
     </Compile>
     <Compile Include="Portal\Patient.aspx.designer.cs">
       <DependentUpon>Patient.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Portal\PharmacyReciept.aspx.cs">
+      <DependentUpon>PharmacyReciept.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Portal\PharmacyReciept.aspx.designer.cs">
+      <DependentUpon>PharmacyReciept.aspx</DependentUpon>
     </Compile>
     <Compile Include="Portal\Pharmasy.aspx.cs">
       <DependentUpon>Pharmasy.aspx</DependentUpon>

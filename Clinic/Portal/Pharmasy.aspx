@@ -4,7 +4,7 @@
 
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head runat="server">
-    <title>ZMT Clinics::Patient Info</title>
+    <title>ZMT Clinics::Pharmacy</title>
     <link rel="stylesheet" href="../assets/js/jquery-ui/css/no-theme/jquery-ui-1.10.3.custom.min.css"/>
 	<link rel="stylesheet" href="../assets/css/font-icons/entypo/css/entypo.css"/>
 	<link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Noto+Sans:400,700,400italic"/>
@@ -17,7 +17,7 @@
     <link href="../style/calendar-win2k-1.css" rel="stylesheet" />
     <script src="../assets/js/jquery-1.11.0.min.js"></script>
     <script src="../assets/js/jquery-1.11.0.min.js"></script>
-
+    
     <script src="dist/jquery.inputmask.bundle.min.js"></script>
     <link rel="stylesheet" href="http://code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css">
     <script src="http://code.jquery.com/ui/1.10.4/jquery-ui.js" type="text/javascript"></script>
@@ -50,6 +50,7 @@
            $(".datepicker").datepicker({ format: 'dd/mm/yyyy', autoclose: true, todayBtn: 'linked' })
        });
 </script>--%>
+    
     <style>
         .hideCol
         {
@@ -92,12 +93,28 @@
     <script type = "text/javascript">
         function Confirm() {
             if (confirm("Do you want to print slip?")) {
-                window.location.href = 'reciept.aspx';
+                window.location.href = 'PharmacyReciept.aspx';
             } else {
                 //alert('No');
-                window.location.href = 'service.aspx';
+                window.location.href = 'Pharmasy.aspx';
                 return false;
             }
+        }
+    </script>
+    <script>
+        function sumQuantity() {
+            var ddUnit = document.getElementById('ddUnit').value;
+            var ddDosage = document.getElementById('ddDosage').value;
+            var ddDays = document.getElementById('ddDays').value;
+            var DosageQuantity = document.getElementById('txtQuantity');
+            if (ddUnit == '5') {
+                
+                DosageQuantity.value = parseInt(ddDosage) * parseInt(ddDays);
+            }
+            else {
+                DosageQuantity.value = 1;
+            }
+            
         }
     </script>
     <link href="style/interface.css" rel="stylesheet" type="text/css" />
@@ -240,27 +257,43 @@
 		
 			</div>
                 <div class="col-md-10 col-md-offset-1" id="search">
-                       <asp:GridView ID="gvPatients" runat="server" CssClass="footable large-only" style="font-size:12px;color:white;" OnSelectedIndexChanged="gvPatients_SelectedIndexChanged"  DataKeyNames="Registration_No" OnRowDataBound="gvPatients_RowDataBound" AutoGenerateColumns="false" EmptyDataText="No Record(s) Found" AutoGenerateSelectButton="True" ForeColor="White">
+                       <asp:GridView ID="gvPatients" runat="server" CssClass="footable large-only" style="font-size:12px;color:white;" OnSelectedIndexChanged="gvPatients_SelectedIndexChanged"  DataKeyNames="Registration_No" OnRowDataBound="gvPatients_RowDataBound" AutoGenerateColumns="False" EmptyDataText="No Record(s) Found" AutoGenerateSelectButton="True" ForeColor="White">
                             <Columns>
-                                <asp:BoundField DataField ="Registration_No" HeaderText="MrNo" HeaderStyle-CssClass="align-left" HeaderStyle-BackColor="#fd8d68" >
-                                    <ItemStyle HorizontalAlign="Left" />
-                                </asp:BoundField>
-                                <asp:BoundField DataField="Registration_Date" HeaderText="Registration Date" HeaderStyle-CssClass="align-center" HeaderStyle-BackColor="#fd8d68"  ControlStyle-BackColor="Violet">
+                                <asp:BoundField DataField="Ticket_Date" HeaderText="Ticket Date" HeaderStyle-CssClass="align-center" HeaderStyle-BackColor="#fd8d68"  ControlStyle-BackColor="Violet">
+<ControlStyle BackColor="Violet"></ControlStyle>
+
+<HeaderStyle BackColor="#FD8D68" CssClass="align-center"></HeaderStyle>
+
                                     <ItemStyle HorizontalAlign ="Center" />
                                 </asp:BoundField>
+                                <asp:BoundField DataField="Ticket_Number" HeaderText="Ticket#" HeaderStyle-CssClass="align-right" HeaderStyle-BackColor="#fd8d68">
+<HeaderStyle BackColor="#FD8D68" CssClass="align-right"></HeaderStyle>
+
+                                    <ItemStyle HorizontalAlign ="Right" />
+                                </asp:BoundField>
+                                <asp:BoundField DataField ="Registration_No" HeaderText="MrNo" HeaderStyle-CssClass="align-left" HeaderStyle-BackColor="#fd8d68" >
+<HeaderStyle BackColor="#FD8D68" CssClass="align-left"></HeaderStyle>
+
+                                    <ItemStyle HorizontalAlign="Left" />
+                                </asp:BoundField>
                                 <asp:BoundField DataField="First_Name" HeaderText="First Name" HeaderStyle-CssClass="align-left" HeaderStyle-BackColor="#fd8d68">
+<HeaderStyle BackColor="#FD8D68" CssClass="align-left"></HeaderStyle>
+
                                     <ItemStyle HorizontalAlign ="Left" />
                                 </asp:BoundField>
                                 <asp:BoundField DataField="Father_Name" HeaderText="Father Name" HeaderStyle-CssClass="align-left" HeaderStyle-BackColor="#fd8d68">
+<HeaderStyle BackColor="#FD8D68" CssClass="align-left"></HeaderStyle>
+
                                     <ItemStyle HorizontalAlign ="Left" />
                                 </asp:BoundField>
-                                <asp:BoundField DataField="CNIC_No" HeaderText="CNIC Number" HeaderStyle-CssClass="align-right" HeaderStyle-BackColor="#fd8d68">
-                                    <ItemStyle HorizontalAlign ="Right" />
-                                </asp:BoundField>
                                 <asp:BoundField DataField="Age" HeaderText="Age" HeaderStyle-CssClass="align-left" HeaderStyle-BackColor="#fd8d68">
+<HeaderStyle BackColor="#FD8D68" CssClass="align-left"></HeaderStyle>
+
                                     <ItemStyle HorizontalAlign ="Left" />
                                 </asp:BoundField>
                                 <asp:BoundField DataField="Mobile_1" HeaderText="Mobile#1" HeaderStyle-CssClass="align-left" HeaderStyle-BackColor="#fd8d68">
+<HeaderStyle BackColor="#FD8D68" CssClass="align-left"></HeaderStyle>
+
                                     <ItemStyle HorizontalAlign ="Left" />
                                 </asp:BoundField>
                                 <asp:BoundField DataField="sys_PatientSno" HeaderText="Patient Sno" HeaderStyle-CssClass="align-left" HeaderStyle-BackColor="#fd8d68">
@@ -450,7 +483,7 @@
                 <div class="panel panel-primary" data-collapsed="0" id="ServiceAddedPanel">
                     <div class="panel-heading" style="background-color:#2E3192; color:whitesmoke;">
                     <div class="panel-title" style="font-family:Arial;">
-                        Medicin Detail
+                        Medicine Detail
                     </div>
                         <div class="panel-options">
 							<a href="#" data-rel="collapse"><i class="entypo-down-open"></i></a>
@@ -460,44 +493,68 @@
                     </div>
                     
                     <div class="panel-body">
-                        <div class="row">
-                        <div class ="col-md-3  ">
-                              <div class="form-group">
-                                <asp:Label runat="server" ID="lblMedical" style="font-weight:bold;font-size:12px;color:blue;">Medicine:</asp:Label>
-                                <asp:DropDownList ID="ddlMedicine" runat="server" class="form-control" Width="100%" Height="100%" style="font-size:12px;width:150px;" AutoPostBack="true"  AppendDataBoundItems="true">
+                        <div>
+                              
+                                <asp:Label runat="server" ID="lblMedical" style="font-weight:bold;font-size:12px;color:red;float:left;margin-top:5px;">Medicine:</asp:Label>
+                                
+                                <asp:DropDownList ID="ddlMedicine" runat="server" class="form-control" Width="100%" Height="100%" style="font-size:12px;width:160px;margin-left:5px;margin-bottom:4px;float:left;" AutoPostBack="true"  AppendDataBoundItems="true">
                                             <asp:ListItem Text="Select Medicine Unit" Value="0"></asp:ListItem>
 								</asp:DropDownList>
-                                <asp:RequiredFieldValidator ID="RequiredFieldValidatorService" runat="server" ControlToValidate="ddlMedicine" ErrorMessage="Select Service" ValidationGroup="Service Selection" Font-Bold="True" Font-Names="Arial Black" Font-Size="10pt" ForeColor="Red"></asp:RequiredFieldValidator>
-                            </div>
-                            </div>
-                        <div class="col-md-3">
-                            <div class="form-group">
-                                <asp:Label runat="server" ID="Label5" style="font-weight:bold;font-size:12px;color:blue;">Unit:</asp:Label>
-                                <asp:DropDownList ID="ddUnit" runat="server" class="form-control" Width="100%" Height="100%" style="font-size:12px;" AutoPostBack="true">
+                                
+
+                                <asp:Label runat="server" ID="Label5" style="font-weight:bold;font-size:12px;color:red;float:left;margin-top:5px;margin-left:10px;">Unit:</asp:Label>
+                              
+                                <asp:DropDownList ID="ddUnit" runat="server" class="form-control" Width="100%" Height="100%" style="font-size:12px;margin-left:5px;float:left;width:78px;" AutoPostBack="true" onchange="sumQuantity();">
                                             <asp:ListItem Text="Select Medicine" Value="0"></asp:ListItem>
 								</asp:DropDownList>
                                 <asp:Label runat="server" CssClass="hideCol" ID="lblSrNo"></asp:Label>
-                            </div>
-                        </div>
-                            <div class="col-md-2" style="padding-left:0px;">
-                                <div class="form-group">
-                                    <asp:Label runat="server" ID="Label6" style="font-weight:bold;font-size:12px;color:blue;margin-left:2px;">Dosage:</asp:Label>
-                                    <asp:TextBox runat="server" ID="txtPatientMedicineDosage" CssClass="form-control" style="font-size:12px;background-color:#F0F0F0;width:120px;margin-left:0;">1+1+1</asp:TextBox>
-                                </div>
-                            </div>
-                            <div class="col-md-2">
-                                <div class="form-group">
-                                    <asp:Label runat="server" ID="Label3" style="font-weight:bold;font-size:12px;color:blue;">Quantity:</asp:Label>
-                                    <asp:TextBox runat="server" ID="txtQuantity" CssClass="form-control" style="font-size:12px;background-color:#F0F0F0;width:120px;margin-left:0;"></asp:TextBox>
-                                </div>
-                            </div>
-                                <div class="col-md-2">
-                                <div class="form-group">
-                                    <asp:Label runat="server" ID="Label1" style="font-weight:bold;font-size:12px;color:white;">aaa</asp:Label>
-                                    <asp:Button runat="server" ID="btnAdd"  style="width:100%;" Text="Add " OnClick="btnAdd_Click" CssClass="btn btn-block" ValidationGroup="Service Selection" />
-                                </div>
-                            </div>
-                            </div>
+
+                                    <asp:Label runat="server" ID="Label6" style="font-weight:bold;font-size:12px;color:red;float:left;margin-top:5px;margin-left:10px;">Dosage:</asp:Label>
+                                    <%--<asp:TextBox runat="server" ID="txtPatientMedicineDosage" CssClass="form-control" style="font-size:12px;background-color:#F0F0F0;width:120px;margin-left:0;">1+1+1</asp:TextBox>--%>
+                                     <asp:DropDownList ID="ddDosage" runat="server" class="form-control" Width="100%" Height="100%" style="font-size:12px;margin-left:5px;float:left;width:78px;" AutoPostBack="true" onchange="sumQuantity();">
+                                            <asp:ListItem Text="Select Dosage" Value="0"></asp:ListItem>
+								</asp:DropDownList>
+                                    <asp:Label runat="server" ID="Label4" style="font-weight:bold;font-size:12px;color:red;float:left;margin-top:5px;margin-left:10px;">Days:</asp:Label>
+                                    <%--<asp:TextBox runat="server" ID="txtPatientMedicineDosage" CssClass="form-control" style="font-size:12px;background-color:#F0F0F0;width:120px;margin-left:0;">1+1+1</asp:TextBox>--%>
+                                     <asp:DropDownList ID="ddDays" runat="server" class="form-control" Width="100%" Height="100%" style="font-size:12px;margin-left:5px;float:left;width:70px;" AutoPostBack="true" onchange="sumQuantity();">
+                                            <asp:ListItem Text="1" Value="1"></asp:ListItem>
+                                            <asp:ListItem Text="2" Value="2"></asp:ListItem>
+                                            <asp:ListItem Text="3" Value="3"></asp:ListItem>
+                                            <asp:ListItem Text="4" Value="4"></asp:ListItem>
+                                            <asp:ListItem Text="5" Value="5"></asp:ListItem>
+                                            <asp:ListItem Text="6" Value="6"></asp:ListItem>
+                                            <asp:ListItem Text="7" Value="7"></asp:ListItem>
+                                            <asp:ListItem Text="8" Value="8"></asp:ListItem>
+                                            <asp:ListItem Text="9" Value="9"></asp:ListItem>
+                                            <asp:ListItem Text="10" Value="10"></asp:ListItem>
+                                            <asp:ListItem Text="11" Value="11"></asp:ListItem>
+                                            <asp:ListItem Text="12" Value="12"></asp:ListItem>
+                                            <asp:ListItem Text="13" Value="13"></asp:ListItem>
+                                            <asp:ListItem Text="14" Value="14"></asp:ListItem>
+                                            <asp:ListItem Text="15" Value="15"></asp:ListItem>
+                                            <asp:ListItem Text="16" Value="16"></asp:ListItem>
+                                            <asp:ListItem Text="17" Value="17"></asp:ListItem>
+                                            <asp:ListItem Text="18" Value="18"></asp:ListItem>
+                                            <asp:ListItem Text="19" Value="19"></asp:ListItem>
+                                            <asp:ListItem Text="20" Value="20"></asp:ListItem>
+                                            <asp:ListItem Text="21" Value="21"></asp:ListItem>
+                                            <asp:ListItem Text="22" Value="22"></asp:ListItem>
+                                            <asp:ListItem Text="23" Value="23"></asp:ListItem>
+                                            <asp:ListItem Text="24" Value="24"></asp:ListItem>
+                                            <asp:ListItem Text="25" Value="25"></asp:ListItem>
+                                            <asp:ListItem Text="26" Value="26"></asp:ListItem>
+                                            <asp:ListItem Text="27" Value="27"></asp:ListItem>
+                                            <asp:ListItem Text="28" Value="28"></asp:ListItem>
+                                            <asp:ListItem Text="29" Value="29"></asp:ListItem>
+                                            <asp:ListItem Text="30" Value="30"></asp:ListItem>
+                                            <asp:ListItem Text="31" Value="31"></asp:ListItem>
+								</asp:DropDownList>
+                                    <asp:Label runat="server" ID="Label3" style="font-weight:bold;font-size:12px;color:red;float:left;margin-top:5px;margin-left:10px;">Quantity:</asp:Label>
+                                    <asp:TextBox runat="server" ID="txtQuantity" CssClass="form-control" style="font-size:12px;background-color:#F0F0F0;width:80px;margin-left:5px;float:left;" >1</asp:TextBox>
+                                    <asp:Button runat="server" ID="btnAdd"  style="width:50px;margin-left:800px;" Text="Add " OnClick="btnAdd_Click" CssClass="btn btn-block" />
+                               
+                            
+                            
 
                             </div>
                         <div class="row">
@@ -522,6 +579,10 @@
                                     <HeaderStyle BackColor="#599adb" CssClass="text-right"></HeaderStyle>
                                     <ItemStyle HorizontalAlign ="right" />
                                 </asp:BoundField>
+                                <asp:BoundField DataField="Days" HeaderText="Days" HeaderStyle-BackColor="#599adb" HeaderStyle-CssClass="text-right">
+                                    <HeaderStyle BackColor="#599adb" CssClass="text-right"></HeaderStyle>
+                                    <ItemStyle HorizontalAlign ="right" />
+                                </asp:BoundField>
                                 <asp:BoundField DataField="Quantity_Required" HeaderText="Quantity" HeaderStyle-BackColor="#599adb" HeaderStyle-CssClass="text-right">
                                     <HeaderStyle BackColor="#599adb" CssClass="text-right"></HeaderStyle>
                                     <ItemStyle HorizontalAlign ="right" />
@@ -535,6 +596,11 @@
                                        <HeaderStyle BackColor="#599adb"></HeaderStyle>
                                 </asp:CommandField>
                                 <asp:BoundField DataField ="sysItemCodeSno" HeaderText="SysItemCodeSno"  HeaderStyle-BackColor="#599adb" >
+                                    <ItemStyle CssClass="hideCol" />
+                                     <HeaderStyle CssClass="hideCol" />
+                                     <FooterStyle CssClass="hideCol" />
+                                </asp:BoundField>
+                                <asp:BoundField DataField ="Dosage_Code" HeaderText="DosageCode"  HeaderStyle-BackColor="#599adb" >
                                     <ItemStyle CssClass="hideCol" />
                                      <HeaderStyle CssClass="hideCol" />
                                      <FooterStyle CssClass="hideCol" />
@@ -576,6 +642,7 @@
             <asp:Label ID="lblDeptCode" runat="server" Text=""></asp:Label>
             <asp:Label ID="lblLocationCode" runat="server" Text=""></asp:Label>
             <asp:Label ID="lblsysTicketMasterNo" runat="server" Text=""></asp:Label>
+            <asp:Label runat="server" CssClass="hideCol" ID="lblTicketNo"></asp:Label> 
         </div>
         </div>
    

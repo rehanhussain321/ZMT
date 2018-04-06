@@ -12,8 +12,6 @@ namespace Clinic
         protected void Page_Load(object sender, EventArgs e)
         {
             Response.Redirect("portal/login.aspx");
-            Response.Write("No File Found Error");
-            Response.Write("No File Found Error");
         }
     }
 }
