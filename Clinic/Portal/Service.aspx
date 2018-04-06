@@ -79,6 +79,10 @@
     color:black;
     font-weight:900;
 }
+.table > tbody > tr > td >a{
+    color:black;
+    font-weight:900;
+}
 .table>tbody > tr:hover{
     background-color:burlywood;
 }

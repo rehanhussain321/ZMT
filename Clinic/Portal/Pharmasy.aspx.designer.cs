@@ -22,22 +22,13 @@ namespace ZMTClinics {
         protected global::System.Web.UI.HtmlControls.HtmlForm form1;
         
         /// <summary>
-        /// Panel1 control.
+        /// Image1 control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Panel Panel1;
-        
-        /// <summary>
-        /// ImgUser control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Image ImgUser;
+        protected global::System.Web.UI.WebControls.Image Image1;
         
         /// <summary>
         /// lblUserName control.
@@ -56,6 +47,15 @@ namespace ZMTClinics {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.DropDownList ddClinic;
+        
+        /// <summary>
+        /// Menu1 control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Menu Menu1;
         
         /// <summary>
         /// txtPatientSearch control.
@@ -265,6 +265,15 @@ namespace ZMTClinics {
         protected global::System.Web.UI.WebControls.Panel ServiceAdded;
         
         /// <summary>
+        /// ltrMedicine control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Literal ltrMedicine;
+        
+        /// <summary>
         /// lblMedical control.
         /// </summary>
         /// <remarks>
@@ -274,13 +283,22 @@ namespace ZMTClinics {
         protected global::System.Web.UI.WebControls.Label lblMedical;
         
         /// <summary>
-        /// ddlMedicine control.
+        /// txtMedicine control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.DropDownList ddlMedicine;
+        protected global::System.Web.UI.WebControls.TextBox txtMedicine;
+        
+        /// <summary>
+        /// hfMedicine control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox hfMedicine;
         
         /// <summary>
         /// Label5 control.

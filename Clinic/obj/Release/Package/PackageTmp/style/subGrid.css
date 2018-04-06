@@ -1,0 +1,36 @@
+﻿.table > tbody > tr > .no-line {
+             border-top: none;
+             height:auto;
+              width:100%;
+             }
+           .table>th{
+               font-size:12px;
+           }
+           .table > th > .text-center {
+                text-align:center;
+             }
+            .table > th > .text-left {
+               text-align:left;
+             }
+            .table > thead > tr > .no-line {
+               border-bottom: none;
+             }
+
+            .table > tbody > tr > .thick-line {
+            border-top: 2px solid;
+             }
+           .table > tbody > tr > td{
+            color:black;
+           /* font-weight:900;*/
+           font-weight:bold;
+           font-size:12px;
+           padding:2px;
+           cursor: pointer;
+        }
+            .table>tbody > tr:hover{
+            background-color:#FFFFBF;
+        }
+            .hover_row
+        {
+            background-color: #FFFFBF;
+        }

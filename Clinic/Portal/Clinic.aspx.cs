@@ -12,7 +12,8 @@ using System.Xml.Linq;
 using System.Data.SqlClient;
 using KT_Classes;
 using System.Drawing;
-using ZMTClinics.Class; 
+using ZMTClinics.Class;
+using System.IO;
 
 namespace ZMTClinics
 {
@@ -26,76 +27,127 @@ namespace ZMTClinics
             SqlConnection con = new SqlConnection(constr);
             string userCode;
             userCode = (Session["User_Code"].ToString());
-            SqlDataAdapter da = new SqlDataAdapter("Select Menu_Code, MenuText, MenuPath,MenuParent from SEC_Menu where MenuType = 6 AND MenuParent=0", con);
-            //  SqlDataAdapter da = new SqlDataAdapter("SEC_GetUserMenu 8,4", con);
-            DataTable dttc = new DataTable();
-            da.Fill(dttc);
-            /*##########################################################Coding for Menu Start ##############################################################################################*/
-            HtmlGenericControl main = UList("main-menu", "main-menu");
-            foreach (DataRow row in dttc.Rows)
+            if (!this.IsPostBack)
             {
-                da = new SqlDataAdapter("select Menu_Code,MenuText,MenuPath,MenuParent from SEC_Menu where MenuParent=" + row["Menu_Code"].ToString() + " order by ISNULL(sortorder,0)", con);
-                // da = new SqlDataAdapter("SELECT  Case MP.Menu_Code WHEN 0 THEN NULL ELSE MP.Menu_Code END AS ParentCode , MP.MenuText AS ParentMenu , M.MenuText , M.Menu_Code , M.MenuType, M.MenuPath, M.MenuDirPath FROM SEC_Menu M INNER JOIN SEC_RoleDetail RD ON RD.Menu_Code = M.Menu_Code INNER JOIN SEC_Role R ON RD.Role_Code = R.Role_Code INNER JOIN SEC_GroupDetail GD ON GD.Role_Code = RD.Role_Code INNER JOIN SEC_Group G ON GD.Group_Code = G.Group_Code INNER JOIN SEC_User U ON U.Group_Code = G.Group_Code INNER JOIN SEC_Menu MP ON MP.Menu_Code = M.MenuParent  WHERE 	U.User_Code  = '8' AND M.Menu_Code NOT IN (SELECT Menu_Code FROM SEC_UserRights WHERE User_Code  = '8')and M.MenuType='4' and MP.Menu_Code <>0 UNION SELECT   Case MP.Menu_Code WHEN 0 THEN NULL ELSE MP.Menu_Code END AS ParentCode , MP.MenuText AS ParentMenu , M.MenuText , M.Menu_Code ,M.MenuType    , M.MenuPath, M.MenuDirPath FROM SEC_Menu M  INNER JOIN SEC_UserRights UR ON UR.Menu_Code = M.Menu_Code INNER JOIN SEC_Menu MP ON MP.Menu_Code = M.MenuParent WHERE User_Code  = '8'and M.MenuType='4' and m.Menu_Code <>0", con);
-                DataTable dtDist = new DataTable();
-                da.Fill(dtDist);
-                if (dtDist.Rows.Count > 0)
-                {
-                    HtmlGenericControl sub_menu = LIList(row["MenuText"].ToString(), row["Menu_Code"].ToString(), row["MenuPath"].ToString());
-                    HtmlGenericControl ul = new HtmlGenericControl("ul");
-                    foreach (DataRow r in dtDist.Rows)
-                    {
-                        ul.Controls.Add(LIList(r["MenuText"].ToString(), r["MenuParent"].ToString(), r["MenuPath"].ToString()));
-                    }
-                    sub_menu.Controls.Add(ul);
-                    main.Controls.Add(sub_menu);
-                }
-                else
-                {
-                    main.Controls.Add(LIList(row["MenuText"].ToString(), row["Menu_Code"].ToString(), row["MenuPath"].ToString()));
-                }
+                DataTable dt = this.GetData(0);
+                PopulateMenu(dt, 0, null);
             }
-            /*##########################################################Coding for Menu End ##############################################################################################*/
-            getUserImage();/*Function to get UserImage*/
-            getUsername();/*Function to get UserName*/
-            PopulateClinic();/*Function to Populate Clinics*/
-            Panel1.Controls.Add(main);/*For Menu*/
-            DateTime localDate = DateTime.Now;
-           // txtRegtDate.Text = localDate.ToString();
-           // System.Guid guid = System.Guid.NewGuid();
-           // txtClinicID.Text = guid.ToString(); 
-           // string MRNo = guid.ToString();
-           // txtMrNo.Text = MRNo;
-            // txtAge.Attributes.Add("onKeyUp", "CalculateAge()");
+        //    SqlDataAdapter da = new SqlDataAdapter("Select Menu_Code, MenuText, MenuPath,MenuParent from SEC_Menu where MenuType = 6 AND MenuParent=0", con);
+        //    //  SqlDataAdapter da = new SqlDataAdapter("SEC_GetUserMenu 8,4", con);
+        //    DataTable dttc = new DataTable();
+        //    da.Fill(dttc);
+        //    /*##########################################################Coding for Menu Start ##############################################################################################*/
+        //    HtmlGenericControl main = UList("main-menu", "main-menu");
+        //    foreach (DataRow row in dttc.Rows)
+        //    {
+        //        da = new SqlDataAdapter("select Menu_Code,MenuText,MenuPath,MenuParent from SEC_Menu where MenuParent=" + row["Menu_Code"].ToString() + " order by ISNULL(sortorder,0)", con);
+        //        // da = new SqlDataAdapter("SELECT  Case MP.Menu_Code WHEN 0 THEN NULL ELSE MP.Menu_Code END AS ParentCode , MP.MenuText AS ParentMenu , M.MenuText , M.Menu_Code , M.MenuType, M.MenuPath, M.MenuDirPath FROM SEC_Menu M INNER JOIN SEC_RoleDetail RD ON RD.Menu_Code = M.Menu_Code INNER JOIN SEC_Role R ON RD.Role_Code = R.Role_Code INNER JOIN SEC_GroupDetail GD ON GD.Role_Code = RD.Role_Code INNER JOIN SEC_Group G ON GD.Group_Code = G.Group_Code INNER JOIN SEC_User U ON U.Group_Code = G.Group_Code INNER JOIN SEC_Menu MP ON MP.Menu_Code = M.MenuParent  WHERE 	U.User_Code  = '8' AND M.Menu_Code NOT IN (SELECT Menu_Code FROM SEC_UserRights WHERE User_Code  = '8')and M.MenuType='4' and MP.Menu_Code <>0 UNION SELECT   Case MP.Menu_Code WHEN 0 THEN NULL ELSE MP.Menu_Code END AS ParentCode , MP.MenuText AS ParentMenu , M.MenuText , M.Menu_Code ,M.MenuType    , M.MenuPath, M.MenuDirPath FROM SEC_Menu M  INNER JOIN SEC_UserRights UR ON UR.Menu_Code = M.Menu_Code INNER JOIN SEC_Menu MP ON MP.Menu_Code = M.MenuParent WHERE User_Code  = '8'and M.MenuType='4' and m.Menu_Code <>0", con);
+        //        DataTable dtDist = new DataTable();
+        //        da.Fill(dtDist);
+        //        if (dtDist.Rows.Count > 0)
+        //        {
+        //            HtmlGenericControl sub_menu = LIList(row["MenuText"].ToString(), row["Menu_Code"].ToString(), row["MenuPath"].ToString());
+        //            HtmlGenericControl ul = new HtmlGenericControl("ul");
+        //            foreach (DataRow r in dtDist.Rows)
+        //            {
+        //                ul.Controls.Add(LIList(r["MenuText"].ToString(), r["MenuParent"].ToString(), r["MenuPath"].ToString()));
+        //            }
+        //            sub_menu.Controls.Add(ul);
+        //            main.Controls.Add(sub_menu);
+        //        }
+        //        else
+        //        {
+        //            main.Controls.Add(LIList(row["MenuText"].ToString(), row["Menu_Code"].ToString(), row["MenuPath"].ToString()));
+        //        }
+        //    }
+        //    /*##########################################################Coding for Menu End ##############################################################################################*/
+        //    getUserImage();/*Function to get UserImage*/
+        //    getUsername();/*Function to get UserName*/
+        //    PopulateClinic();/*Function to Populate Clinics*/
+        //    Panel1.Controls.Add(main);/*For Menu*/
+        //    DateTime localDate = DateTime.Now;
+        //   // txtRegtDate.Text = localDate.ToString();
+        //   // System.Guid guid = System.Guid.NewGuid();
+        //   // txtClinicID.Text = guid.ToString(); 
+        //   // string MRNo = guid.ToString();
+        //   // txtMrNo.Text = MRNo;
+        //    // txtAge.Attributes.Add("onKeyUp", "CalculateAge()");
+        //}
+        ///*##########################################################Functions for Menu Part ##############################################################################################*/
+        //private HtmlGenericControl UList(string id, string cssClass)
+        //{
+        //    HtmlGenericControl ul = new HtmlGenericControl("ul");
+        //    ul.ID = id;
+        //    ul.Attributes.Add("class", cssClass);
+        //    return ul;
+        //}
+        //private HtmlGenericControl LIList(string innerHtml, string rel, string url)
+        //{
+        //    HtmlGenericControl li = new HtmlGenericControl("li");
+        //    li.Attributes.Add("rel", rel);
+        //    //  li.InnerHtml = "<a href=" + string.Format("http://{0}", url) + ">" + innerHtml + "</a>";
+        //    li.InnerHtml = "<a href=" + string.Format("{0}", url) + ">" + innerHtml + "</a>";
+        //    return li;
+        //}
+        ///*##########################################################End of Functions for Menu Part ##############################################################################################*/
+        //private void getUserImage()
+        //{
+        //    object img;
+        //    img = oConnection.GetDataTable("SELECT Employee_Image FROM HRM_EmployeeSetup WHERE sysEmployeeSno =dbo.Func_SEC_UserCode_sysEmployeeSno(" + Session["User_Code"] + ")").Rows[0]["Employee_Image"];
+        //    if (img != DBNull.Value)
+        //    {
+        //        byte[] bytes = (byte[])img;
+        //        string base64String = Convert.ToBase64String(bytes, 0, bytes.Length);
+        //        ImgUser.ImageUrl = "data:image/png;base64," + base64String;
+        //    }
         }
-        /*##########################################################Functions for Menu Part ##############################################################################################*/
-        private HtmlGenericControl UList(string id, string cssClass)
+        private DataTable GetData(int parentMenuId)
         {
-            HtmlGenericControl ul = new HtmlGenericControl("ul");
-            ul.ID = id;
-            ul.Attributes.Add("class", cssClass);
-            return ul;
-        }
-        private HtmlGenericControl LIList(string innerHtml, string rel, string url)
-        {
-            HtmlGenericControl li = new HtmlGenericControl("li");
-            li.Attributes.Add("rel", rel);
-            //  li.InnerHtml = "<a href=" + string.Format("http://{0}", url) + ">" + innerHtml + "</a>";
-            li.InnerHtml = "<a href=" + string.Format("{0}", url) + ">" + innerHtml + "</a>";
-            return li;
-        }
-        /*##########################################################End of Functions for Menu Part ##############################################################################################*/
-        private void getUserImage()
-        {
-            object img;
-            img = oConnection.GetDataTable("SELECT Employee_Image FROM HRM_EmployeeSetup WHERE sysEmployeeSno =dbo.Func_SEC_UserCode_sysEmployeeSno(" + Session["User_Code"] + ")").Rows[0]["Employee_Image"];
-            if (img != DBNull.Value)
+            
+           // string query = "SELECT [MenuId], [Title], [Description], [Url] FROM [Menus] WHERE ParentMenuId = @ParentMenuId";
+            string query = "SELECT Menu_Code, MenuText, MenuPath,MenuParent from SEC_Menu where MenuType = 6 AND MenuParent=@ParentMenuId";
+            using (SqlConnection con = new SqlConnection(constr))
             {
-                byte[] bytes = (byte[])img;
-                string base64String = Convert.ToBase64String(bytes, 0, bytes.Length);
-                ImgUser.ImageUrl = "data:image/png;base64," + base64String;
+                DataTable dt = new DataTable();
+                using (SqlCommand cmd = new SqlCommand(query))
+                {
+                    using (SqlDataAdapter sda = new SqlDataAdapter())
+                    {
+                        cmd.Parameters.AddWithValue("@ParentMenuId", parentMenuId);
+                        cmd.CommandType = CommandType.Text;
+                        cmd.Connection = con;
+                        sda.SelectCommand = cmd;
+                        sda.Fill(dt);
+                    }
+                }
+                return dt;
             }
         }
 
+        private void PopulateMenu(DataTable dt, int parentMenuId, MenuItem parentMenuItem)
+        {
+            string currentPage = Path.GetFileName(Request.Url.AbsolutePath);
+            foreach (DataRow row in dt.Rows)
+            {
+                MenuItem menuItem = new MenuItem
+                {
+                    Value = row["Menu_Code"].ToString(),
+                    Text = row["MenuText"].ToString(),
+                    NavigateUrl = row["MenuPath"].ToString(),
+                    Selected = row["MenuPath"].ToString().EndsWith(currentPage, StringComparison.CurrentCultureIgnoreCase)
+                };
+                if (parentMenuId == 0)
+                {
+                    Menu1.Items.Add(menuItem);
+                    DataTable dtChild = this.GetData(int.Parse(menuItem.Value));
+                    PopulateMenu(dtChild, int.Parse(menuItem.Value), menuItem);
+                }
+                else
+                {
+                    parentMenuItem.ChildItems.Add(menuItem);
+                }
+            }
+        }
         private DataTable getUsername()
         {
             string usercode = Session["User_Code"].ToString();
@@ -111,7 +163,7 @@ namespace ZMTClinics
                         using (DataTable dt = new DataTable())
                         {
                             sda.Fill(dt);
-                            lblUserName.Text = dt.Rows[0]["User_Name"].ToString();
+                            //lblUserName.Text = dt.Rows[0]["User_Name"].ToString();
                             // lblUser.Text = dt.Rows[0]["User_Name"].ToString();
                             return dt;
                         }

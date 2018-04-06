@@ -239,6 +239,7 @@
        }
       
     </style>
+
 </head>
 <body>
      <form id="form1" runat="server">
@@ -249,7 +250,7 @@
                 <table class="table" style="margin-top:2%;margin-left:1%;margin-right:1%;" >
                 <tr>
                     <td style="color:black;font-weight:bold;"><asp:label runat="server" ID="lblClinic" style="font-weight:bolder;font-size:20px">ZMT Clinics</asp:label><br /><asp:label ID="lblClinicAddress" runat="server"></asp:label><br /><asp:Label runat="server" style="font-weight:bolder;font-size:10px">Pharmacy #:</asp:Label><asp:Label runat="server" ID="lblPharmacyNumber"></asp:Label></td>
-                    <td style="text-align:right;color:black;font-weight:bold;" colspan="3"><asp:label runat="server" style="font-weight:bolder; font-size:16px">Token#</asp:label><asp:label runat="server" ID="lbltokenNo" style="font-weight:bolder; font-size:16px"></asp:label><br /><asp:Label runat="server">Dated:</asp:Label><asp:label runat="server" ID="lblDate"></asp:label></td>
+                    <td style="text-align:right;color:black;font-weight:bold;" colspan="3"><asp:label runat="server" style="font-weight:bolder; font-size:16px">Token#</asp:label><asp:label runat="server" ID="lbltokenNo" style="font-weight:bolder; font-size:16px"></asp:label><br /><asp:Label runat="server"></asp:Label><asp:label runat="server" ID="lblDate"></asp:label></td>
                 </tr>
                 </table>
                 <table style="margin-left: 1%; margin-right: 1%; width: 100%">
@@ -321,6 +322,10 @@
                     <HeaderStyle BackColor="Black" CssClass="align-left" />
                     <ItemStyle HorizontalAlign="Left" CssClass="align-left" Font-Bold="false" />
                     </asp:BoundField>
+                    <asp:BoundField DataField="Days" HeaderStyle-BackColor="Black" HeaderStyle-CssClass="align-left" HeaderStyle-Font-Bold="true" HeaderText="Days" HeaderStyle-ForeColor="White">
+                    <HeaderStyle BackColor="Black" CssClass="align-left" />
+                    <ItemStyle HorizontalAlign="Left" CssClass="align-left" Font-Bold="false" />
+                    </asp:BoundField>
                     <asp:BoundField  DataField="Description" HeaderStyle-BackColor="black" HeaderStyle-CssClass="align-right" HeaderStyle-Font-Bold="true" HeaderText="Dosage" HeaderStyle-ForeColor="White">
                     <ControlStyle BackColor="white" />
                     <HeaderStyle BackColor="Black" CssClass="align-right" />
@@ -372,7 +377,7 @@
             <asp:CheckBox ID="CheckFooter" runat="server"  /><asp:Label runat="server" ID="lblFooterHide" >Click To Enable Disable Footer Message</asp:Label>
         </div> 
         <div class="col-md-4 row ">
-           <a href="Pharmasy.aspx"<asp:Button ID="btnBack" runat="server" Text="Back To Main" Class="btn btn-blue" />Back To Patient</a>
+           <a href="Pharmasy.aspx"<asp:Button ID="btnBack" runat="server" Text="Back To Main" Class="btn btn-blue" />Back To Pharmacy</a>
         </div>   
         </div>
     </form>

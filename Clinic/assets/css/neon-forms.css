@@ -2097,12 +2097,15 @@ th {
 .table > thead > tr > td,
 .table > tbody > tr > td,
 .table > tfoot > tr > td {
-  padding: 8px;
+  /*padding: 8px;*/
+  padding:2px;
   line-height: 1.42857143;
   vertical-align: top;
   border-top: 1px solid #ebebeb;
   color:black;
-  font-weight:900;
+  font-size:12px;
+  /*font-weight:900;*/
+  font-weight:bold;
 }
 .table > thead > tr > th .progress,
 .table > tbody > tr > th .progress,

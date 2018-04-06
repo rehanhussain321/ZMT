@@ -125,7 +125,7 @@ namespace Clinic.Portal
             else if (e.Row.RowType == DataControlRowType.Footer)
             {
                 this.ViewState["viewCount_daysSum"] = viewCount_Days;
-                e.Row.Cells[2].Text = this.ViewState["viewCount_daysSum"].ToString() + " Day(s)";
+                //e.Row.Cells[2].Text = this.ViewState["viewCount_daysSum"].ToString() + " Day(s)";
                // e.Row.Cells[3].Text = "Total Qty.";
             }
         }
