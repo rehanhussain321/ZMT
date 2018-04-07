@@ -12,7 +12,8 @@ using System.Xml.Linq;
 using System.Data.SqlClient;
 //using KT_Classes;
 using System.Drawing;
-using ZMTClinics.Class; 
+using ZMTClinics.Class;
+using System.IO;
 
 namespace ZMTClinics
 {
@@ -21,7 +22,7 @@ namespace ZMTClinics
         Connection oConnection = new Connection();
 
         Connection oConn = new Connection();
-        
+        DateTime localDate = DateTime.Now;
         string constr = ConfigurationManager.ConnectionStrings["KTConnectionString"].ConnectionString;
 
         SqlCommandBuilder c_Builder = default(SqlCommandBuilder);
@@ -36,14 +37,27 @@ namespace ZMTClinics
 
         protected void Page_Load(object sender, EventArgs e)
         {
+            
+            lblPatientRegistrationDate.Text = localDate.ToString();
 
             this.MaintainScrollPositionOnPostBack = true;
-            this.CreateMenu();
+           // this.CreateMenu();
 
-            DateTime localDate = DateTime.Now;
-            lblPatientRegistrationDate.Text = localDate.ToString();
+         
             if (!IsPostBack)
             {
+
+                DataTable dt = this.GetData(0);
+                PopulateMenu(dt, 0, null);
+                PopulateDropDown();
+                
+                btn_Submit.Text = SAVE_BUTTON;
+                ddSuffix.Focus();
+            }
+            ddClinic.SelectedValue = Session["sysClinicSNo"].ToString();
+        }
+        private void PopulateDropDown()
+        {
                 this.PopulatePayingStatus();
                 this.PopulateServices();
                 this.PopulateGuardian();
@@ -58,80 +72,120 @@ namespace ZMTClinics
                 this.GenerateToken();
                 this.PopulateRegisterRelation();
                 this.DefaultSelectedValuesDropDown();
-                
-                btn_Submit.Text = SAVE_BUTTON;
-                ddSuffix.Focus();
-            }
-            ddClinic.SelectedValue = Session["sysClinicSNo"].ToString();
+
         }
-
-
-        #region "CREATE-MENU"
-
-
-        private void CreateMenu()
+        private DataTable GetData(int parentMenuId)
         {
 
-            // ******************* MENU ************************//
-            string userCode;
-            SqlConnection conn = new SqlConnection(constr);
-            userCode = (Session["User_Code"].ToString());
-            SqlDataAdapter da = new SqlDataAdapter("SELECT Menu_Code, MenuText, MenuPath,MenuParent from SEC_Menu where MenuType = 6 AND MenuParent=0", conn);
-            DataTable dttc = new DataTable();
-            da.Fill(dttc);
-            HtmlGenericControl main = UList("main-menu", "main-menu");
-            foreach (DataRow row in dttc.Rows)
+            // string query = "SELECT [MenuId], [Title], [Description], [Url] FROM [Menus] WHERE ParentMenuId = @ParentMenuId";
+            string query = "SELECT Menu_Code, MenuText, MenuPath,MenuParent from SEC_Menu where MenuType = 6 AND MenuParent=@ParentMenuId";
+            using (SqlConnection con = new SqlConnection(constr))
             {
-                da = new SqlDataAdapter("select Menu_Code,MenuText,MenuPath,MenuParent from SEC_Menu where MenuParent=" + row["Menu_Code"].ToString() + " order by ISNULL(sortorder,0)", conn);
-                DataTable dtDist = new DataTable();
-                da.Fill(dtDist);
-                if (dtDist.Rows.Count > 0)
+                DataTable dt = new DataTable();
+                using (SqlCommand cmd = new SqlCommand(query))
                 {
-                    HtmlGenericControl sub_menu = LIList(row["MenuText"].ToString(), row["Menu_Code"].ToString(), row["MenuPath"].ToString());
-                    HtmlGenericControl ul = new HtmlGenericControl("ul");
-                    foreach (DataRow r in dtDist.Rows)
+                    using (SqlDataAdapter sda = new SqlDataAdapter())
                     {
-                        ul.Controls.Add(LIList(r["MenuText"].ToString(), r["MenuParent"].ToString(), r["MenuPath"].ToString()));
+                        cmd.Parameters.AddWithValue("@ParentMenuId", parentMenuId);
+                        cmd.CommandType = CommandType.Text;
+                        cmd.Connection = con;
+                        sda.SelectCommand = cmd;
+                        sda.Fill(dt);
                     }
-                    sub_menu.Controls.Add(ul);
-                    main.Controls.Add(sub_menu);
+                }
+                return dt;
+            }
+        }
+        private void PopulateMenu(DataTable dt, int parentMenuId, MenuItem parentMenuItem)
+        {
+            string currentPage = Path.GetFileName(Request.Url.AbsolutePath);
+            foreach (DataRow row in dt.Rows)
+            {
+                MenuItem menuItem = new MenuItem
+                {
+                    Value = row["Menu_Code"].ToString(),
+                    Text = row["MenuText"].ToString(),
+                    NavigateUrl = row["MenuPath"].ToString(),
+                    Selected = row["MenuPath"].ToString().EndsWith(currentPage, StringComparison.CurrentCultureIgnoreCase)
+                };
+                if (parentMenuId == 0)
+                {
+                    Menu1.Items.Add(menuItem);
+                    DataTable dtChild = this.GetData(int.Parse(menuItem.Value));
+                    PopulateMenu(dtChild, int.Parse(menuItem.Value), menuItem);
                 }
                 else
                 {
-                    main.Controls.Add(LIList(row["MenuText"].ToString(), row["Menu_Code"].ToString(), row["MenuPath"].ToString()));
+                    parentMenuItem.ChildItems.Add(menuItem);
                 }
             }
-            Panel1.Controls.Add(main);
-            // ******************* END MENU ************************//
+        }
+        //#region "CREATE-MENU"
 
-        }
-        private HtmlGenericControl UList(string id, string cssClass)
-        {
-            HtmlGenericControl ul = new HtmlGenericControl("ul");
-            ul.ID = id;
-            ul.Attributes.Add("class", cssClass);
-            return ul;
-        }
-        private HtmlGenericControl LIList(string innerHtml, string rel, string url)
-        {
-            HtmlGenericControl li = new HtmlGenericControl("li");
-            li.Attributes.Add("rel", rel);
-            //  li.InnerHtml = "<a href=" + string.Format("http://{0}", url) + ">" + innerHtml + "</a>";
-            li.InnerHtml = "<a href=" + string.Format("{0}", url) + ">" + innerHtml + "</a>";
-            return li;
-        }
 
-        #endregion
+        ////private void CreateMenu()
+        ////{
+
+        ////    // ******************* MENU ************************//
+        ////    string userCode;
+        ////    SqlConnection conn = new SqlConnection(constr);
+        ////    userCode = (Session["User_Code"].ToString());
+        ////    SqlDataAdapter da = new SqlDataAdapter("SELECT Menu_Code, MenuText, MenuPath,MenuParent from SEC_Menu where MenuType = 6 AND MenuParent=0", conn);
+        ////    DataTable dttc = new DataTable();
+        ////    da.Fill(dttc);
+        ////    HtmlGenericControl main = UList("main-menu", "main-menu");
+        ////    foreach (DataRow row in dttc.Rows)
+        ////    {
+        ////        da = new SqlDataAdapter("select Menu_Code,MenuText,MenuPath,MenuParent from SEC_Menu where MenuParent=" + row["Menu_Code"].ToString() + " order by ISNULL(sortorder,0)", conn);
+        ////        DataTable dtDist = new DataTable();
+        ////        da.Fill(dtDist);
+        ////        if (dtDist.Rows.Count > 0)
+        ////        {
+        ////            HtmlGenericControl sub_menu = LIList(row["MenuText"].ToString(), row["Menu_Code"].ToString(), row["MenuPath"].ToString());
+        ////            HtmlGenericControl ul = new HtmlGenericControl("ul");
+        ////            foreach (DataRow r in dtDist.Rows)
+        ////            {
+        ////                ul.Controls.Add(LIList(r["MenuText"].ToString(), r["MenuParent"].ToString(), r["MenuPath"].ToString()));
+        ////            }
+        ////            sub_menu.Controls.Add(ul);
+        ////            main.Controls.Add(sub_menu);
+        ////        }
+        ////        else
+        ////        {
+        ////            main.Controls.Add(LIList(row["MenuText"].ToString(), row["Menu_Code"].ToString(), row["MenuPath"].ToString()));
+        ////        }
+        ////    }
+        ////    Panel1.Controls.Add(main);
+        ////    // ******************* END MENU ************************//
+
+        ////}
+        ////private HtmlGenericControl UList(string id, string cssClass)
+        ////{
+        ////    HtmlGenericControl ul = new HtmlGenericControl("ul");
+        ////    ul.ID = id;
+        ////    ul.Attributes.Add("class", cssClass);
+        ////    return ul;
+        ////}
+        ////private HtmlGenericControl LIList(string innerHtml, string rel, string url)
+        ////{
+        ////    HtmlGenericControl li = new HtmlGenericControl("li");
+        ////    li.Attributes.Add("rel", rel);
+        ////    //  li.InnerHtml = "<a href=" + string.Format("http://{0}", url) + ">" + innerHtml + "</a>";
+        ////    li.InnerHtml = "<a href=" + string.Format("{0}", url) + ">" + innerHtml + "</a>";
+        ////    return li;
+        ////}
+
+        ////#endregion
 
         #region "LOAD-HEADER-DROPDOWNS"
         private void PopulateReligion()
         {
 
             oConn = new Connection();
-            string _sql= "SELECT sysReligionSno,Religion_Name from HRM_ReligionSetup Order By Religion_Name";
+            string _sql = "SELECT Religion_Code,Religion_Name from HRM_ReligionSetup Order By Religion_Name";
             ddReligion.DataSource = oConn.GetDataTable(_sql);
             ddReligion.DataTextField = "Religion_Name";
-            ddReligion.DataValueField = "sysReligionSno";
+            ddReligion.DataValueField = "Religion_Code";
             ddReligion.DataBind();
             oConn.CloseConnection(); 
         }
@@ -281,196 +335,226 @@ namespace ZMTClinics
         {
 
             SqlConnection con = new SqlConnection(constr);
-            
-        try
-        {
-            if (btn_Submit.Text == SAVE_BUTTON)
+            if (gvServiceDetail.Rows.Count != 0)
             {
-           
-                string User_Code;
-                User_Code = (Session["User_Code"].ToString());
-                string genderPatient = "";
-                if (rbnMale.Checked == true)
+                try
                 {
-                    genderPatient = "Male";
+                    if (btn_Submit.Text == SAVE_BUTTON)
+                    {
+
+                        string User_Code;
+                        User_Code = (Session["User_Code"].ToString());
+                        string genderPatient = "";
+                        if (rbnMale.Checked == true)
+                        {
+                            genderPatient = "Male";
+                        }
+                        if (rbnFemale.Checked)
+                        {
+                            genderPatient = "Female";
+                        }
+                        GenerateMrNo(ddClinic.SelectedValue);
+                        string iSql;
+                        iSql = "INSERT INTO MED_PatientRegistration( Suffix,";
+                        iSql += "  Registration_No,Registration_Date, First_Name,Middle_Name, Last_Name,";
+                        iSql += "  Father_Name,CNIC_No,Religion_Code,Gender,Age,";
+                        iSql += "  Maritial_Status,Mobile_1,Mobile_2,Registered_By,Registered_Relation,";
+                        iSql += "  Registered_ContactNo,Present_Address,Present_Area,Present_City,Present_Country,";
+                        iSql += "  Present_Province,Permanent_Address,Permanent_City,Permanent_Area,Permanent_Province,";
+                        iSql += "  Permanent_Country,DOB,sysClinicSno,User_Code, ";
+
+                        iSql += "  Phone_Number,Patient_Of,Zakat_Eligble,Age_Months ) ";
+
+                        iSql += " VALUES ('" + ddSuffix.SelectedValue + "', ";
+                        iSql += " '" + lblPatientMrNo.Text + "','" + lblPatientRegistrationDate.Text + "','" + txtFirstName.Text + "','" + txtMiddleName.Text + "','" + txtLastName.Text + "', ";
+                        iSql += " '" + txtFatherName.Text + "','" + txtCNICNO.Text + "','" + ddReligion.SelectedValue + "','" + genderPatient + "','" + txtAge.Text + "',";
+                        iSql += " '" + ddMaritialStatus.SelectedValue + "','" + txtMobile1.Text + "','" + txtMobile2.Text + "','" + txtRegisterBy.Text + "','" + ddRegisterRelation.SelectedValue + "',";
+                        iSql += " '" + txtRegisterByContactNo.Text + "' , '" + txtAddress.Text + "' ,'" + ddlArea.SelectedValue + "','" + ddlCity.SelectedValue + "','" + ddlCountry.SelectedValue + "',";
+                        iSql += " '" + ddlProvince.SelectedValue + "','" + txtPermanentBlock.Text + "','" + ddlPermanentCity.SelectedValue.ToString() + "','" + ddPermanentArea.SelectedValue + "','" + ddlPermanentProvince.SelectedValue.ToString() + "',";
+                        iSql += " '" + ddlPermanentCountry.SelectedValue.ToString() + "','" + txtDOB.Text + "','" + ddClinic.SelectedValue.ToString() + "','" + User_Code + "',";
+                        iSql += " '" + txtContactNo.Text + "','" + ddGurdian.SelectedValue.ToString() + "','" + ddPatientPayingStatus.SelectedValue + "','" + txtAgeMonth.Text + "'); ";
+
+
+
+
+                        iSql += " INSERT INTO MED_TicketMaster (MR_No,sysClinicSno,Ticket_Date,Amount_Return,Ticket_Number,User_Code) ";
+                        iSql += " VALUES ('" + lblPatientMrNo.Text + "', '" + ddClinic.SelectedValue.ToString() + "', '" + DateTime.Now + "','" + "0" + "','" + lblPatientToken.Text + "','" + User_Code + "'); ";
+
+                        iSql += " SELECT IDENT_CURRENT('MED_TicketMaster')";
+
+                        Connection conn = new Connection();
+                        sysTicketMasterNo = conn.ExecuteScalarQuery(iSql);
+
+
+                    }
+
+
+                    else
+                    {
+                        string User_Code;
+                        User_Code = (Session["User_Code"].ToString());
+                        string sqlQuery;
+
+                        string MRNO;
+                        MRNO = lblPatientMrNo.Text;
+                        con.Open();
+                        SqlCommand cmd = new SqlCommand("UPDATE MED_PatientRegistration SET First_Name=@First_Name,Middle_Name=@Middle_Name,Last_Name=@Last_Name,Father_Name=@Father_Name,CNIC_No=@CNIC_No,Permanent_Address=@Permanent_Address,Permanent_Area=@Permanent_Area,Permanent_City=@Permanent_City,Permanent_Province=@Permanent_Province,Permanent_Country=@Permanent_Country,Present_Address=@Present_Address,Present_Area=@Present_Area,Present_City=@Present_City,Present_Country=@Present_Country,Present_Province=@Present_Province,Age=@Age,Maritial_Status=@Maritial_Status,Mobile_1=@Mobile_1,Mobile_2=@Mobile_2,Phone_Number=@Phone_Number,Registered_By=@Registered_By,Registered_Relation=@Registered_Relation,Registered_ContactNo=@Registered_ContactNo,sysClinicSno=@Clinic,User_Code=@User_Code,Zakat_Eligble=@Zakat_Eligble,Age_Months=@Age_Months where sys_PatientSno= @sys_PatientSno", con);
+                        cmd.Parameters.AddWithValue("@First_Name", txtFirstName.Text);
+                        cmd.Parameters.AddWithValue("@Middle_Name", txtMiddleName.Text);
+                        cmd.Parameters.AddWithValue("@Last_Name", txtLastName.Text);
+                        cmd.Parameters.AddWithValue("@Father_Name", txtFatherName.Text);
+                        cmd.Parameters.AddWithValue("@CNIC_No", txtCNICNO.Text);
+                        cmd.Parameters.AddWithValue("@Permanent_Address", txtPermanentBlock.Text);
+                        cmd.Parameters.AddWithValue("@Permanent_Area", ddPermanentArea.SelectedValue.ToString());
+                        cmd.Parameters.AddWithValue("@Permanent_City", ddlPermanentCity.SelectedValue);
+                        cmd.Parameters.AddWithValue("@Permanent_Province", ddlPermanentProvince.SelectedValue);
+                        cmd.Parameters.AddWithValue("@Permanent_Country", ddlPermanentCountry.SelectedValue);
+                        cmd.Parameters.AddWithValue("@Present_Address", txtAddress.Text);
+                        cmd.Parameters.AddWithValue("@Present_Area", ddlArea.SelectedValue);
+                        cmd.Parameters.AddWithValue("@Present_City", ddlCity.SelectedValue);
+                        cmd.Parameters.AddWithValue("@Present_Country", ddlCountry.SelectedValue);
+                        cmd.Parameters.AddWithValue("@Present_Province", ddlProvince.SelectedValue);
+                        cmd.Parameters.AddWithValue("@Age", txtAge.Text);
+                        cmd.Parameters.AddWithValue("@Maritial_Status", ddMaritialStatus.SelectedValue);
+                        cmd.Parameters.AddWithValue("@Mobile_1", txtMobile1.Text);
+                        cmd.Parameters.AddWithValue("@Mobile_2", txtMobile2.Text);
+                        cmd.Parameters.AddWithValue("@Phone_Number", txtContactNo.Text);
+                        cmd.Parameters.AddWithValue("@Registered_By", txtRegisterBy.Text);
+                        cmd.Parameters.AddWithValue("@Registered_Relation", ddRegisterRelation.SelectedValue);
+                        cmd.Parameters.AddWithValue("@Registered_ContactNo", txtRegisterByContactNo.Text);
+                        cmd.Parameters.AddWithValue("@Clinic", ddClinic.SelectedValue);
+                        cmd.Parameters.AddWithValue("@User_Code", User_Code);
+                        cmd.Parameters.AddWithValue("@Mrno", lblPatientMrNo.Text);
+                        cmd.Parameters.AddWithValue("@sys_PatientSno", lblSrNo.Text);
+                        cmd.Parameters.AddWithValue("@Zakat_Eligble", ddPatientPayingStatus.SelectedValue);
+                        cmd.Parameters.AddWithValue("@Age_Months", txtAgeMonth.Text);
+                        cmd.ExecuteNonQuery();
+                        ShowMessage("Patient Updated");
+                        Session["SESSION_MRNO"] = lblPatientMrNo.Text;
+                        //1542
+                        DateTime CurrentDate = DateTime.Now;
+                        DateTime CurrentDateOnly = CurrentDate.Date;
+                        DateTime RegistrationDate = Convert.ToDateTime(lblTicketDate.Text);
+                        DateTime RegistrationDateOnly = RegistrationDate.Date;
+                        if (RegistrationDateOnly == CurrentDateOnly) // Patient Update
+                        {
+                            sysTicketMasterNo = lblTicketNo.Text;
+                            Session["SESSION_TICKETNO"] = sysTicketMasterNo;
+                        }
+                        else
+                        {  // New Patient
+                            this.GenerateToken();
+                            string uSql;
+                            uSql = " INSERT INTO MED_TicketMaster (MR_No,sysClinicSno,Ticket_Date,,Amount_Return,Ticket_Number,User_Code) ";
+                            uSql += " VALUES ('" + lblPatientMrNo.Text + "', '" + ddClinic.SelectedValue.ToString() + "', '" + DateTime.Now + "','" + "0" + "','" + lblPatientToken.Text + "','" + User_Code + "'); ";
+
+                            uSql += " SELECT IDENT_CURRENT('MED_TicketMaster')";
+
+                            Connection conn = new Connection();
+                            sysTicketMasterNo = conn.ExecuteScalarQuery(uSql);
+
+                        }
+
+
+                        // string ticketNumber;
+                        this.EnableDisable(true); // Enabling after Updating Record 
+                        //  ShowPrintMessage();
+
+                        //        //**************************** Popluate Gridview*************************************************//
+
+
+                    }
+
+
+                    //==================== ADDING SERVICES DETAIL TO SERVICE DETAIL TABLE ======================
+
+                    string _Select;
+                    if (btn_Submit.Text == SAVE_BUTTON)
+                    {
+                        _Select = " SELECT sysTicketMasterNo,Service_Code,Service_DetailNo,Charges from MED_TicketDetail Where sysTicketDetailNo is Null ";
+                    }
+                    else
+                    {
+                        _Select = " SELECT sysTicketDetailNo,sysTicketMasterNo,Service_Code,Service_DetailNo,Charges from MED_TicketDetail Where sysTicketMasterNo = '" + sysTicketMasterNo.ToString() + "' ";
+                        this.GetPatient(lblSrNo.Text);
+
+
+                    }
+
+
+                    d_Adapter = new SqlDataAdapter(_Select.ToString(), con);
+                    c_Builder = new SqlCommandBuilder(d_Adapter);
+                    T_Detail = new DataTable();
+                    d_Adapter.FillSchema(T_Detail, SchemaType.Source);
+                    d_Adapter.Fill(T_Detail);
+
+
+                    int i = 0;
+
+                    foreach (GridViewRow l_dgRow in gvServiceDetail.Rows)
+                    {
+                        string _sysTicketDetailNo = gvServiceDetail.Rows[i].Cells[0].Text.Replace("&nbsp;", "0").ToString();
+                        string _ServiceCode = gvServiceDetail.Rows[i].Cells[1].Text.Replace("&nbsp;", "0").ToString();
+                        string _ServiceDetailCode = gvServiceDetail.Rows[i].Cells[2].Text.Replace("&nbsp;", "0").ToString();
+                        string _Charges = gvServiceDetail.Rows[i].Cells[5].Text.Replace("&nbsp;", "0").ToString();
+                        if (btn_Submit.Text == SAVE_BUTTON)
+                        {
+                            T_Detail.LoadDataRow(new object[] { sysTicketMasterNo.ToString(), _ServiceCode, _ServiceDetailCode, _Charges }, LoadOption.Upsert);
+                        }
+                        else
+                        {
+                            T_Detail.LoadDataRow(new object[] { _sysTicketDetailNo, sysTicketMasterNo.ToString(), _ServiceCode, _ServiceDetailCode, _Charges }, LoadOption.Upsert);
+
+                        }
+                        i = i + 1;
+                    }
+
+
+                    if (btn_Submit.Text == SAVE_BUTTON)
+                    {
+                    }
+                    else
+                    {
+                        btn_Submit.Text = SAVE_BUTTON;
+                    }
+                    //  con.Open();
+                    d_Adapter.Update(this.T_Detail);
+                    con.Close();
+                    this.T_Detail.AcceptChanges();
+                    //==========================================================================================
+                    //iSql = " INSERT INTO MED_TicketDetail (sysTicketMasterNo,Service_Code,Service_DetailNo,Charges) ";
+                    //iSql += " VALUES ('" + sysTicketMasterNo + "', '" + ddlServices.SelectedValue.ToString() + "', '" + ddServicesDetail.SelectedValue.ToString() + "', '" + lblServiceCharges.Text + "') ";
+
+                    // Below lines                 
+                    //SqlCommand cmd = new SqlCommand(iSql, con);
+                    //cmd.CommandType = CommandType.Text;
+                    //con.Open();
+                    //cmd.ExecuteNonQuery();
+                    Literal1.Text = "Data Inserted Succesfully";
+                    con.Close();
+                    string MR_NO;
+                    MR_NO = lblPatientMrNo.Text;
+
+                    Session["SESSION_MRNO"] = lblPatientMrNo.Text;
+                    Session["SESSION_TICKETNO"] = sysTicketMasterNo;
+                    ShowPrintMessage();
+                    this.clear();
+
                 }
-                if (rbnFemale.Checked)
+
+                catch (SqlException ex)
                 {
-                    genderPatient = "Female";
+                    ShowMessage(ex.Message);
                 }
-                GenerateMrNo(ddClinic.SelectedValue);
-                string iSql;
-                iSql = "INSERT INTO MED_PatientRegistration( Suffix,";
-                iSql += "  Registration_No,Registration_Date, First_Name,Middle_Name, Last_Name,";
-                iSql += "  Father_Name,CNIC_No,Religion_Code,Gender,Age,";
-                iSql += "  Maritial_Status,Mobile_1,Mobile_2,Registered_By,Registered_Relation,";
-                iSql += "  Registered_ContactNo,Present_Address,Present_Area,Present_City,Present_Country,";
-                iSql += "  Present_Province,Permanent_Address,Permanent_City,Permanent_Area,Permanent_Province,";
-                iSql += "  Permanent_Country,DOB,sysClinicSno,User_Code, ";
-
-                iSql += "  Phone_Number,Patient_Of,Zakat_Eligble,Age_Months ) ";
-
-                iSql += " VALUES ('" + ddSuffix.SelectedValue + "', ";
-                iSql += " '" + lblPatientMrNo.Text + "','" + lblPatientRegistrationDate.Text + "','" + txtFirstName.Text + "','" + txtMiddleName.Text + "','" + txtLastName.Text + "', ";
-                iSql += " '" + txtFatherName.Text + "','" + txtCNICNO.Text + "','" + ddReligion.SelectedValue + "','" + genderPatient + "','" + txtAge.Text + "',";
-                iSql += " '" + ddMaritialStatus.SelectedValue + "','" + txtMobile1.Text + "','" + txtMobile2.Text + "','" + txtRegisterBy.Text + "','" + ddRegisterRelation.SelectedValue + "',";
-                iSql += " '" + txtRegisterByContactNo.Text + "' , '" + txtAddress.Text + "' ,'" + ddlArea.SelectedValue + "','" + ddlCity.SelectedValue + "','" + ddlCountry.SelectedValue + "',";
-                iSql += " '" + ddlProvince.SelectedValue + "','" + txtPermanentBlock.Text + "','" + ddlPermanentCity.SelectedValue.ToString() + "','" + ddPermanentArea.SelectedValue + "','" + ddlPermanentProvince.SelectedValue.ToString() + "',";
-                iSql += " '" + ddlPermanentCountry.SelectedValue.ToString() + "','" + txtDOB.Text + "','" + ddClinic.SelectedValue.ToString() + "','" + User_Code + "',";
-                iSql += " '" + txtContactNo.Text + "','" + ddGurdian.SelectedValue.ToString() + "','" + ddPatientPayingStatus.SelectedValue + "','" + txtAgeMonth.Text + "'); ";
-               
-
-
-
-                iSql += " INSERT INTO MED_TicketMaster (MR_No,sysClinicSno,Ticket_Date,Ticket_Number,User_Code) ";
-                iSql += " VALUES ('" + lblPatientMrNo.Text + "', '" + ddClinic.SelectedValue.ToString() + "', '" + DateTime.Now + "','" + lblPatientToken.Text + "','" + User_Code + "'); ";
-
-                iSql += " SELECT IDENT_CURRENT('MED_TicketMaster')";
-
-                Connection conn = new Connection();
-                sysTicketMasterNo = conn.ExecuteScalarQuery(iSql);
-               
-              
+                finally
+                {
+                    con.Close();
                 }
-                
-          
+            }
             else
             {
-                string User_Code;
-                User_Code = (Session["User_Code"].ToString());
-                string sqlQuery;
-               
-                    string MRNO;
-                    MRNO = lblPatientMrNo.Text;
-                    con.Open();
-                    SqlCommand cmd = new SqlCommand("UPDATE MED_PatientRegistration SET First_Name=@First_Name,Middle_Name=@Middle_Name,Last_Name=@Last_Name,Father_Name=@Father_Name,CNIC_No=@CNIC_No,Permanent_Address=@Permanent_Address,Permanent_Area=@Permanent_Area,Permanent_City=@Permanent_City,Permanent_Province=@Permanent_Province,Permanent_Country=@Permanent_Country,Present_Address=@Present_Address,Present_Area=@Present_Area,Present_City=@Present_City,Present_Country=@Present_Country,Present_Province=@Present_Province,Age=@Age,Maritial_Status=@Maritial_Status,Mobile_1=@Mobile_1,Mobile_2=@Mobile_2,Phone_Number=@Phone_Number,Registered_By=@Registered_By,Registered_Relation=@Registered_Relation,Registered_ContactNo=@Registered_ContactNo,sysClinicSno=@Clinic,User_Code=@User_Code,Zakat_Eligble=@Zakat_Eligble,Age_Months=@Age_Months where sys_PatientSno= @sys_PatientSno", con);
-                    cmd.Parameters.AddWithValue("@First_Name", txtFirstName.Text);
-                    cmd.Parameters.AddWithValue("@Middle_Name", txtMiddleName.Text);
-                    cmd.Parameters.AddWithValue("@Last_Name", txtLastName.Text);
-                    cmd.Parameters.AddWithValue("@Father_Name", txtFatherName.Text);
-                    cmd.Parameters.AddWithValue("@CNIC_No", txtCNICNO.Text);
-                    cmd.Parameters.AddWithValue("@Permanent_Address", txtPermanentBlock.Text);
-                    cmd.Parameters.AddWithValue("@Permanent_Area", ddPermanentArea.SelectedValue.ToString());
-                    cmd.Parameters.AddWithValue("@Permanent_City", ddlPermanentCity.SelectedValue);
-                    cmd.Parameters.AddWithValue("@Permanent_Province", ddlPermanentProvince.SelectedValue);
-                    cmd.Parameters.AddWithValue("@Permanent_Country", ddlPermanentCountry.SelectedValue);
-                    cmd.Parameters.AddWithValue("@Present_Address", txtAddress.Text);
-                    cmd.Parameters.AddWithValue("@Present_Area", ddlArea.SelectedValue);
-                    cmd.Parameters.AddWithValue("@Present_City", ddlCity.SelectedValue);
-                    cmd.Parameters.AddWithValue("@Present_Country", ddlCountry.SelectedValue);
-                    cmd.Parameters.AddWithValue("@Present_Province", ddlProvince.SelectedValue);
-                    cmd.Parameters.AddWithValue("@Age", txtAge.Text);
-                    cmd.Parameters.AddWithValue("@Maritial_Status", ddMaritialStatus.SelectedValue);
-                    cmd.Parameters.AddWithValue("@Mobile_1", txtMobile1.Text);
-                    cmd.Parameters.AddWithValue("@Mobile_2", txtMobile2.Text);
-                    cmd.Parameters.AddWithValue("@Phone_Number", txtContactNo.Text);
-                    cmd.Parameters.AddWithValue("@Registered_By", txtRegisterBy.Text);
-                    cmd.Parameters.AddWithValue("@Registered_Relation", ddRegisterRelation.SelectedValue);
-                    cmd.Parameters.AddWithValue("@Registered_ContactNo", txtRegisterByContactNo.Text);
-                    cmd.Parameters.AddWithValue("@Clinic", ddClinic.SelectedValue);
-                    cmd.Parameters.AddWithValue("@User_Code", User_Code);
-                    cmd.Parameters.AddWithValue("@Mrno", lblPatientMrNo.Text);
-                    cmd.Parameters.AddWithValue("@sys_PatientSno", lblSrNo.Text);
-                    cmd.Parameters.AddWithValue("@Zakat_Eligble", ddPatientPayingStatus.SelectedValue);
-                    cmd.Parameters.AddWithValue("@Age_Months", txtAgeMonth.Text);
-                    cmd.ExecuteNonQuery();
-                    ShowMessage("Patient Updated");
-                   Session["SESSION_MRNO"] = lblPatientMrNo.Text;
-                   // string ticketNumber;
-                   sysTicketMasterNo = lblTicketNo.Text;
-                   Session["SESSION_TICKETNO"] = sysTicketMasterNo;
-                    this.EnableDisable(true); // Enabling after Updating Record 
-                  //  ShowPrintMessage();
-
-                    //        //**************************** Popluate Gridview*************************************************//
-
-                    
+                lblErrMsg.Text = "Select Service ";
             }
-
-
-            //==================== ADDING SERVICES DETAIL TO SERVICE DETAIL TABLE ======================
-
-            string _Select;
-            if (btn_Submit.Text == SAVE_BUTTON){
-                _Select = " SELECT sysTicketMasterNo,Service_Code,Service_DetailNo,Charges from MED_TicketDetail Where sysTicketDetailNo is Null ";
-            }
-            else {
-                _Select = " SELECT sysTicketDetailNo,sysTicketMasterNo,Service_Code,Service_DetailNo,Charges from MED_TicketDetail Where sysTicketMasterNo = '" + sysTicketMasterNo.ToString() + "' ";
-                this.GetPatient(lblSrNo.Text);
-             
-               
-            }
-
-            
-            d_Adapter = new SqlDataAdapter(_Select.ToString(), con);
-            c_Builder = new SqlCommandBuilder(d_Adapter);
-            T_Detail = new DataTable();
-            d_Adapter.FillSchema(T_Detail, SchemaType.Source);
-            d_Adapter.Fill(T_Detail);
-
-
-            int i = 0;
-
-            foreach (GridViewRow l_dgRow in gvServiceDetail.Rows)
-            {
-                string _sysTicketDetailNo = gvServiceDetail.Rows[i].Cells[0].Text.Replace("&nbsp;", "0").ToString();
-                string _ServiceCode = gvServiceDetail.Rows[i].Cells[1].Text.Replace("&nbsp;", "0").ToString();
-                string _ServiceDetailCode = gvServiceDetail.Rows[i].Cells[2].Text.Replace("&nbsp;", "0").ToString();
-                string _Charges = gvServiceDetail.Rows[i].Cells[5].Text.Replace("&nbsp;", "0").ToString();
-                if (btn_Submit.Text == SAVE_BUTTON)
-                {
-                    T_Detail.LoadDataRow(new object[] { sysTicketMasterNo.ToString(), _ServiceCode, _ServiceDetailCode, _Charges }, LoadOption.Upsert);
-                }
-                else {
-                    T_Detail.LoadDataRow(new object[] { _sysTicketDetailNo, sysTicketMasterNo.ToString(), _ServiceCode, _ServiceDetailCode, _Charges }, LoadOption.Upsert);
-                  
-                }
-                
-                i = i + 1;
-
-            }
-
-
-            if (btn_Submit.Text == SAVE_BUTTON)
-            {
-            }
-            else {
-                btn_Submit.Text = SAVE_BUTTON;
-            }
-          //  con.Open();
-            d_Adapter.Update(this.T_Detail);
-            con.Close();
-            this.T_Detail.AcceptChanges();
-            //==========================================================================================
-            //iSql = " INSERT INTO MED_TicketDetail (sysTicketMasterNo,Service_Code,Service_DetailNo,Charges) ";
-            //iSql += " VALUES ('" + sysTicketMasterNo + "', '" + ddlServices.SelectedValue.ToString() + "', '" + ddServicesDetail.SelectedValue.ToString() + "', '" + lblServiceCharges.Text + "') ";
-
-            // Below lines                 
-            //SqlCommand cmd = new SqlCommand(iSql, con);
-            //cmd.CommandType = CommandType.Text;
-            //con.Open();
-            //cmd.ExecuteNonQuery();
-            Literal1.Text = "Data Inserted Succesfully";
-            con.Close();
-            string MR_NO;
-            MR_NO = lblPatientMrNo.Text;
-            
-            Session["SESSION_MRNO"] = lblPatientMrNo.Text;
-            Session["SESSION_TICKETNO"] = sysTicketMasterNo;
-            ShowPrintMessage();
-            this.clear();
-         
-        }
-
-        catch (SqlException ex)
-        {
-            ShowMessage(ex.Message);
-        }
-        finally
-        {
-            con.Close();
-        }
-
 
         }
         protected void btn_Cancel_Click(object sender, EventArgs e)
@@ -750,13 +834,13 @@ namespace ZMTClinics
             }
         }
         //*********************************Click Patient Grid (Select patient) ***************************//
-        protected void gvPatients_SelectedIndexChanged(object sender, EventArgs e)
-        {
 
+        private void GetPatientDetail(string RegistrationNo )
+        {
 
             Connection Conn = new Connection();
             DataTable DT = new DataTable();
-            DT = Conn.GetDataTable("EXECUTE [MED_GetPatientDetail]  ' AND Registration_No =''" + gvPatients.SelectedRow.Cells[1].Text + "'' ' ");
+            DT = Conn.GetDataTable("EXECUTE [MED_GetPatientDetail]  ' AND Registration_No =''" + RegistrationNo + "'' ' ");
             clear();
             lblPatientMrNo.Text = DT.Rows[0]["Registration_No"].ToString();
             lblPatientRegistrationDate.Text = DT.Rows[0]["Registration_Date"].ToString();
@@ -770,7 +854,7 @@ namespace ZMTClinics
             ddReligion.SelectedValue = DT.Rows[0]["Religion_Code"].ToString();
 
             lblTicketNo.Text = DT.Rows[0]["sysTicketMasterNo"].ToString();
-
+            lblTicketDate.Text = DT.Rows[0]["Ticket_Date"].ToString();
 
 
             if (DT.Rows[0]["Gender"].ToString() == "Male")
@@ -814,10 +898,26 @@ namespace ZMTClinics
             txtAgeMonth.Text = DT.Rows[0]["Age_Months"].ToString();
 
             // Populating Services Detail 
-            this.GetTicketDetail(DT.Rows[0]["sysTicketMasterNo"].ToString());
+            //if currentdate = regdate then true else false
+            DateTime CurrentDate = DateTime.Now;
+            DateTime CurrentDateOnly = CurrentDate.Date;
+            DateTime RegistrationDate = Convert.ToDateTime(DT.Rows[0]["Ticket_Date"]);
+            DateTime RegistrationDateOnly = RegistrationDate.Date;
+            if (RegistrationDateOnly == CurrentDateOnly) // Patient Update
+            {
+                this.GetTicketDetail(DT.Rows[0]["sysTicketMasterNo"].ToString());
+            }
+            else
+            {  // New Patient
+                this.GetTicketDetail("0");
+            }
             lblstn.Text = DT.Rows[0]["sysTicketMasterNo"].ToString();
             btn_Submit.Text = "Update Patient";
-            this.EnableDisable(true);
+            //this.EnableDisable(false);
+        }
+        protected void gvPatients_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            this.GetPatientDetail(gvPatients.SelectedRow.Cells[1].Text);
         }
         private void GetTicketDetail(string sysTicketMasterNo)
         {
@@ -853,7 +953,14 @@ namespace ZMTClinics
             ddlServices.Enabled = Value;
             ddServicesDetail.Enabled = Value;
             ddPatientPayingStatus.Enabled = Value;
+            lblPatientMrNo.Enabled = Value;
+            txtFatherName.Enabled = Value;
         }
+        //private void EnableDisable()
+        //{
+        //    // No Edit in TicketMaster/Detail 
+        //    txtFatherName.ReadOnly = true;
+        //}
         public void ShowMessage(string msg)
         {
             ClientScript.RegisterStartupScript(Page.GetType(), "validation", "<script  language='javascript'>alert('" + msg + "');</script>");
@@ -914,7 +1021,8 @@ namespace ZMTClinics
             txtFirstName.Text = string.Empty;
             txtFatherName.Text = string.Empty;
             txtCNICNO.Text = string.Empty;
-            txtAge.Text = string.Empty;
+            txtAge.Text = "0";
+            txtAgeMonth.Text = "0";
             txtMobile1.Text = string.Empty;
             txtRegisterBy.Text = string.Empty;
             txtRegisterByContactNo.Text = string.Empty;
@@ -924,9 +1032,15 @@ namespace ZMTClinics
             txtMiddleName.Text = string.Empty;
             txtLastName.Text = string.Empty;
             ddPermanentArea.SelectedIndex = 0;
+            ddlArea.SelectedIndex = 0;
+            ddGurdian.SelectedIndex = 0;
+            ddSuffix.SelectedIndex = 0;
+            ddMaritialStatus.SelectedIndex = 0;
             txtPermanentBlock.Text = string.Empty;
-            lblServiceCharges.Text = string.Empty;
+            lblServiceCharges.Text = "30";
             txtAddress.Text = string.Empty;
+            lblPatientToken.Text = string.Empty;
+            ddPatientPayingStatus.SelectedValue = "2";
             btn_Submit.Text = SAVE_BUTTON;
 
         }
@@ -942,5 +1056,24 @@ namespace ZMTClinics
 
         }
         //*****************************End Events Function *******************************//
+
+        private void clearForm() {
+            // To Clear Form
+            this.clear();  // clear Header
+            this.GetTicketDetail("0");  // Clear grid
+            this.GenerateToken(); // Generat New Token
+            lblPatientRegistrationDate.Text = localDate.ToString();
+        }
+
+        protected void btn_Clear_Click1(object sender, EventArgs e)
+        {
+            this.clearForm();
+
+            GenerateMrNo(ddClinic.SelectedValue);
+            GenerateToken();
+            lblPatientRegistrationDate.Text = localDate.ToString();
+            btn_Submit.Text = SAVE_BUTTON;
+            ddSuffix.Focus();
+        }
     }
 }

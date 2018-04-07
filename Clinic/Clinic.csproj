@@ -1540,6 +1540,7 @@
     <Content Include="Javascript\Popup.js" />
     <Content Include="Javascript\scw.js" />
     <Content Include="Javascript\SlideMenu.js" />
+    <Content Include="MainPageChart.asmx" />
     <Content Include="packages.config" />
     <Content Include="fonts\glyphicons-halflings-regular.woff" />
     <Content Include="fonts\glyphicons-halflings-regular.ttf" />
@@ -1757,14 +1758,18 @@
     <Content Include="Javascript\vssver2.scc" />
     <None Include="Properties\PublishProfiles\ZMT.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
+    <Content Include="Portal\calendar.gif" />
     <Content Include="Portal\Clinic.aspx" />
+    <Content Include="Portal\Design.aspx" />
     <Content Include="Portal\grid.aspx" />
     <Content Include="Portal\Login.aspx" />
+    <Content Include="Portal\MainPageChart.asmx" />
     <Content Include="Portal\nursing.aspx" />
     <Content Include="Portal\NursingReciept.aspx" />
     <Content Include="Portal\Patient.aspx" />
     <Content Include="Portal\PharmacyReciept.aspx" />
     <Content Include="Portal\Pharmasy.aspx" />
+    <Content Include="Portal\PharmasyChart.aspx" />
     <Content Include="Portal\reciept.aspx" />
     <Content Include="Portal\Service.aspx" />
     <Content Include="Scripts\bootstrap.js" />
@@ -1802,7 +1807,9 @@
     <Content Include="Site.Master" />
     <Content Include="style\bootstrap-multiselect.css" />
     <Content Include="style\calendar-win2k-1.css" />
+    <Content Include="style\grid.css" />
     <Content Include="style\interface.css" />
+    <Content Include="style\subGrid.css" />
     <Content Include="ViewSwitcher.ascx" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
@@ -1847,12 +1854,23 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="MainPageChart.asmx.cs">
+      <DependentUpon>MainPageChart.asmx</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Portal\Clinic.aspx.cs">
       <DependentUpon>Clinic.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Portal\Clinic.aspx.designer.cs">
       <DependentUpon>Clinic.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Portal\Design.aspx.cs">
+      <DependentUpon>Design.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Portal\Design.aspx.designer.cs">
+      <DependentUpon>Design.aspx</DependentUpon>
     </Compile>
     <Compile Include="Portal\grid.aspx.cs">
       <DependentUpon>grid.aspx</DependentUpon>
@@ -1867,6 +1885,10 @@
     </Compile>
     <Compile Include="Portal\Login.aspx.designer.cs">
       <DependentUpon>Login.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Portal\MainPageChart.asmx.cs">
+      <DependentUpon>MainPageChart.asmx</DependentUpon>
+      <SubType>Component</SubType>
     </Compile>
     <Compile Include="Portal\nursing.aspx.cs">
       <DependentUpon>nursing.aspx</DependentUpon>
@@ -1902,6 +1924,13 @@
     </Compile>
     <Compile Include="Portal\Pharmasy.aspx.designer.cs">
       <DependentUpon>Pharmasy.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Portal\PharmasyChart.aspx.cs">
+      <DependentUpon>PharmasyChart.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Portal\PharmasyChart.aspx.designer.cs">
+      <DependentUpon>PharmasyChart.aspx</DependentUpon>
     </Compile>
     <Compile Include="Portal\reciept.aspx.cs">
       <DependentUpon>reciept.aspx</DependentUpon>

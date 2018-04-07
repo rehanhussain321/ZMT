@@ -12,7 +12,8 @@ using System.Xml.Linq;
 using System.Data.SqlClient;
 using KT_Classes;
 using System.Drawing;
-using ZMTClinics.Class; 
+using ZMTClinics.Class;
+using System.IO;
 
 namespace ZMTClinics
 {
@@ -34,57 +35,69 @@ namespace ZMTClinics
             SqlDataAdapter da = new SqlDataAdapter("SELECT Menu_Code, MenuText, MenuPath,MenuParent from SEC_Menu where MenuType = 6 AND MenuParent=0", con);
             DataTable dttc = new DataTable();
             da.Fill(dttc);
-            HtmlGenericControl main = UList("main-menu", "main-menu");
-            foreach (DataRow row in dttc.Rows)
-            {
-                da = new SqlDataAdapter("select Menu_Code,MenuText,MenuPath,MenuParent from SEC_Menu where MenuParent=" + row["Menu_Code"].ToString() + " order by ISNULL(sortorder,0)", con);
-                DataTable dtDist = new DataTable();
-                da.Fill(dtDist);
-                if (dtDist.Rows.Count > 0)
-                {
-                    HtmlGenericControl sub_menu = LIList(row["MenuText"].ToString(), row["Menu_Code"].ToString(), row["MenuPath"].ToString());
-                    HtmlGenericControl ul = new HtmlGenericControl("ul");
-                    foreach (DataRow r in dtDist.Rows)
-                    {
-                        ul.Controls.Add(LIList(r["MenuText"].ToString(), r["MenuParent"].ToString(), r["MenuPath"].ToString()));
-                    }
-                    sub_menu.Controls.Add(ul);
-                    main.Controls.Add(sub_menu);
-                }
-                else
-                {
-                    main.Controls.Add(LIList(row["MenuText"].ToString(), row["Menu_Code"].ToString(), row["MenuPath"].ToString()));
-                }
-            }
-            Panel1.Controls.Add(main);
             // ******************* END MENU ************************//
             if (!IsPostBack)
             {
+                DataTable dt = this.GetData(0);
+                PopulateMenu(dt, 0, null);
                 getUserImage();
                 getUsername();
-                Panel1.Controls.Add(main);
+              //  Panel1.Controls.Add(main);
                 PopulateClinic();
                 btn_Submit.Text = SAVE_BUTTON;
                 DateTime localDate = DateTime.Now;
             }
 
         }
-        private HtmlGenericControl UList(string id, string cssClass)
+
+
+        private DataTable GetData(int parentMenuId)
         {
-            HtmlGenericControl ul = new HtmlGenericControl("ul");
-            ul.ID = id;
-            ul.Attributes.Add("class", cssClass);
-            return ul;
-        }
-        private HtmlGenericControl LIList(string innerHtml, string rel, string url)
-        {
-            HtmlGenericControl li = new HtmlGenericControl("li");
-            li.Attributes.Add("rel", rel);
-            //  li.InnerHtml = "<a href=" + string.Format("http://{0}", url) + ">" + innerHtml + "</a>";
-            li.InnerHtml = "<a href=" + string.Format("{0}", url) + ">" + innerHtml + "</a>";
-            return li;
+
+            // string query = "SELECT [MenuId], [Title], [Description], [Url] FROM [Menus] WHERE ParentMenuId = @ParentMenuId";
+            string query = "SELECT Menu_Code, MenuText, MenuPath,MenuParent from SEC_Menu where MenuType = 6 AND MenuParent=@ParentMenuId";
+            using (SqlConnection con = new SqlConnection(constr))
+            {
+                DataTable dt = new DataTable();
+                using (SqlCommand cmd = new SqlCommand(query))
+                {
+                    using (SqlDataAdapter sda = new SqlDataAdapter())
+                    {
+                        cmd.Parameters.AddWithValue("@ParentMenuId", parentMenuId);
+                        cmd.CommandType = CommandType.Text;
+                        cmd.Connection = con;
+                        sda.SelectCommand = cmd;
+                        sda.Fill(dt);
+                    }
+                }
+                return dt;
+            }
         }
 
+        private void PopulateMenu(DataTable dt, int parentMenuId, MenuItem parentMenuItem)
+        {
+            string currentPage = Path.GetFileName(Request.Url.AbsolutePath);
+            foreach (DataRow row in dt.Rows)
+            {
+                MenuItem menuItem = new MenuItem
+                {
+                    Value = row["Menu_Code"].ToString(),
+                    Text = row["MenuText"].ToString(),
+                    NavigateUrl = row["MenuPath"].ToString(),
+                    Selected = row["MenuPath"].ToString().EndsWith(currentPage, StringComparison.CurrentCultureIgnoreCase)
+                };
+                if (parentMenuId == 0)
+                {
+                    Menu1.Items.Add(menuItem);
+                    DataTable dtChild = this.GetData(int.Parse(menuItem.Value));
+                    PopulateMenu(dtChild, int.Parse(menuItem.Value), menuItem);
+                }
+                else
+                {
+                    parentMenuItem.ChildItems.Add(menuItem);
+                }
+            }
+        }
         protected void btn_Submit_Click(object sender, EventArgs e)
         {
             SqlConnection con = new SqlConnection(constr);

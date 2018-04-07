@@ -238,7 +238,7 @@
                 <table class="table" style="margin-top:2%;margin-left:1%;margin-right:1%;" >
                 <tr>
                     <td style="color:black;font-weight:bold;"><asp:label runat="server" ID="lblClinic" style="font-weight:bolder;font-size:20px">ZMT Clinics</asp:label><br /><asp:label ID="lblClinicAddress" runat="server"></asp:label></td>
-                    <td style="text-align:right;color:black;font-weight:bold;" colspan="3"><asp:label runat="server" style="font-weight:bolder; font-size:16px">Token#</asp:label><asp:label runat="server" ID="lbltokenNo" style="font-weight:bolder; font-size:16px"></asp:label><br /><asp:Label runat="server">Dated:</asp:Label><asp:label runat="server" ID="lblDate"></asp:label></td>
+                    <td style="text-align:right;color:black;font-weight:bold;" colspan="3"><asp:label runat="server" style="font-weight:bolder; font-size:16px">Token#</asp:label><asp:label runat="server" ID="lbltokenNo" style="font-weight:bolder; font-size:16px"></asp:label><br /><asp:Label runat="server"></asp:Label><asp:label runat="server" ID="lblDate"></asp:label></td>
                 </tr>
                 </table>
                 <table style="margin-left: 1%; margin-right: 1%; width: 100%">

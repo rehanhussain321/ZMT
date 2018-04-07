@@ -44,11 +44,49 @@
           display:none;
             }
     </style>
+        <script type="text/javascript">
+    //Disable the default MouseOver functionality of ASP.Net Menu control.
+    Sys.WebForms.Menu._elementObjectMapper.getMappedObject = function () {
+        return false;
+    };
+        $(function () {
+            //Remove the style attributes.
+            $(".navbar-nav li, .navbar-nav a, .navbar-nav ul").removeAttr('style');
+           
+            //Apply the Bootstrap class to the Submenu.
+            $(".dropdown-menu").closest("li").removeClass().addClass("dropdown-toggle");
+           
+            //Apply the Bootstrap properties to the Submenu.
+            $(".dropdown-toggle").find("a").eq(0).attr("data-toggle", "dropdown").attr("aria-haspopup", "true").attr("aria-expanded", "false").append("<span class='caret'></span>");
+           
+            //Apply the Bootstrap "active" class to the selected Menu item.
+            $("a.selected").closest("li").addClass("active");
+            $("a.selected").closest(".dropdown-toggle").addClass("active");
+        });
+</script>
 </head>
 <body class="page-body">
     <form id="form1" runat="server">
+           <div class="navbar navbar-default">
+                <div class="container-fluid">
+                    <div class="navbar-header">
+                        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1"
+                                        aria-expanded="false">
+                        <span class="sr-only">Toggle navigation</span> <span class="icon-bar"></span><span
+                                        class="icon-bar"></span><span class="icon-bar"></span>
+                        </button>
+                    <a class="navbar-brand" href="#">ZMT Clinics</a>
+                    </div>
+                    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                        <asp:Menu ID="Menu1" runat="server" Orientation="Horizontal" RenderingMode="List"
+                                IncludeStyleBlock="false" StaticMenuStyle-CssClass="nav navbar-nav" DynamicMenuStyle-CssClass="dropdown-menu" style="background-color:aqua">
+                        </asp:Menu>
+                   </div>
+              </div>
+        </div>
     <div class="page-container">
-    <div class="sidebar-menu">
+     
+<%--    <div class="sidebar-menu">
         <div class ="sidebar-menu-inner">
         <header class="logo-env">
 
@@ -82,31 +120,30 @@
         </asp:Panel>
                 
         </div>
-    </div>
+    </div>--%>
         <div class="main-content">
             <div class="row">
 		
 			<!-- Profile Info and Notifications -->
-			<div class="col-md-6 col-sm-8 clearfix">
+		<!--	<div class="col-md-6 col-sm-8 clearfix">
 		
 				<ul class="user-info pull-left pull-none-xsm">
 		
-					<!-- Profile Info -->
-					<li class="profile-info dropdown"><!-- add class "pull-right" if you want to place this from right -->
+					<!-- Profile Info 
+					<li class="profile-info dropdown"><!-- add class "pull-right" if you want to place this from right 
 		
 						<a href="#" class="dropdown-toggle" data-toggle="dropdown">
-							<%--<img src="assets/images/thumb-1@2x.png" alt="" class="img-circle" width="44" />--%>
+							<%--<img src="assets/images/thumb-1@2x.png" alt="" class="img-circle" width="44" />
                             <asp:Image ID="ImgUser" runat="server"  Width="50" CssClass="img-circle"  />
 							<asp:Label runat="server" ID="lblUserName"></asp:Label>
 						</a>
 		
 						<ul class="dropdown-menu">
 		
-							<!-- Reverse Caret -->
-							<%--<li class="caret"></li>
+							<!-- Reverse Caret 
+							<li class="caret"></li>
 		
-							<!-- Profile sub-links -->
-							<li>
+							<!-- Profile sub-links 
 								<a href="extra-timeline.html">
 									<i class="entypo-user"></i>
 									Edit Profile
@@ -134,347 +171,44 @@
 								</a>
 							</li>
 						</ul>
-					</li>--%>
+					</li>
 		
 				</ul>
 				
 				<ul class="user-info pull-left pull-right-xs pull-none-xsm">
 		
-					<!-- Raw Notifications -->
-					<%--<li class="notifications dropdown">
-		
-						<a href="#" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
-							<i class="entypo-attention"></i>
-							<span class="badge badge-info">6</span>
-						</a>
-		
-						<ul class="dropdown-menu">
-							<li class="top">
-								<p class="small">
-									<a href="#" class="pull-right">Mark all Read</a>
-									You have <strong>3</strong> new notifications.
-								</p>
-							</li>
-							
-							<li>
-								<ul class="dropdown-menu-list scroller">
-									<li class="unread notification-success">
-										<a href="#">
-											<i class="entypo-user-add pull-right"></i>
-											
-											<span class="line">
-												<strong>New user registered</strong>
-											</span>
-											
-											<span class="line small">
-												30 seconds ago
-											</span>
-										</a>
-									</li>
-									
-									<li class="unread notification-secondary">
-										<a href="#">
-											<i class="entypo-heart pull-right"></i>
-											
-											<span class="line">
-												<strong>Someone special liked this</strong>
-											</span>
-											
-											<span class="line small">
-												2 minutes ago
-											</span>
-										</a>
-									</li>
-									
-									<li class="notification-primary">
-										<a href="#">
-											<i class="entypo-user pull-right"></i>
-											
-											<span class="line">
-												<strong>Privacy settings have been changed</strong>
-											</span>
-											
-											<span class="line small">
-												3 hours ago
-											</span>
-										</a>
-									</li>
-									
-									<li class="notification-danger">
-										<a href="#">
-											<i class="entypo-cancel-circled pull-right"></i>
-											
-											<span class="line">
-												John cancelled the event
-											</span>
-											
-											<span class="line small">
-												9 hours ago
-											</span>
-										</a>
-									</li>
-									
-									<li class="notification-info">
-										<a href="#">
-											<i class="entypo-info pull-right"></i>
-											
-											<span class="line">
-												The server is status is stable
-											</span>
-											
-											<span class="line small">
-												yesterday at 10:30am
-											</span>
-										</a>
-									</li>
-									
-									<li class="notification-warning">
-										<a href="#">
-											<i class="entypo-rss pull-right"></i>
-											
-											<span class="line">
-												New comments waiting approval
-											</span>
-											
-											<span class="line small">
-												last week
-											</span>
-										</a>
-									</li>
-								</ul>
-							</li>
-							
-							<li class="external">
-								<a href="#">View all notifications</a>
-							</li>
-						</ul>
-		
-					</li>
-		
-					<!-- Message Notifications -->
-					<li class="notifications dropdown">
-		
-						<a href="#" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
-							<i class="entypo-mail"></i>
-							<span class="badge badge-secondary">10</span>
-						</a>
-		
-						<ul class="dropdown-menu">
-							<li>
-								<form class="top-dropdown-search">
-									
-									<div class="form-group">
-										<input type="text" class="form-control" placeholder="Search anything..." name="s" />
-									</div>
-									
-								</form>
-								
-								<ul class="dropdown-menu-list scroller">
-									<li class="active">
-										<a href="#">
-											<span class="image pull-right">
-												<img src="assets/images/thumb-1.png" alt="" class="img-circle" />
-											</span>
-											
-											<span class="line">
-												<strong>Luc Chartier</strong>
-												- yesterday
-											</span>
-											
-											<span class="line desc small">
-												This ain’t our first item, it is the best of the rest.
-											</span>
-										</a>
-									</li>
-									
-									<li class="active">
-										<a href="#">
-											<span class="image pull-right">
-												<img src="assets/images/thumb-1.png" alt="" class="img-circle" />
-											</span>
-											
-											<span class="line">
-												<strong>Salma Nyberg</strong>
-												- 2 days ago
-											</span>
-											
-											<span class="line desc small">
-												Oh he decisively impression attachment friendship so if everything. 
-											</span>
-										</a>
-									</li>
-									
-									<li>
-										<a href="#">
-											<span class="image pull-right">
-												<img src="assets/images/thumb-1.png" alt="" class="img-circle" />
-											</span>
-											
-											<span class="line">
-												Hayden Cartwright
-												- a week ago
-											</span>
-											
-											<span class="line desc small">
-												Whose her enjoy chief new young. Felicity if ye required likewise so doubtful.
-											</span>
-										</a>
-									</li>
-									
-									<li>
-										<a href="#">
-											<span class="image pull-right">
-												<img src="assets/images/thumb-1.png" alt="" class="img-circle" />
-											</span>
-											
-											<span class="line">
-												Sandra Eberhardt
-												- 16 days ago
-											</span>
-											
-											<span class="line desc small">
-												On so attention necessary at by provision otherwise existence direction.
-											</span>
-										</a>
-									</li>
-								</ul>
-							</li>
-							
-							<li class="external">
-								<a href="mailbox.html">All Messages</a>
-							</li>
-						</ul>
-		
-					</li>
-		
-					<!-- Task Notifications -->
-					<li class="notifications dropdown">
-		
-						<a href="#" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
-							<i class="entypo-list"></i>
-							<span class="badge badge-warning">1</span>
-						</a>
-		
-						<ul class="dropdown-menu">
-							<li class="top">
-								<p>You have 6 pending tasks</p>
-							</li>
-							
-							<li>
-								<ul class="dropdown-menu-list scroller">
-									<li>
-										<a href="#">
-											<span class="task">
-												<span class="desc">Procurement</span>
-												<span class="percent">27%</span>
-											</span>
-										
-											<span class="progress">
-												<span style="width: 27%;" class="progress-bar progress-bar-success">
-													<span class="sr-only">27% Complete</span>
-												</span>
-											</span>
-										</a>
-									</li>
-									<li>
-										<a href="#">
-											<span class="task">
-												<span class="desc">App Development</span>
-												<span class="percent">83%</span>
-											</span>
-											
-											<span class="progress progress-striped">
-												<span style="width: 83%;" class="progress-bar progress-bar-danger">
-													<span class="sr-only">83% Complete</span>
-												</span>
-											</span>
-										</a>
-									</li>
-									<li>
-										<a href="#">
-											<span class="task">
-												<span class="desc">HTML Slicing</span>
-												<span class="percent">91%</span>
-											</span>
-											
-											<span class="progress">
-												<span style="width: 91%;" class="progress-bar progress-bar-success">
-													<span class="sr-only">91% Complete</span>
-												</span>
-											</span>
-										</a>
-									</li>
-									<li>
-										<a href="#">
-											<span class="task">
-												<span class="desc">Database Repair</span>
-												<span class="percent">12%</span>
-											</span>
-											
-											<span class="progress progress-striped">
-												<span style="width: 12%;" class="progress-bar progress-bar-warning">
-													<span class="sr-only">12% Complete</span>
-												</span>
-											</span>
-										</a>
-									</li>
-									<li>
-										<a href="#">
-											<span class="task">
-												<span class="desc">Backup Create Progress</span>
-												<span class="percent">54%</span>
-											</span>
-											
-											<span class="progress progress-striped">
-												<span style="width: 54%;" class="progress-bar progress-bar-info">
-													<span class="sr-only">54% Complete</span>
-												</span>
-											</span>
-										</a>
-									</li>
-									<li>
-										<a href="#">
-											<span class="task">
-												<span class="desc">Upgrade Progress</span>
-												<span class="percent">17%</span>
-											</span>
-											
-											<span class="progress progress-striped">
-												<span style="width: 17%;" class="progress-bar progress-bar-important">
-													<span class="sr-only">17% Complete</span>
-												</span>
-											</span>
-										</a>
-									</li>
-								</ul>
-							</li>
-							
-							<li class="external">
-								<a href="#">See all tasks</a>
-							</li>
-						</ul>
-		--%>
+
 					</li>
 		
 				</ul>
 		
-			</div>
+			</div>--%>
 		
 		
 			<!-- Raw Links -->
 			<div class="col-md-6 col-sm-4 clearfix hidden-xs">
 		
+				<ul class="list-inline links-list pull-left">
+                       <Table>
+                           <tr>
+                               <td>
+                                   <<asp:TextBox runat="server" CssClass="form-control" ID="txtPatientSearch"></asp:TextBox>
+                               </td>
+                               <td style="margin-top:4%;">
+                                   <asp:Button runat="server" ID="btnSearch" Text="Search" CssClass="btn btn-block" OnClick="Search_Click" />
+                               </td>
+                           </tr>
+                       </Table>
+                            
+                               
+			    </ul>
+			</div>
+            <div class="col-md-6 col-sm-4 clearfix hidden-xs">
+		
 				<ul class="list-inline links-list pull-right">
-		
+		                  
 				         <asp:DropDownList ID="ddClinic" runat="server" class="form-control"></asp:DropDownList><br /><br />
-                            <asp:TextBox runat="server" CssClass="form-control" ID="txtPatientSearch"></asp:TextBox>
-                            <asp:Button runat="server" ID="btnSearch" Text="Search" CssClass="btn btn-block" OnClick="Search_Click" /><br /><br />
-						</ul>
-		
-					</li>
-		
-				</ul>
-		
+			    </ul>
 			</div>
 		  <div class="col-md-10 col-md-offset-1" id="search">
                 <asp:GridView ID="gvClinics" runat="server" CssClass="footable large-only" style="font-size:12px;color:white;" OnSelectedIndexChanged="gvClinics_SelectedIndexChanged"  DataKeyNames="Clinic_Registration_No" OnRowDataBound="gvClinics_RowDataBound" AutoGenerateColumns="false" EmptyDataText="No Record(s) Found" AutoGenerateSelectButton="True" ForeColor="White">

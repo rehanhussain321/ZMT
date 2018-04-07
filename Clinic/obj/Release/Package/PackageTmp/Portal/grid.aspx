@@ -25,48 +25,146 @@
     <link href="../gridcss/footable.css" rel="stylesheet" />
      <link href="DatePicker/bootstrap-datepicker.css" rel="stylesheet" />
     <script src="DatePicker/bootstrap-datepicker.js"></script>
-            <style>
+     <style>
         .hideCol
         {
           display:none;
             }
     </style>
     <style>
-    .table > tbody > tr > .no-line {
-    border-top: none;
-    }
-   .table > th > .text-center {
-    text-align:center;
-    }
-    .table > th > .text-left {
-    text-align:left;
-    }
-    .table > thead > tr > .no-line {
-    border-bottom: none;
-    }
-    .table > tbody > tr > .thick-line {
-    border-top: 2px solid;
-    }
-    .table > tbody > tr > td .{
-    color:black;
-    font-weight:900;
-    }
-    .table>tbody > tr:hover{
-    background-color:burlywood;
-    }
-    </style>
-    <style>
         .padding-0{
-    padding-right:0  !important;
-    padding-left:0   !important;
+            padding-right:0  !important;
+            padding-left:0   !important;
 }
     </style>
+    <style>
+       .mydatagrid
+            {
+	            width: 100%;
+	            /*border: solid 2px black;*/
+	            min-width: 80%;
+            }
+       .header
+            {
+	            background-color: #2E3192;
+	            font-family: Arial;
+	            color: White;
+	            border: none 0px transparent;
+	            height: 25px;
+	            text-align: center;
+	            font-size: 16px;
+            }
+
+        .rows
+            {
+	            background-color: #fff;
+	            font-family: Arial;
+	            font-size: 14px;
+	            color: #000;
+	            min-height: 25px;
+	            text-align: left;
+	            border: none 0px transparent;
+            }
+      .rows:hover
+            {
+	            background-color: #ff8000;
+	            font-family: Arial;
+	            color: #fff;
+	            text-align: left;
+            }
+     .selectedrow
+            {
+	            background-color: #ff8000;
+	            font-family: Arial;
+	            color: #fff;
+	            font-weight: bold;
+	            text-align: left;
+            }
+      .mydatagrid a /** FOR THE PAGING ICONS  **/
+            {
+	            background-color: Transparent;
+	            padding: 5px 5px 5px 5px;
+	            color: #fff;
+	            text-decoration: none;
+	            font-weight: bold;
+            }
+
+      .mydatagrid a:hover /** FOR THE PAGING ICONS  HOVER STYLES**/
+            {
+	            background-color: #000;
+	            color: #fff;
+            }
+      .mydatagrid span /** FOR THE PAGING ICONS CURRENT PAGE INDICATOR **/
+            {
+	            background-color: #c9c9c9;
+	            color: #000;
+	            padding: 5px 5px 5px 5px;
+            }
+      .pager
+            {
+	            background-color: #646464;
+	            font-family: Arial;
+	            color: White;
+	            height: 30px;
+	            text-align: left;
+            }
+
+     .mydatagrid td
+            {
+	            padding: 5px;
+            }
+     .mydatagrid th
+            {
+	            padding: 5px;
+            }
+     .frame
+            {
+                width:100%;
+                height:100%;
+            }
+
+    </style>
+    <script type="text/javascript">
+         //Disable the default MouseOver functionality of ASP.Net Menu control.
+         Sys.WebForms.Menu._elementObjectMapper.getMappedObject = function () {
+             return false;
+         };
+         $(function () {
+             //Remove the style attributes.
+             $(".navbar-nav li, .navbar-nav a, .navbar-nav ul").removeAttr('style');
+
+             //Apply the Bootstrap class to the Submenu.
+             $(".dropdown-menu").closest("li").removeClass().addClass("dropdown-toggle");
+
+             //Apply the Bootstrap properties to the Submenu.
+             $(".dropdown-toggle").find("a").eq(0).attr("data-toggle", "dropdown").attr("aria-haspopup", "true").attr("aria-expanded", "false").append("<span class='caret'></span>");
+
+             //Apply the Bootstrap "active" class to the selected Menu item.
+             $("a.selected").closest("li").addClass("active");
+             $("a.selected").closest(".dropdown-toggle").addClass("active");
+         });
+</script>
 </head>
-<body class="page-body  page-fade gray">>
+<body class="page-body  page-fade gray" >
     <form id="form1" runat="server">
+         <div class="navbar navbar-default">
+                <div class="container-fluid">
+                    <div class="navbar-header">
+                        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1"
+                                        aria-expanded="false">
+                        <span class="sr-only">Toggle navigation</span> <span class="icon-bar"></span><span
+                                        class="icon-bar"></span><span class="icon-bar"></span>
+                        </button>
+                    <a class="navbar-brand" href="#">ZMT Clinics</a>
+                    </div>
+                    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                        <asp:Menu ID="Menu1" runat="server" Orientation="Horizontal" RenderingMode="List"
+                                IncludeStyleBlock="false" StaticMenuStyle-CssClass="nav navbar-nav" DynamicMenuStyle-CssClass="dropdown-menu" style="background-color:aqua">
+                        </asp:Menu>
+                   </div>
+              </div>
+        </div>
     <div class="page-container">
-        <div class="sidebar-menu">
-        <div class ="sidebar-menu-inner">
         <header class="logo-env">
 
 				<!-- logo -->
@@ -77,13 +175,13 @@
 					</a>
 				</div>
 
-				<!-- logo collapse icon -->
+<%--				<!-- logo collapse icon -->
 				<div class="sidebar-collapse">
 					<a href="#" class="sidebar-collapse-icon">
                         <!-- add class "with-animation" if you want sidebar to have animation during expanding/collapsing transition -->
 						<i class="entypo-menu"></i>
 					</a>
-				</div>
+				</div>--%>
 
 								
 				<!-- open/close menu icon (do not remove if you want to enable menu on mobile devices) -->
@@ -94,44 +192,48 @@
 				</div>
 
 			</header>
+       <%-- <div class="sidebar-menu">
+        <div class ="sidebar-menu-inner">
+        
             
         <asp:Panel ID="Panel1" runat="server" CssClass="main-menu">
            
         </asp:Panel>
                 
         </div>
-    </div>
+    </div>--%>
         <div class="main-content">
             <div class="row">
 			<div class="col-md-3 col-sm-6">
-				<div class="tile-stats tile-white stat-tile">
-					<h3>1500 plus</h3>
-					<p>Monthly visitor statistics</p>
+				<div class="tile-stats tile-white-blue steps-progress">
+					<h1><asp:Label ID="lblPatientLastMonth" runat="server" Text=""></asp:Label>   Patients</h1>
+					<p>Last Month</p>
 					<span class="daily-visitors"></span>
 				</div>		
 			</div>
 		
 			<div class="col-md-3 col-sm-6">
-				<div class="tile-stats tile-white stat-tile">
-					<h3>327 OPD</h3>
-					<p>Avg. OPD per day</p>
+				<%--<div class="tile-stats tile-white stat-tile">--%>
+                <div class="tile-stats tile-white-blue steps-progress">
+					<h1><asp:Label ID="lblPatientThisMonth" runat="server" Text=""></asp:Label> Patients</h1>
+					<p>This Month</p>
 					<span class="monthly-sales"></span>
 				</div>		
 			</div>
 		
 		
 			<div class="col-md-3 col-sm-6">
-				<div class="tile-stats tile-white stat-tile">
-					<h3>70000</h3>
-					<p>Pharmacy</p>
+				<div class="tile-stats tile-white-blue steps-progress">
+					<h1><asp:Label ID="lblMedicineIssuedThisMonth" runat="server" Text=""></asp:Label> Medicines</h1>
+					<p>Pharmasy Issue This Month</p>
 					<span class="stock-market"></span>
 				</div>		
 			</div>
 		
 		
 			<div class="col-md-3 col-sm-6">
-				<div class="tile-stats tile-white stat-tile">
-					<h3>6.5%</h3>
+				<div class="tile-stats tile-white-blue steps-progress">
+					<h1>6.5%</h1>
 					<p>Affiliate Share</p>
 					<span class="pie-chart"></span>
 				</div>		
@@ -140,7 +242,7 @@
          <div class="row">
             <div class="col-md-6">
          <div class="panel panel-white">
-             <div class="panel-heading" style="background-color:gray;color:white;">
+             <div class="panel-heading" style="background-color:#2E3192;color:white;font-weight:bold">
                   <h4 class="panel-title text-primary" id="panel1" style="color:white;">Patient History<b></b></h4>
                  <div class="panel-tools">
                                     <a data-original-title="Collapse" data-toggle="tooltip" data-placement="bottom" class="btn btn-transparent btn-sm panel-collapse" href="#"><i class="fa fa-minus collapse-off"></i><i class="fa fa-plus collapse-on"></i></a>
@@ -156,21 +258,21 @@
                                     </div>
                                 </div>
              </div>
-             <div class="panel-body">
-        <asp:GridView ID="grdPatient" runat="server" AutoGenerateColumns="False" CssClass="footable large-only"   GridLines="None" style="font-size:12px;color:white;">
+             <div class="panel-body" style="padding:0px;padding-top:10px;">
+        <asp:GridView ID="grdPatient" runat="server" AutoGenerateColumns="False" CssClass="mydatagrid" PagerStyle-CssClass="pager" HeaderStyle-CssClass="header" RowStyle-CssClass="rows"   GridLines="None">
             <Columns>
-                <asp:BoundField DataField="RegistrationDate" HeaderText="Date"  HeaderStyle-BackColor="#fd8d68" HeaderStyle-CssClass="align-center" DataFormatString="{0: dd MMM yy}" HtmlEncode="False">
-               <HeaderStyle BackColor="#fd8d68"></HeaderStyle>
+                <asp:BoundField DataField="Ticket_Date" HeaderText="Date" HeaderStyle-CssClass="align-center" DataFormatString="{0: dd MMM yy}" HtmlEncode="False">
+               <HeaderStyle CssClass="header"></HeaderStyle>
 
+                    <ItemStyle HorizontalAlign="Center" CssClass="row" />
+                </asp:BoundField>
+                <asp:BoundField DataField="ClinicName" HeaderText="Clinic" HeaderStyle-CssClass="align-right">
+                    <HeaderStyle CssClass="header"></HeaderStyle>
+                    <ItemStyle HorizontalAlign="Center" CssClass="row" />
+                </asp:BoundField>
+                <asp:BoundField DataField="No. of Patients" HeaderText="No. of Patients" HeaderStyle-CssClass="align-center">
+                    <HeaderStyle CssClass="header" ></HeaderStyle>
                     <ItemStyle HorizontalAlign="Center" />
-                </asp:BoundField>
-                <asp:BoundField DataField="ClinicName" HeaderText="Clinic" HeaderStyle-CssClass="align-right" HeaderStyle-BackColor="#fd8d68">
-                    <HeaderStyle BackColor="#fd8d68"></HeaderStyle>
-                    <ItemStyle HorizontalAlign="Left" />
-                </asp:BoundField>
-                <asp:BoundField DataField="No. of Patients" HeaderText="No. of Patients" HeaderStyle-CssClass="align-center"  HeaderStyle-BackColor="#fd8d68">
-                    <HeaderStyle BackColor="#fd8d68"></HeaderStyle>
-                    <ItemStyle HorizontalAlign="Right" />
                 </asp:BoundField>
             </Columns>
         </asp:GridView>
@@ -178,9 +280,9 @@
              </div>
                 </div>
              <div class="col-md-6">
-          <div class="panel panel-white">
-             <div class="panel-heading" style="background-color:gray;color:white;">
-                  <h4 class="panel-title text-primary" id="panel2" style="color:white;">Doctors<b></b></h4>
+          <div class="panel panel-white" style="height:700px;">
+             <div class="panel-heading" style="background-color:#2E3192;color:white;">
+                  <h4 class="panel-title text-primary" id="panel2" style="color:white;">Pharmasy(This Month)<b></b></h4>
                  <div class="panel-tools">
                                     <a data-original-title="Collapse" data-toggle="tooltip" data-placement="bottom" class="btn btn-transparent btn-sm panel-collapse" href="#"><i class="fa fa-minus collapse-off"></i><i class="fa fa-plus collapse-on"></i></a>
                                     <a data-original-title="Refresh" data-toggle="tooltip" data-placement="bottom" class="btn btn-transparent btn-sm panel-refresh" href="#"><i class="fa fa-refresh"></i></a>
@@ -195,90 +297,16 @@
                                     </div>
                                 </div>
              </div>
-              <div class="panel-body">
-        <asp:GridView ID="grdPatientMaritialStatus" runat="server" AutoGenerateColumns="false" CssClass="footable large-only" GridLines="None" style="font-size:12px;color:white;" >
-            <Columns>
-               <%-- <asp:BoundField DataField="Doctor_Name" HeaderText=" Name" HeaderStyle-CssClass="align-left" HeaderStyle-BackColor="#fd8d68">
-                    <ItemStyle HorizontalAlign="left" />
-                </asp:BoundField>
-                <asp:BoundField DataField="Doctor_Clinic" HeaderText="Clinic" HeaderStyle-CssClass="align-left" HeaderStyle-BackColor="#fd8d68">
-                    <ItemStyle HorizontalAlign="Left" />
-                </asp:BoundField>--%>
-            </Columns>
-        </asp:GridView>
-             </div>
+              
+                 <div style="background-color:white;height:550px;padding-left:0px;">
+                     <iframe class="frame" style="background-color:white;padding-left:0;" src="PharmasyChart.aspx" frameborder="0" marginwidth="0" marginheight="0" scrolling="no" onload="" allowtransparency="false"></iframe>
+                 </div>
+                
+             
               </div>
                 </div>
              </div>
-            <div class="row">
-            <div class="col-md-6">
-        <div class="panel panel-white">
-             <div class="panel-heading" style="background-color:gray;color:white;">
-                  <h4 class="panel-title text-primary" id="panel3" style="color:white;">Doctor<b></b></h4>
-                 <div class="panel-tools">
-                                    <a data-original-title="Collapse" data-toggle="tooltip" data-placement="bottom" class="btn btn-transparent btn-sm panel-collapse" href="#"><i class="fa fa-minus collapse-off"></i><i class="fa fa-plus collapse-on"></i></a>
-                                    <a data-original-title="Refresh" data-toggle="tooltip" data-placement="bottom" class="btn btn-transparent btn-sm panel-refresh" href="#"><i class="fa fa-refresh"></i></a>
-                                    <a data-original-title="Full Screen" data-toggle="tooltip" data-placement="bottom" class="btn btn-transparent btn-sm full-link" href="#"><i class="fa fa-expand"></i></a>
-                                    <a data-original-title="Close" data-toggle="tooltip" data-placement="bottom" class="btn btn-transparent btn-sm panel-close" href="#"><i class="fa fa-close"></i></a>
-                                    <div class="btn-group">
-                                        <a data-original-title="DropDown" data-toggle="dropdown" data-placement="bottom" class="btn btn-transparent btn-sm toggle-dropdown" href="#"><i class="fa fa-chevron-down"></i></a>
-                                        <ul class="dropdown-menu dropdown-menu-right" style="overflow-y:scroll;height:150px;">
-                                           
-                                            <li><a href="#" class="dropdown-anchor">Another action</a> </li>
-                                        </ul>
-                                    </div>
-                                </div>
-             </div>
-            <div class="panel-body">
-        <asp:GridView ID="grdPatientAdmissionRelation" runat="server" AutoGenerateColumns="false" CssClass="footable large-only" GridLines="None" style="font-size:12px;color:white;" >
-            <Columns>
-                <asp:BoundField DataField="Doctor_Name" HeaderText=" Name" HeaderStyle-CssClass="align-left" HeaderStyle-BackColor="#fd8d68">
-                    <ItemStyle HorizontalAlign="left" />
-                </asp:BoundField>
-                <%--<asp:BoundField DataField="Doctor_Clinic" HeaderText="Clinic" HeaderStyle-CssClass="align-left" HeaderStyle-BackColor="#fd8d68">
-                    <ItemStyle HorizontalAlign="Left" />
-                </asp:BoundField>--%>
-            </Columns>
-        </asp:GridView>
-                </div>
-             </div>
-                </div>
-             <div class="col-md-6">
-        <div class="panel panel-white">
-             <div class="panel-heading" style="background-color:gray;color:white;">
-                  <h4 class="panel-title text-primary" id="panel4" style="color:white;">Clinic<b></b></h4>
-                 <div class="panel-tools">
-                                    <a data-original-title="Collapse" data-toggle="tooltip" data-placement="bottom" class="btn btn-transparent btn-sm panel-collapse" href="#"><i class="fa fa-minus collapse-off"></i><i class="fa fa-plus collapse-on"></i></a>
-                                    <a data-original-title="Refresh" data-toggle="tooltip" data-placement="bottom" class="btn btn-transparent btn-sm panel-refresh" href="#"><i class="fa fa-refresh"></i></a>
-                                    <a data-original-title="Full Screen" data-toggle="tooltip" data-placement="bottom" class="btn btn-transparent btn-sm full-link" href="#"><i class="fa fa-expand"></i></a>
-                                    <a data-original-title="Close" data-toggle="tooltip" data-placement="bottom" class="btn btn-transparent btn-sm panel-close" href="#"><i class="fa fa-close"></i></a>
-                                    <div class="btn-group">
-                                        <a data-original-title="DropDown" data-toggle="dropdown" data-placement="bottom" class="btn btn-transparent btn-sm toggle-dropdown" href="#"><i class="fa fa-chevron-down"></i></a>
-                                        <ul class="dropdown-menu dropdown-menu-right" style="overflow-y:scroll;height:150px;">
-                                           
-                                            <li><a href="#" class="dropdown-anchor">Another action</a> </li>
-                                        </ul>
-                                    </div>
-                                </div>
-             </div>
-            <div class="panel-body">
-        <asp:GridView ID="grdPatientDetail" runat="server" AutoGenerateColumns="false" CssClass="footable large-only" GridLines="None" style="font-size:12px;color:white;" >
-            <Columns>
-                <asp:BoundField DataField="Clinic_Name" HeaderText=" Name" HeaderStyle-CssClass="align-left" HeaderStyle-BackColor="#fd8d68">
-                    <ItemStyle HorizontalAlign="left" />
-                </asp:BoundField>
-                <asp:BoundField DataField="Clinic_Incharge" HeaderText="Gender" HeaderStyle-CssClass="align-left" HeaderStyle-BackColor="#fd8d68">
-                    <ItemStyle HorizontalAlign="Left" />
-                </asp:BoundField>
-                <asp:BoundField DataField="Clinic_Area" HeaderText="Desease" HeaderStyle-CssClass="align-left" HeaderStyle-BackColor="#fd8d68">
-                    <ItemStyle HorizontalAlign="Left" />
-                </asp:BoundField>
-            </Columns>
-        </asp:GridView>
-             </div>
-                </div>
-                </div>
-             </div>
+            
         </div>
     </div>
     </form>

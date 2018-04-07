@@ -18,3 +18,4 @@ D:\Running Projects\ZMT\Clinic\bin\Newtonsoft.Json.xml
 D:\Running Projects\ZMT\Clinic\bin\Microsoft.AspNet.FriendlyUrls.xml
 D:\Running Projects\ZMT\Clinic\obj\Release\Clinic.dll
 D:\Running Projects\ZMT\Clinic\obj\Release\Clinic.pdb
+D:\Running Projects\ZMT\Clinic\obj\Release\Clinic.csprojResolveAssemblyReference.cache

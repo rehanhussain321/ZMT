@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="Pharmasy.aspx.cs" Inherits="ZMTClinics.Pharmasy" %>
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="Pharmasy.aspx.cs" Inherits="ZMTClinics.Pharmasy" EnableEventValidation="false" %>
 
 <!DOCTYPE html>
 
@@ -6,35 +6,30 @@
 <head runat="server">
     <title>ZMT Clinics::Pharmacy</title>
     <link rel="stylesheet" href="../assets/js/jquery-ui/css/no-theme/jquery-ui-1.10.3.custom.min.css"/>
+    <script type="text/javascript" src="http://cdn.ucb.org.br/Scripts/formValidator/js/languages/jquery.validationEngine-en.js"
+        charset="utf-8"></script>
+    <script type="text/javascript" src="http://cdn.ucb.org.br/Scripts/formValidator/js/jquery.validationEngine.js"
+        charset="utf-8"></script>
 	<link rel="stylesheet" href="../assets/css/font-icons/entypo/css/entypo.css"/>
 	<link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Noto+Sans:400,700,400italic"/>
 	<link rel="stylesheet" href="../assets/css/bootstrap.css"/>
 	<link rel="stylesheet" href="../assets/css/neon-core.css"/>
 	<link rel="stylesheet" href="../assets/css/neon-theme.css"/>
 	<link rel="stylesheet" href="../assets/css/neon-forms.css"/>
+    <link rel="stylesheet" href="../style/grid.css" />
+    <link rel="stylesheet" href="../style/subGrid.css" />
 	<link rel="stylesheet" href="../assets/css/custom.css"/>
     <link rel="stylesheet" href="../assets/form.css" />
     <link href="../style/calendar-win2k-1.css" rel="stylesheet" />
-    <script src="../assets/js/jquery-1.11.0.min.js"></script>
-    <script src="../assets/js/jquery-1.11.0.min.js"></script>
-    
     <script src="dist/jquery.inputmask.bundle.min.js"></script>
-    <link rel="stylesheet" href="http://code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css">
+    <link rel="stylesheet" href="http://code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css"/>
     <script src="http://code.jquery.com/ui/1.10.4/jquery-ui.js" type="text/javascript"></script>
-    <%--    <script src="Scripts/calendar-en.js"></script>
-    <script src="Scripts/calendar-setup.js"></script>
-    <script src="Scripts/calendar-setup_stripped.js"></script>
-    <script src="Scripts/calendar_stripped.js"></script>
-    <script src="Scripts/CalendarPopup.js"></script>--%><%-- <script src="assets/jquery-1.4.1.min.js"></script>--%>
     <script src="../assets/jquery.dynDateTime.min.js"></script>
     <script src="../assets/calendar-en.min.js"></script>
     <link href="../assets/calendar-blue.css" rel="stylesheet" />
         <link href="../gridcss/grid.css" rel="stylesheet" />
     <link href="../gridcss/table.css" rel="stylesheet" />
     <link href="../gridcss/footable.css" rel="stylesheet" />
-    <%--<link href="grid.css" rel="stylesheet" />
-    <link href="table.css" rel="stylesheet" />
-    <link href="footable.css" rel="stylesheet" /> --%>
      <link href="../DatePicker/bootstrap-datepicker.css" rel="stylesheet" />
     <script src="../DatePicker/bootstrap-datepicker.js"></script>
     <%--<script>$.noConflict();</script>
@@ -45,12 +40,11 @@
 		<script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
 		<script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
 	<![endif]-->
-   <%--<script>
-       $(document).ready(function () {
-           $(".datepicker").datepicker({ format: 'dd/mm/yyyy', autoclose: true, todayBtn: 'linked' })
-       });
-</script>--%>
-    
+   <%--<link rel="stylesheet" href='http://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.0.3/css/bootstrap.min.css' media="screen" />--%>
+   <script type="text/javascript" src='http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.8.3.min.js'></script>
+   <script type="text/javascript" src='http://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.0.3/js/bootstrap.min.js'></script>
+   <script type="text/javascript" src="http://cdn.rawgit.com/bassjobsen/Bootstrap-3-Typeahead/master/bootstrap3-typeahead.min.js"></script>
+   <link rel="Stylesheet" href="https://twitter.github.io/typeahead.js/css/examples.css" />
     <style>
         .hideCol
         {
@@ -62,34 +56,15 @@
             
         }
     </style>
-        <style>
-
- 
-.table > tbody > tr > .no-line {
-    border-top: none;
-}
-.table > th > .text-center {
-    text-align:center;
-}
-.table > th > .text-left {
-    text-align:left;
-}
-.table > thead > tr > .no-line {
-    border-bottom: none;
-}
-
-.table > tbody > tr > .thick-line {
-    border-top: 2px solid;
-}
-.table > tbody > tr > td .{
-    color:black;
-    font-weight:900;
-}
-.table>tbody > tr:hover{
-    background-color:burlywood;
-}
-    </style>
-
+<script type="text/javascript">
+    $(function () {
+        $("[id*=gvPatientService] td").hover(function () {
+            $("td", $(this).closest("tr")).addClass("hover_row");
+        }, function () {
+            $("td", $(this).closest("tr")).removeClass("hover_row");
+        });
+    });
+    </script>
     <script type = "text/javascript">
         function Confirm() {
             if (confirm("Do you want to print slip?")) {
@@ -117,6 +92,49 @@
             
         }
     </script>
+    <script type="text/javascript">
+    $(function () {
+        $('[id*=txtMedicine]').typeahead({
+            hint: true,
+            highlight: true,
+            minLength: 1
+            ,source: function (request, response) {
+                $.ajax({
+                    url: '<%=ResolveUrl("Pharmasy.aspx/GetMedicines") %>',
+                    data: "{ 'prefix': '" + request + "'}",
+                    dataType: "json",
+                    type: "POST",
+                    contentType: "application/json; charset=utf-8",
+                    success: function (data) {
+                        items = [];
+                        map = {};
+                        $.each(data.d, function (i, item) {
+                            var id = item.split('~')[1];
+                            var name = item.split('~')[0];
+                            map[name] = { id: id, name: name };
+                            items.push(name);
+                        });
+                        response(items);
+                        $(".dropdown-menu").css("height", "auto");
+                        $(".dropdown-menu").css("font-size", "12px");
+                        $(".dropdown-menu").css("width", "200px");
+                        $(".dropdown-menu").css("font-color", "yellow");
+                    },
+                    error: function (response) {
+                        alert(response.responseText);
+                    },
+                    failure: function (response) {
+                        alert(response.responseText);
+                    }
+                });
+            },
+            updater: function (item) {
+                $('[id*=hfMedicine]').val(map[item].id);
+                return item;
+            }
+        });
+    });
+    </script>
     <link href="style/interface.css" rel="stylesheet" type="text/css" />
     <link href="style/calendar-win2k-1.css" type="text/css" rel="stylesheet" />
     <script src="Javascript/calendar.js" type="text/javascript"></script>
@@ -133,45 +151,60 @@
         }
 
     </script>
+    <script type="text/javascript">
+        //Disable the default MouseOver functionality of ASP.Net Menu control.
+        Sys.WebForms.Menu._elementObjectMapper.getMappedObject = function () {
+            return false;
+        };
+        $(function () {
+            //Remove the style attributes.
+            $(".navbar-nav li, .navbar-nav a, .navbar-nav ul").removeAttr('style');
+
+            //Apply the Bootstrap class to the Submenu.
+            $(".dropdown-menu").closest("li").removeClass().addClass("dropdown-toggle");
+
+            //Apply the Bootstrap properties to the Submenu.
+            $(".dropdown-toggle").find("a").eq(0).attr("data-toggle", "dropdown").attr("aria-haspopup", "true").attr("aria-expanded", "false").append("<span class='caret'></span>");
+
+            //Apply the Bootstrap "active" class to the selected Menu item.
+            $("a.selected").closest("li").addClass("active");
+            $("a.selected").closest(".dropdown-toggle").addClass("active");
+        });
+</script>
 </head>
 <body class="page-body">
     <form id="form1" runat="server">
-    <div class="page-container">
-       <div class="sidebar-menu">
-        <div class ="sidebar-menu-inner">
-        <header class="logo-env">
-
-				<!-- logo -->
-				<div class="logo">
-					<a href="grid.aspx">
-						<img src="logo.png" class="img-circle" Width="150" />
-					</a>
-				</div>
-
-				<!-- logo collapse icon -->
-				<div class="sidebar-collapse">
-					<a href="#" class="sidebar-collapse-icon">
-                        <!-- add class "with-animation" if you want sidebar to have animation during expanding/collapsing transition -->
-						<i class="entypo-menu"></i>
-					</a>
-				</div>
-
-								
-				<!-- open/close menu icon (do not remove if you want to enable menu on mobile devices) -->
-				<div class="sidebar-mobile-menu visible-xs">
-					<a href="#" class="with-animation"><!-- add class "with-animation" to support animation -->
-						<i class="entypo-menu"></i>
-					</a>
-				</div>
-
-			</header>
-            
-        <asp:Panel ID="Panel1" runat="server" CssClass="main-menu">
-           
-        </asp:Panel>
-                
+        <div class="navbar navbar-default">
+                <div class="container-fluid">
+                    <div class="row">
+                 <div class="col-md-2">
+                     <asp:Image ID="Image1" runat="server"/>
+                 </div>
+                 <div class="col-md-2">
+                     <asp:Label runat="server" ID="lblUserName"></asp:Label>
+                 </div>
+                 <div class="col-md-10 col-sm-offset-2">
+                     <asp:DropDownList ID="ddClinic" runat="server" class="form-control" width="15%" style="margin-left:85%;"  AutoPostBack="true" disabled="disabled"></asp:DropDownList>
+                 </div>
+                 </div>
+                    <div class="navbar-header">
+                        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1"
+                                        aria-expanded="false">
+                        <span class="sr-only">Toggle navigation</span> <span class="icon-bar"></span><span
+                                        class="icon-bar"></span><span class="icon-bar"></span>
+                        </button>
+                    <a class="navbar-brand" href="grid.aspx">ZMT Clinics</a>
+                    </div>
+                    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                        <asp:Menu ID="Menu1" runat="server" Orientation="Horizontal" RenderingMode="List"
+                                IncludeStyleBlock="false" StaticMenuStyle-CssClass="nav navbar-nav" DynamicMenuStyle-CssClass="dropdown-menu" style="background-color:aqua">
+                        </asp:Menu>
+                   </div>
+              </div>
         </div>
-    </div>
+    <div class="page-container">
+         
+     
         <div class="main-content">
             <div class="row">
 		
@@ -185,45 +218,11 @@
 		
 						<a href="#" class="dropdown-toggle" data-toggle="dropdown">
                         <%--<img src="assets/images/thumb-1@2x.png" alt="" class="img-circle" width="44" />--%>
-                            <asp:Image ID="ImgUser" runat="server"  Width="50" CssClass="img-circle"  />
-							<asp:Label runat="server" ID="lblUserName"></asp:Label>
+                            <%--<asp:Image ID="ImgUser" runat="server"  Width="50" CssClass="img-circle"  />
+							<asp:Label runat="server" ID=""></asp:Label>--%>
 						</a>
 		
 						<ul class="dropdown-menu">
-		
-							<!-- Reverse Caret -->
-                            <%--<li class="caret"></li>
-		
-							<!-- Profile sub-links -->
-							<li>
-								<a href="extra-timeline.html">
-									<i class="entypo-user"></i>
-									Edit Profile
-								</a>
-							</li>
-		
-							<li>
-								<a href="mailbox.html">
-									<i class="entypo-mail"></i>
-									Inbox
-								</a>
-							</li>
-		
-							<li>
-								<a href="extra-calendar.html">
-									<i class="entypo-calendar"></i>
-									Calendar
-								</a>
-							</li>
-		
-							<li>
-								<a href="#">
-									<i class="entypo-clipboard"></i>
-									Tasks
-								</a>
-							</li>
-						</ul>
-					</li>--%>
 		
 				</ul>
 				
@@ -239,15 +238,12 @@
 		
 		
 			<!-- Raw Links -->
-			<div class="col-md-6 col-sm-4 clearfix hidden-xs" >
-		
-				<ul class="list-inline links-list pull-right">
-		                    <asp:DropDownList ID="ddClinic" runat="server" class="form-control" disabled ="disabled"></asp:DropDownList><br /><br />
-                            <asp:TextBox runat="server" CssClass="form-control" ID="txtPatientSearch"></asp:TextBox>
-                            <asp:Button runat="server" ID="btnSearch" Text="Search" CssClass="btn btn-block btn-blue" OnClick="Unnamed1_Click" /><br /><br />
-                    
-                    
-					
+			<div class="col-md-12" style="margin-top:0px;">
+				<ul class="col-md-12">
+                           <div class="ui-widget">
+                            <asp:TextBox runat="server" CssClass="form-control" style="float:left;width:55%;" ID="txtPatientSearch" placeholder="Enter patient name for search" ></asp:TextBox>
+                        </div>
+                            <asp:Button runat="server" id="btnSearch" Text="Search" CssClass="btn btn-blue btn-block" style="width:45%" OnClick="Unnamed1_Click"/>
 						</ul>
 		
 					</li>
@@ -256,72 +252,49 @@
 				</ul>
 		
 			</div>
-                <div class="col-md-10 col-md-offset-1" id="search">
-                       <asp:GridView ID="gvPatients" runat="server" CssClass="footable large-only" style="font-size:12px;color:white;" OnSelectedIndexChanged="gvPatients_SelectedIndexChanged"  DataKeyNames="Registration_No" OnRowDataBound="gvPatients_RowDataBound" AutoGenerateColumns="False" EmptyDataText="No Record(s) Found" AutoGenerateSelectButton="True" ForeColor="White">
+                <div class="col-md-12 " id="search" style="height:352px;margin-left:0px;overflow:scroll;">
+                       <asp:GridView ID="gvPatients" runat="server" CssClass="mydatagrid" PagerStyle-CssClass="pager" HeaderStyle-CssClass="header" RowStyle-CssClass="rows"  OnSelectedIndexChanged="gvPatients_SelectedIndexChanged"  DataKeyNames="Registration_No" OnRowDataBound="gvPatients_RowDataBound" AutoGenerateColumns="False" EmptyDataText="No Record(s) Found" AutoGenerateSelectButton="True" ForeColor="Black">
                             <Columns>
-                                <asp:BoundField DataField="Ticket_Date" HeaderText="Ticket Date" HeaderStyle-CssClass="align-center" HeaderStyle-BackColor="#fd8d68"  ControlStyle-BackColor="Violet">
-<ControlStyle BackColor="Violet"></ControlStyle>
-
-<HeaderStyle BackColor="#FD8D68" CssClass="align-center"></HeaderStyle>
-
-                                    <ItemStyle HorizontalAlign ="Center" />
+                               <asp:BoundField DataField="Ticket_Date" HeaderText="Ticket Date" HeaderStyle-CssClass="align-right" >
+                                <ControlStyle></ControlStyle>
+                                <HeaderStyle CssClass="header"></HeaderStyle>
+                                 <ItemStyle HorizontalAlign ="Center" CssClass="row"  />
+                               </asp:BoundField>
+                               <asp:BoundField DataField="Ticket_Number" HeaderText="Ticket#" HeaderStyle-CssClass="text-center">
+                                  <HeaderStyle  CssClass="header"></HeaderStyle>
+                                  <ItemStyle HorizontalAlign ="Center" CssClass="row"  />
+                               </asp:BoundField>
+                               <asp:BoundField DataField ="Registration_No" HeaderText="MrNo" HeaderStyle-CssClass="align-left">
+                                 <HeaderStyle  CssClass="header"></HeaderStyle>
+                                 <ItemStyle HorizontalAlign="Left" CssClass="row"  />
+                               </asp:BoundField>
+                               <asp:BoundField DataField="First_Name" HeaderText="First Name" HeaderStyle-CssClass="align-left">
+                                 <HeaderStyle  CssClass="header"></HeaderStyle>
+                                 <ItemStyle HorizontalAlign ="Left" CssClass="row"  />
+                               </asp:BoundField>
+                                <asp:BoundField DataField="Father_Name" HeaderText="Father Name" HeaderStyle-CssClass="align-left">
+                                  <HeaderStyle  CssClass="header"></HeaderStyle>
+                                  <ItemStyle HorizontalAlign ="Left" CssClass="row"  />
                                 </asp:BoundField>
-                                <asp:BoundField DataField="Ticket_Number" HeaderText="Ticket#" HeaderStyle-CssClass="align-right" HeaderStyle-BackColor="#fd8d68">
-<HeaderStyle BackColor="#FD8D68" CssClass="align-right"></HeaderStyle>
-
-                                    <ItemStyle HorizontalAlign ="Right" />
+                                <asp:BoundField DataField="Age" HeaderText="Age" HeaderStyle-CssClass="align-left">
+                                  <HeaderStyle  CssClass="header"></HeaderStyle>
+                                  <ItemStyle HorizontalAlign ="Left" CssClass="row"  />
                                 </asp:BoundField>
-                                <asp:BoundField DataField ="Registration_No" HeaderText="MrNo" HeaderStyle-CssClass="align-left" HeaderStyle-BackColor="#fd8d68" >
-<HeaderStyle BackColor="#FD8D68" CssClass="align-left"></HeaderStyle>
-
-                                    <ItemStyle HorizontalAlign="Left" />
+                                <asp:BoundField DataField="Mobile_1" HeaderText="Mobile#1" HeaderStyle-CssClass="align-left">
+                                  <HeaderStyle  CssClass="header"></HeaderStyle>
+                                  <ItemStyle HorizontalAlign ="Left"  />
                                 </asp:BoundField>
-                                <asp:BoundField DataField="First_Name" HeaderText="First Name" HeaderStyle-CssClass="align-left" HeaderStyle-BackColor="#fd8d68">
-<HeaderStyle BackColor="#FD8D68" CssClass="align-left"></HeaderStyle>
-
-                                    <ItemStyle HorizontalAlign ="Left" />
-                                </asp:BoundField>
-                                <asp:BoundField DataField="Father_Name" HeaderText="Father Name" HeaderStyle-CssClass="align-left" HeaderStyle-BackColor="#fd8d68">
-<HeaderStyle BackColor="#FD8D68" CssClass="align-left"></HeaderStyle>
-
-                                    <ItemStyle HorizontalAlign ="Left" />
-                                </asp:BoundField>
-                                <asp:BoundField DataField="Age" HeaderText="Age" HeaderStyle-CssClass="align-left" HeaderStyle-BackColor="#fd8d68">
-<HeaderStyle BackColor="#FD8D68" CssClass="align-left"></HeaderStyle>
-
-                                    <ItemStyle HorizontalAlign ="Left" />
-                                </asp:BoundField>
-                                <asp:BoundField DataField="Mobile_1" HeaderText="Mobile#1" HeaderStyle-CssClass="align-left" HeaderStyle-BackColor="#fd8d68">
-<HeaderStyle BackColor="#FD8D68" CssClass="align-left"></HeaderStyle>
-
-                                    <ItemStyle HorizontalAlign ="Left" />
-                                </asp:BoundField>
-                                <asp:BoundField DataField="sys_PatientSno" HeaderText="Patient Sno" HeaderStyle-CssClass="align-left" HeaderStyle-BackColor="#fd8d68">
-                                    <ItemStyle CssClass="hideCol" />
-                                     <HeaderStyle CssClass="hideCol" />
+                                <asp:BoundField DataField="sys_PatientSno" HeaderText="Patient Sno" HeaderStyle-CssClass="align-left">
+                                  <ItemStyle CssClass="hideCol" />
+                                  <HeaderStyle CssClass="hideCol" />
                                 </asp:BoundField>
                             </Columns>
-                            </asp:GridView>
+                     </asp:GridView>
                     </div>
 		
 		</div>
 		
-		<hr />
-		
-					<ol class="breadcrumb bc-3" >
-								<li>
-						<a href="dashboard.aspx"><i class="fa-home"></i>Home</a>
-					</li>
-							<li>
-		
-									<a href="forms-main.html">Services</a>
-							</li>
-						<li class="active">
-		
-									<strong>Pharmacy</strong>
-							</li>
-							</ol>
-					
+		<hr />			
 		<h2>Pharmacy</h2>
 		<br />
         <div class="row">
@@ -338,44 +311,54 @@
 							<!--<a href="#" data-rel="close"><i class="entypo-cancel"></i></a>!-->
 						</div>
                     </div>
-                    <div class="panel-body">
+                    <div class="panel-body" style="padding:0px;padding-top:10px;padding-left:0px;padding-right:0px;">
                         <div class="row">
                             <div class="col-md-12">
-                                <asp:GridView ID="gvPatientService" runat="server" CssClass="footable large-only" style="font-size:12px;color:white;"  AutoGenerateColumns="False" EmptyDataText="No Record(s) Found" AutoGenerateSelectButton="True" ForeColor="White" OnSelectedIndexChanged="gvPatientService_SelectedIndexChanged">
+                                <asp:GridView ID="gvPatientService" runat="server" CssClass="table" style="font-size:12px;color:black;"  AutoGenerateColumns="False" EmptyDataText="No Record(s) Found" ForeColor="Black" OnRowDataBound = "OnRowDataBound" OnSelectedIndexChanged="gvPatientService_SelectedIndexChanged" OnRowCommand="gvPatientService_RowCommand" DataKeyNames="sysTicketMasterNo">
                             <Columns>
-                                <asp:BoundField DataField ="MR_No" HeaderText="MrNo" HeaderStyle-CssClass="align-left" HeaderStyle-BackColor="#fd8d68" >
-<HeaderStyle BackColor="#FD8D68" CssClass="align-left"></HeaderStyle>
-
-                                    <ItemStyle HorizontalAlign="Left" />
+                                <asp:BoundField DataField ="MR_No" HeaderText="MrNo" HeaderStyle-CssClass="text-right" HeaderStyle-BackColor="#c5c5d8" >
+                                    <HeaderStyle BackColor="#c5c5d8" CssClass="text-right"></HeaderStyle>
+                                    <ItemStyle HorizontalAlign="Right" />
                                 </asp:BoundField>
-                                <asp:BoundField DataField="sysTicketMasterNo" HeaderText="STN" />
-                                <asp:BoundField DataField="Patient_Name" HeaderText="Name" HeaderStyle-CssClass="align-center" HeaderStyle-BackColor="#fd8d68"  ControlStyle-BackColor="Violet">
-<ControlStyle BackColor="Violet"></ControlStyle>
-
-<HeaderStyle BackColor="#FD8D68" CssClass="align-center"></HeaderStyle>
-
-                                    <ItemStyle HorizontalAlign ="Center" />
+                                <asp:BoundField DataField="sysTicketMasterNo" HeaderText="STN" HeaderStyle-CssClass="text-center">
+                                    <ItemStyle CssClass="hideCol" />
+                                     <HeaderStyle CssClass="hideCol" />
                                 </asp:BoundField>
-                                <asp:BoundField DataField="Ticket_Number" HeaderText="Ticket_Number" HeaderStyle-CssClass="align-left" HeaderStyle-BackColor="#fd8d68">
-<HeaderStyle BackColor="#FD8D68" CssClass="align-left"></HeaderStyle>
-
-                                    <ItemStyle HorizontalAlign ="Left" />
+                                <asp:BoundField DataField="Patient_Name" HeaderText="Name" HeaderStyle-CssClass="text-left" HeaderStyle-BackColor="#c5c5d8"  ControlStyle-BackColor="#c5c5d8">
+                                <ControlStyle BackColor="#c5c5d8"></ControlStyle>
+                                <HeaderStyle BackColor="#c5c5d8" CssClass="text-left"></HeaderStyle>
+                                <ItemStyle HorizontalAlign ="left" />
                                 </asp:BoundField>
-                                <asp:BoundField DataField="Ticket_Date" HeaderText="Ticket Date" HeaderStyle-CssClass="align-left" HeaderStyle-BackColor="#fd8d68">
-<HeaderStyle BackColor="#FD8D68" CssClass="align-left"></HeaderStyle>
-
-                                    <ItemStyle HorizontalAlign ="Left" />
+                                <asp:BoundField DataField="Ticket_Number" HeaderText="Ticket" HeaderStyle-CssClass="text-right" HeaderStyle-BackColor="#fd8d68">
+                                <HeaderStyle BackColor="#c5c5d8" CssClass="text-right"></HeaderStyle>
+                                <ItemStyle HorizontalAlign="Right" />
                                 </asp:BoundField>
-                                <asp:BoundField DataField="NoOfServices" HeaderText="No Of Services" HeaderStyle-CssClass="align-left" HeaderStyle-BackColor="#fd8d68">
-<HeaderStyle BackColor="#FD8D68" CssClass="align-left"></HeaderStyle>
-
-                                    <ItemStyle HorizontalAlign ="Left" />
+                                <asp:BoundField DataField="Ticket_Date" HeaderText="Ticket Date" HeaderStyle-CssClass="text-center" HeaderStyle-BackColor="#fd8d68">
+                                <HeaderStyle BackColor="#c5c5d8" CssClass="text-center"></HeaderStyle>
+                                <ItemStyle HorizontalAlign ="Center" />
                                 </asp:BoundField>
-                                <asp:BoundField DataField="Total_Amount" HeaderText="Total Amount" HeaderStyle-CssClass="align-left" HeaderStyle-BackColor="#fd8d68">
-<HeaderStyle BackColor="#FD8D68" CssClass="align-left"></HeaderStyle>
-
-                                    <ItemStyle HorizontalAlign ="Left" />
+                                <asp:BoundField DataField="NoOfServices" HeaderText="No Of Services" HeaderStyle-CssClass="text-right" HeaderStyle-BackColor="#fd8d68">
+                                 <HeaderStyle BackColor="#c5c5d8" CssClass="text-right"></HeaderStyle>
+                                <ItemStyle HorizontalAlign ="Right" />
                                 </asp:BoundField>
+                                <asp:BoundField DataField="Collapse_ServiceName" HeaderText="Name Of Services" HeaderStyle-CssClass="text-left" HeaderStyle-BackColor="#fd8d68">
+                                 <HeaderStyle BackColor="#c5c5d8" CssClass="text-left"></HeaderStyle>
+                                <ItemStyle HorizontalAlign ="Left" />
+                                </asp:BoundField>
+                                <asp:BoundField DataField="Total_Amount" HeaderText="Total Amount" HeaderStyle-CssClass="text-center" HeaderStyle-BackColor="#fd8d68">
+                                <HeaderStyle BackColor="#c5c5d8" CssClass="text-center"></HeaderStyle>
+                                <ItemStyle HorizontalAlign ="Center" />
+                                </asp:BoundField>
+                                <%--<asp:CommandField ShowSelectButton="True" ControlStyle-CssClass="hideCol" >
+                                <ControlStyle CssClass="hideCol"></ControlStyle>
+                                </asp:CommandField>--%>
+                                <asp:TemplateField>
+                                <ItemTemplate>
+                                    <asp:Button ID="btnrefund" CssClass="btn" runat="server" OnClick="ChangeStatus" Text='<%# "Amount Return"  %>' />
+                                </ItemTemplate>
+                                <HeaderTemplate>Amount Return</HeaderTemplate>
+                                <HeaderStyle BackColor="#c5c5d8" Width="25" />
+                                </asp:TemplateField>
                             </Columns>
                             </asp:GridView>
                             </div>
@@ -407,7 +390,7 @@
                                 <div class="form-group">
                                         <asp:Label runat="server" ID="lblMrNo"  style="font-weight:bold;font-size:12px;color:red;float:left">Patient MR #:</asp:Label>
                                       <div class="col-md-4">
-                                           <asp:Label runat ="server" ID="lblPatientMrNo" BorderColor="#C8C8C8" style="font-size:12px;background-color:#F0F0F0;width:150px;" CssClass="form-control input-sm" ></asp:Label>
+                                           <asp:Label runat ="server" ID="lblPatientMrNo" BorderColor="#C8C8C8" style="font-size:12px;background-color:#F0F0F0;width:220px;" CssClass="form-control input-sm" ></asp:Label>
                                       </div>  
                                 </div>
                           <!-- </div> -->
@@ -415,7 +398,7 @@
                                <div class="form-group">
                                 <asp:Label runat="server" ID="Label2" style="font-weight:bold;font-size:12px;color:red;float:left">Token #:</asp:Label>
                                 <div class="col-md-4">
-                                    <asp:Label runat="server" ID="lblPatientToken" BorderColor="#C8C8C8" style="font-size:12px;background-color:#F0F0F0;width:150px;margin-left:29px;" CssClass="form-control"></asp:Label>
+                                    <asp:Label runat="server" ID="lblPatientToken" BorderColor="#C8C8C8" style="font-size:12px;background-color:#F0F0F0;width:220px;margin-left:29px;" CssClass="form-control"></asp:Label>
                                 </div>
                                 
                                </div>
@@ -424,7 +407,7 @@
                             <div class="form-group">
                                 <asp:Label runat="server" ID="lblRegistrationDate" style="font-weight:bold;font-size:12px;color:red;float:left;">Regd Date:</asp:Label>
                                 <div class="col-md-4">
-                               <asp:Label runat="server" ID="lblPatientRegistrationDate" BorderColor="#C8C8C8" style="font-size:11px;background-color:#F0F0F0;width:155px;" CssClass="form-control"></asp:Label>
+                               <asp:Label runat="server" ID="lblPatientRegistrationDate" BorderColor="#C8C8C8" style="font-size:11px;background-color:#F0F0F0;width:220px;" CssClass="form-control"></asp:Label>
                             </div>
                                 </div>
                             </div>
@@ -435,19 +418,19 @@
                                 <div class="form-group">
                                 <asp:label runat="server" for="field-2"  ID="lblFirstName" style="font-weight:bold;font-size:12px;color:red;float:left;">Name:</asp:label>
                               <div class="col-md-4">
-                                <asp:Label runat="server" ID="lblPatientFirstName" BorderColor="#C8C8C8" style="font-size:12px;background-color:#F0F0F0;width:150px;margin-left:40px;" CssClass="form-control"></asp:Label>
+                                <asp:Label runat="server" ID="lblPatientFirstName" BorderColor="#C8C8C8" style="font-size:12px;background-color:#F0F0F0;width:220px;margin-left:40px;" CssClass="form-control"></asp:Label>
                               </div>
                             </div>
                                 <div class="form-group">
                                <asp:Label runat="server" ID="lblFatherName" style="font-weight:bold;font-size:12px;color:red;float:left;">Father Name:</asp:Label>
                               <div class="col-md-4">
-                               <asp:Label runat="server" ID="lblPatientFatherName" BorderColor="#C8C8C8" style="font-size:12px;background-color:#F0F0F0;width:150px;" CssClass="form-control"></asp:Label>
+                               <asp:Label runat="server" ID="lblPatientFatherName" BorderColor="#C8C8C8" style="font-size:12px;background-color:#F0F0F0;width:220px;" CssClass="form-control"></asp:Label>
                                 </div>
                             </div>
                               <div class="form-group">
                                <asp:Label runat="server" ID="lblAge" style="font-weight:bold;font-size:12px;color:red;float:left">Age:</asp:Label>
                                  <div class="col-md-4">
-                                     <asp:Label runat="server" ID="lblPatientAge" BorderColor="#C8C8C8" style="font-size:12px;background-color:#F0F0F0;width:150px;margin-left:36px;" CssClass="form-control"></asp:Label>
+                                     <asp:Label runat="server" ID="lblPatientAge" BorderColor="#C8C8C8" style="font-size:12px;background-color:#F0F0F0;width:220px;margin-left:36px;" CssClass="form-control"></asp:Label>
                             </div>
                                   </div>
                     </div>
@@ -458,19 +441,19 @@
                                     <div class="form-group">
                                          <asp:Label runat="server" ID="lblGender" style="font-weight:bold;font-size:12px;color:red;float:left;">Gender:</asp:Label>
                                     <div class="col-md-4">
-                                          <asp:Label runat="server" ID="lblPatientGender" BorderColor="#C8C8C8" style="font-size:12px;background-color:#F0F0F0;width:150px;margin-left:30px;" CssClass="form-control"></asp:Label>        
+                                          <asp:Label runat="server" ID="lblPatientGender" BorderColor="#C8C8C8" style="font-size:12px;background-color:#F0F0F0;width:220px;margin-left:30px;" CssClass="form-control"></asp:Label>        
                                     </div>
                                         </div>
                                     <div class="form-group">
                                         <asp:label runat="server" for="field-2" ID="lblReligion" style="font-weight:bold;font-size:12px;color:red;float:left;">Religion:</asp:label>
                                     <div class="col-md-4">
-                                        <asp:Label runat="server" ID="lblPatientReligion" BorderColor="#C8C8C8" style="font-size:12px;background-color:#F0F0F0;width:150px;margin-left:28px;;" CssClass="form-control"></asp:Label>        
+                                        <asp:Label runat="server" ID="lblPatientReligion" BorderColor="#C8C8C8" style="font-size:12px;background-color:#F0F0F0;width:220px;margin-left:28px;;" CssClass="form-control"></asp:Label>        
                                     </div>
                                   </div>
                                     <div class="form-group">
                                        <asp:label runat="server" for="field-2" ID="lblMaritialStatus" style="font-weight:bold;font-size:12px;color:red;float:left;">Maritial St:</asp:label>
                                     <div class="col-md-4">
-                                    <asp:Label runat="server" ID="lblPatientMaritialStatus" BorderColor="#C8C8C8" style="font-size:12px;background-color:#F0F0F0;width:150px;" CssClass="form-control"></asp:Label>   
+                                    <asp:Label runat="server" ID="lblPatientMaritialStatus" BorderColor="#C8C8C8" style="font-size:12px;background-color:#F0F0F0;width:220px;" CssClass="form-control"></asp:Label>   
                                     </div>
                                 </div>
                             </div>
@@ -483,7 +466,7 @@
                 <div class="panel panel-primary" data-collapsed="0" id="ServiceAddedPanel">
                     <div class="panel-heading" style="background-color:#2E3192; color:whitesmoke;">
                     <div class="panel-title" style="font-family:Arial;">
-                        Medicine Detail
+                        Medicine Detail  <span style="font-size:16px;color:#FFFF00;font-weight:bold;"><asp:Literal runat="server" id="ltrMedicine"></asp:Literal></span>
                     </div>
                         <div class="panel-options">
 							<a href="#" data-rel="collapse"><i class="entypo-down-open"></i></a>
@@ -495,28 +478,30 @@
                     <div class="panel-body">
                         <div>
                               
-                                <asp:Label runat="server" ID="lblMedical" style="font-weight:bold;font-size:12px;color:red;float:left;margin-top:5px;">Medicine:</asp:Label>
+                                <asp:Label runat="server" ID="lblMedical" style="font-weight:bold;font-size:12px;color:red;float:left;margin-top:5px;margin-left:30px;">Medicine:</asp:Label>
                                 
-                                <asp:DropDownList ID="ddlMedicine" runat="server" class="form-control" Width="100%" Height="100%" style="font-size:12px;width:160px;margin-left:5px;margin-bottom:4px;float:left;" AutoPostBack="true"  AppendDataBoundItems="true">
+                                <%--<asp:DropDownList ID="ddlMedicine" runat="server" class="form-control" Width="100%" Height="100%" style="font-size:12px;width:250px;margin-left:5px;margin-bottom:4px;float:left;" AutoPostBack="true"  AppendDataBoundItems="true">
                                             <asp:ListItem Text="Select Medicine Unit" Value="0"></asp:ListItem>
-								</asp:DropDownList>
-                                
+								</asp:DropDownList>--%>
 
-                                <asp:Label runat="server" ID="Label5" style="font-weight:bold;font-size:12px;color:red;float:left;margin-top:5px;margin-left:10px;">Unit:</asp:Label>
+                                 <asp:TextBox runat="server"  id="txtMedicine"  class="form-control" autocomplete="off" style="font-size:12px;width:250px;margin-left:5px;margin-bottom:4px;float:left;" placeholder="Enter medicine name to search"/>
+                                 <asp:TextBox runat="server"  id="hfMedicine" CssClass="hideCol" />
+
+                                <asp:Label runat="server" ID="Label5" style="font-weight:bold;font-size:12px;color:red;float:left;margin-top:5px;margin-left:25px;">Unit:</asp:Label>
                               
-                                <asp:DropDownList ID="ddUnit" runat="server" class="form-control" Width="100%" Height="100%" style="font-size:12px;margin-left:5px;float:left;width:78px;" AutoPostBack="true" onchange="sumQuantity();">
+                                <asp:DropDownList ID="ddUnit" runat="server" class="form-control" Width="100%" Height="100%" style="font-size:12px;margin-left:5px;float:left;width:100px;" AutoPostBack="true" onchange="sumQuantity();">
                                             <asp:ListItem Text="Select Medicine" Value="0"></asp:ListItem>
 								</asp:DropDownList>
                                 <asp:Label runat="server" CssClass="hideCol" ID="lblSrNo"></asp:Label>
 
-                                    <asp:Label runat="server" ID="Label6" style="font-weight:bold;font-size:12px;color:red;float:left;margin-top:5px;margin-left:10px;">Dosage:</asp:Label>
+                                    <asp:Label runat="server" ID="Label6" style="font-weight:bold;font-size:12px;color:red;float:left;margin-top:5px;margin-left:25px;">Dosage:</asp:Label>
                                     <%--<asp:TextBox runat="server" ID="txtPatientMedicineDosage" CssClass="form-control" style="font-size:12px;background-color:#F0F0F0;width:120px;margin-left:0;">1+1+1</asp:TextBox>--%>
-                                     <asp:DropDownList ID="ddDosage" runat="server" class="form-control" Width="100%" Height="100%" style="font-size:12px;margin-left:5px;float:left;width:78px;" AutoPostBack="true" onchange="sumQuantity();">
+                                     <asp:DropDownList ID="ddDosage" runat="server" class="form-control" Width="100%" Height="100%" style="font-size:12px;margin-left:5px;float:left;width:100px;" AutoPostBack="true" onchange="sumQuantity();">
                                             <asp:ListItem Text="Select Dosage" Value="0"></asp:ListItem>
 								</asp:DropDownList>
-                                    <asp:Label runat="server" ID="Label4" style="font-weight:bold;font-size:12px;color:red;float:left;margin-top:5px;margin-left:10px;">Days:</asp:Label>
+                                    <asp:Label runat="server" ID="Label4" style="font-weight:bold;font-size:12px;color:red;float:left;margin-top:5px;margin-left:25px;">Days:</asp:Label>
                                     <%--<asp:TextBox runat="server" ID="txtPatientMedicineDosage" CssClass="form-control" style="font-size:12px;background-color:#F0F0F0;width:120px;margin-left:0;">1+1+1</asp:TextBox>--%>
-                                     <asp:DropDownList ID="ddDays" runat="server" class="form-control" Width="100%" Height="100%" style="font-size:12px;margin-left:5px;float:left;width:70px;" AutoPostBack="true" onchange="sumQuantity();">
+                                     <asp:DropDownList ID="ddDays" runat="server" class="form-control" Width="100%" Height="100%" style="font-size:12px;margin-left:15px;float:left;width:100px;" AutoPostBack="true" onchange="sumQuantity();">
                                             <asp:ListItem Text="1" Value="1"></asp:ListItem>
                                             <asp:ListItem Text="2" Value="2"></asp:ListItem>
                                             <asp:ListItem Text="3" Value="3"></asp:ListItem>
@@ -549,14 +534,18 @@
                                             <asp:ListItem Text="30" Value="30"></asp:ListItem>
                                             <asp:ListItem Text="31" Value="31"></asp:ListItem>
 								</asp:DropDownList>
-                                    <asp:Label runat="server" ID="Label3" style="font-weight:bold;font-size:12px;color:red;float:left;margin-top:5px;margin-left:10px;">Quantity:</asp:Label>
-                                    <asp:TextBox runat="server" ID="txtQuantity" CssClass="form-control" style="font-size:12px;background-color:#F0F0F0;width:80px;margin-left:5px;float:left;" >1</asp:TextBox>
-                                    <asp:Button runat="server" ID="btnAdd"  style="width:50px;margin-left:800px;" Text="Add " OnClick="btnAdd_Click" CssClass="btn btn-block" />
+                                    <asp:Label runat="server" ID="Label3" style="font-weight:bold;font-size:12px;color:red;float:left;margin-top:5px;margin-left:25px;">Quantity:</asp:Label>
+                                    <asp:TextBox runat="server" ID="txtQuantity" CssClass="form-control" style="font-size:12px;background-color:#F0F0F0;width:100px;margin-left:5px;float:left;" >1</asp:TextBox>
+                                    <asp:Button runat="server" ID="btnAdd"  style="width:75px;margin-left:1050px;" Text="Add " OnClick="btnAdd_Click" CssClass="btn btn-block" />
                                
                             
                             
 
                             </div>
+                        
+                           
+                        
+                             
                         <div class="row">
                             <div class="col-md-12">
                                 <asp:GridView ID="gvServiceDetail" runat="server" CssClass="table" style="font-size:12px;font-weight:900" AutoGenerateColumns="False" EmptyDataText="No Service Added" ForeColor="White" OnRowDeleting="gvServiceDetail_RowDeleting" OnRowDataBound="gvServiceDetail_RowDataBound" ShowFooter="True">

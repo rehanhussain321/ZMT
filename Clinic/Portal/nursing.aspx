@@ -59,11 +59,48 @@
             }
         }
     </script>
+     <script type="text/javascript">
+         //Disable the default MouseOver functionality of ASP.Net Menu control.
+         Sys.WebForms.Menu._elementObjectMapper.getMappedObject = function () {
+             return false;
+         };
+         $(function () {
+             //Remove the style attributes.
+             $(".navbar-nav li, .navbar-nav a, .navbar-nav ul").removeAttr('style');
+
+             //Apply the Bootstrap class to the Submenu.
+             $(".dropdown-menu").closest("li").removeClass().addClass("dropdown-toggle");
+
+             //Apply the Bootstrap properties to the Submenu.
+             $(".dropdown-toggle").find("a").eq(0).attr("data-toggle", "dropdown").attr("aria-haspopup", "true").attr("aria-expanded", "false").append("<span class='caret'></span>");
+
+             //Apply the Bootstrap "active" class to the selected Menu item.
+             $("a.selected").closest("li").addClass("active");
+             $("a.selected").closest(".dropdown-toggle").addClass("active");
+         });
+</script>
 </head>
 <body class="page-body">
     <form id="form1" runat="server">
+         <div class="navbar navbar-default">
+                <div class="container-fluid">
+                    <div class="navbar-header">
+                        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1"
+                                        aria-expanded="false">
+                        <span class="sr-only">Toggle navigation</span> <span class="icon-bar"></span><span
+                                        class="icon-bar"></span><span class="icon-bar"></span>
+                        </button>
+                    <a class="navbar-brand" href="#">ZMT Clinics</a>
+                    </div>
+                    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                        <asp:Menu ID="Menu1" runat="server" Orientation="Horizontal" RenderingMode="List"
+                                IncludeStyleBlock="false" StaticMenuStyle-CssClass="nav navbar-nav" DynamicMenuStyle-CssClass="dropdown-menu" style="background-color:aqua">
+                        </asp:Menu>
+                   </div>
+              </div>
+        </div>
     <div class="page-container">
-       <div class="sidebar-menu">
+<%--       <div class="sidebar-menu">
         <div class ="sidebar-menu-inner">
         <header class="logo-env">
 				<!-- logo -->
@@ -91,7 +128,7 @@
            
         </asp:Panel>       
         </div>
-    </div>
+    </div>--%>
         <div class="main-content">
             <div class="row">
 			<!-- Profile Info and Notifications -->
@@ -255,7 +292,7 @@
                                 <div class="form-group">
                                         <asp:Label runat="server" ID="lblMrNo"  style="font-weight:bold;font-size:12px;color:red;float:left">Patient MR #:</asp:Label>
                                       <div class="col-md-4">
-                                           <asp:Label runat ="server" ID="lblPatientMrNo" BorderColor="#C8C8C8" style="font-size:12px;background-color:#F0F0F0;width:150px;" CssClass="form-control input-sm" ></asp:Label>
+                                           <asp:Label runat ="server" ID="lblPatientMrNo" BorderColor="#C8C8C8" style="font-size:12px;background-color:#F0F0F0;width:200px;" CssClass="form-control input-sm" ></asp:Label>
                                       </div>  
                                 </div>
                           <!-- </div> -->
@@ -263,7 +300,7 @@
                                <div class="form-group">
                                 <asp:Label runat="server" ID="Label2" style="font-weight:bold;font-size:12px;color:red;float:left">Token #:</asp:Label>
                                 <div class="col-md-4">
-                                    <asp:Label runat="server" ID="lblPatientToken" BorderColor="#C8C8C8" style="font-size:12px;background-color:#F0F0F0;width:150px;margin-left:29px;" CssClass="form-control"></asp:Label>
+                                    <asp:Label runat="server" ID="lblPatientToken" BorderColor="#C8C8C8" style="font-size:12px;background-color:#F0F0F0;width:200px;margin-left:29px;" CssClass="form-control"></asp:Label>
                                 </div>
                                 
                                </div>
@@ -272,7 +309,7 @@
                             <div class="form-group">
                                 <asp:Label runat="server" ID="lblRegistrationDate" style="font-weight:bold;font-size:12px;color:red;float:left;">Regd Date:</asp:Label>
                                 <div class="col-md-4">
-                               <asp:Label runat="server" ID="lblPatientRegistrationDate" BorderColor="#C8C8C8" style="font-size:12px;background-color:#F0F0F0;width:150px;" CssClass="form-control"></asp:Label>
+                               <asp:Label runat="server" ID="lblPatientRegistrationDate" BorderColor="#C8C8C8" style="font-size:12px;background-color:#F0F0F0;width:200px;" CssClass="form-control"></asp:Label>
                             </div>
                                 </div>
                             </div>
@@ -283,19 +320,19 @@
                                 <div class="form-group">
                                 <asp:label runat="server" for="field-2"  ID="lblFirstName" style="font-weight:bold;font-size:12px;color:red;float:left;">Name:</asp:label>
                               <div class="col-md-4">
-                                <asp:Label runat="server" ID="lblPatientFirstName" BorderColor="#C8C8C8" style="font-size:12px;background-color:#F0F0F0;width:150px;margin-left:40px;" CssClass="form-control"></asp:Label>
+                                <asp:Label runat="server" ID="lblPatientFirstName" BorderColor="#C8C8C8" style="font-size:12px;background-color:#F0F0F0;width:200px;margin-left:40px;" CssClass="form-control"></asp:Label>
                               </div>
                             </div>
                                 <div class="form-group">
                                <asp:Label runat="server" ID="lblFatherName" style="font-weight:bold;font-size:12px;color:red;float:left;">Father Name:</asp:Label>
                               <div class="col-md-4">
-                               <asp:Label runat="server" ID="lblPatientFatherName" BorderColor="#C8C8C8" style="font-size:12px;background-color:#F0F0F0;width:150px;" CssClass="form-control"></asp:Label>
+                               <asp:Label runat="server" ID="lblPatientFatherName" BorderColor="#C8C8C8" style="font-size:12px;background-color:#F0F0F0;width:200px;" CssClass="form-control"></asp:Label>
                                 </div>
                             </div>
                               <div class="form-group">
                                <asp:Label runat="server" ID="lblAge" style="font-weight:bold;font-size:12px;color:red;float:left">Age:</asp:Label>
                                  <div class="col-md-4">
-                                     <asp:Label runat="server" ID="lblPatientAge" BorderColor="#C8C8C8" style="font-size:12px;background-color:#F0F0F0;width:150px;margin-left:36px;" CssClass="form-control"></asp:Label>
+                                     <asp:Label runat="server" ID="lblPatientAge" BorderColor="#C8C8C8" style="font-size:12px;background-color:#F0F0F0;width:200px;margin-left:36px;" CssClass="form-control"></asp:Label>
                             </div>
                                   </div>
                     </div>
@@ -306,19 +343,19 @@
                                     <div class="form-group">
                                          <asp:Label runat="server" ID="lblGender" style="font-weight:bold;font-size:12px;color:red;float:left;">Gender:</asp:Label>
                                     <div class="col-md-4">
-                                          <asp:Label runat="server" ID="lblPatientGender" BorderColor="#C8C8C8" style="font-size:12px;background-color:#F0F0F0;width:150px;margin-left:30px;" CssClass="form-control"></asp:Label>        
+                                          <asp:Label runat="server" ID="lblPatientGender" BorderColor="#C8C8C8" style="font-size:12px;background-color:#F0F0F0;width:200px;margin-left:30px;" CssClass="form-control"></asp:Label>        
                                     </div>
                                         </div>
                                     <div class="form-group">
                                         <asp:label runat="server" for="field-2" ID="lblReligion" style="font-weight:bold;font-size:12px;color:red;float:left;">Religion:</asp:label>
                                     <div class="col-md-4">
-                                        <asp:Label runat="server" ID="lblPatientReligion" BorderColor="#C8C8C8" style="font-size:12px;background-color:#F0F0F0;width:150px;margin-left:28px;;" CssClass="form-control"></asp:Label>        
+                                        <asp:Label runat="server" ID="lblPatientReligion" BorderColor="#C8C8C8" style="font-size:12px;background-color:#F0F0F0;width:200px;margin-left:28px;;" CssClass="form-control"></asp:Label>        
                                     </div>
                                   </div>
                                     <div class="form-group">
                                        <asp:label runat="server" for="field-2" ID="lblMaritialStatus" style="font-weight:bold;font-size:12px;color:red;float:left;">Maritial St:</asp:label>
                                     <div class="col-md-4">
-                                    <asp:Label runat="server" ID="lblPatientMaritialStatus" BorderColor="#C8C8C8" style="font-size:12px;background-color:#F0F0F0;width:150px;" CssClass="form-control"></asp:Label>   
+                                    <asp:Label runat="server" ID="lblPatientMaritialStatus" BorderColor="#C8C8C8" style="font-size:12px;background-color:#F0F0F0;width:200px;" CssClass="form-control"></asp:Label>   
                                     </div>
                                 </div>
                             </div>
@@ -341,19 +378,19 @@
                              <div class="form-group">
                                  <asp:Label runat="server" ID="lblPatientBp" style="font-weight:bold;font-size:12px;color:blue;float:left">B.P:</asp:Label>
                                  <div class="col-md-4">
-                                <asp:TextBox runat="server" ID="txtPatientBp" type="text" placeholder="Enter Patient Blood Pressure"  CssClass="form-control" style="font-size:14px;background-color:#F0F0F0;width:150px;margin-left:44px;"></asp:TextBox>
+                                <asp:TextBox runat="server" ID="txtPatientBp" type="text" placeholder="Enter Patient Blood Pressure"  CssClass="form-control" style="font-size:14px;background-color:#F0F0F0;width:200px;margin-left:44px;"></asp:TextBox>
                              </div> 
                             </div>
                               <div class="form-group">
                                   <asp:Label runat="server" ID="lblPatientPulse" style="font-weight:bold;font-size:12px;color:blue;float:left;">Pulse:</asp:Label>
                                 <div class="col-md-4">
-                                <asp:TextBox runat="server" ID="txtPatientPulse" type="text" placeholder="Enter Patient Pulse" CssClass="form-control" style="font-size:12px;background-color:#F0F0F0;width:150px;margin-left:26px;"></asp:TextBox>
+                                <asp:TextBox runat="server" ID="txtPatientPulse" type="text" placeholder="Enter Patient Pulse" CssClass="form-control" style="font-size:12px;background-color:#F0F0F0;width:200px;margin-left:26px;"></asp:TextBox>
                               </div>
                             </div>
                               <div class="form-group">
                                    <asp:Label runat="server" ID="lblPatientTemperature" style="font-weight:bold;font-size:12px;color:blue;float:left">Temperature:</asp:Label>
                                  <div class="col-md-4">
-                                   <asp:TextBox runat="server" ID="txtPatientTemperature" type="text" placeholder="Enter Patient Temperature" CssClass="form-control" style="font-size:12px;background-color:#F0F0F0;width:150px;margin-left:12px;"></asp:TextBox>
+                                   <asp:TextBox runat="server" ID="txtPatientTemperature" type="text" placeholder="Enter Patient Temperature" CssClass="form-control" style="font-size:12px;background-color:#F0F0F0;width:200px;margin-left:12px;"></asp:TextBox>
                               </div> 
                             </div>
                           </div>
@@ -361,19 +398,19 @@
                               <div class="form-group">
                                 <asp:Label runat="server" ID="lblPatientWeight" style="font-weight:bold;font-size:12px;color:blue;float:left">Weight:</asp:Label>
                                <div class="col-md-4">
-                                <asp:TextBox runat="server" ID="txtPatientWeight" type="text" placeholder="Enter Patient Weight" CssClass="form-control" style="font-size:14px;background-color:#F0F0F0;width:150px;margin-left:25px;"></asp:TextBox>
+                                <asp:TextBox runat="server" ID="txtPatientWeight" type="text" placeholder="Enter Patient Weight" CssClass="form-control" style="font-size:14px;background-color:#F0F0F0;width:200px;margin-left:25px;"></asp:TextBox>
                               </div>
                             </div>
                               <div class="form-group">
                                   <asp:Label runat="server" ID="lblPatientHeightfeet" style="font-weight:bold;font-size:12px;color:blue;float:left;">Height(ft):</asp:Label>
                                <div class="col-md-4">
-                                <asp:TextBox runat="server" ID="txtPatientHeightfeet" type="text" placeholder="Enter Patient Height in Feet" CssClass="form-control" style="font-size:12px;background-color:#F0F0F0;width:150px;margin-left:5px;"></asp:TextBox>
+                                <asp:TextBox runat="server" ID="txtPatientHeightfeet" type="text" placeholder="Enter Patient Height in Feet" CssClass="form-control" style="font-size:12px;background-color:#F0F0F0;width:200px;margin-left:5px;"></asp:TextBox>
                               </div>
                             </div>
                               <div class="form-group">
                                   <asp:Label runat="server" ID="lblPatientHeightinch" style="font-weight:bold;font-size:12px;color:blue;float:left">Height(inc):</asp:Label>
                                 <div class="col-md-4">
-                                <asp:TextBox runat="server" ID="txtPatientHeightinch" type="text" placeholder="Enter Patient Height in inches" CssClass="form-control" style="font-size:12px;background-color:#F0F0F0;width:150px;margin-left:20px;"></asp:TextBox>
+                                <asp:TextBox runat="server" ID="txtPatientHeightinch" type="text" placeholder="Enter Patient Height in inches" CssClass="form-control" style="font-size:12px;background-color:#F0F0F0;width:200px;margin-left:20px;"></asp:TextBox>
                               </div>
                             </div>
                         </div>
@@ -382,19 +419,19 @@
                             <div class="form-group">
                                 <asp:Label runat="server" ID="lblBloodGroup" style="font-weight:bold;font-size:12px;color:blue;float:left">Blood Gp:</asp:Label>
                                 <div class ="col-md-4">
-                                <asp:TextBox runat="server" ID="txtBloodGroup" type="text" placeholder="Enter Patient Blood Group" CssClass="form-control" style="font-size:12px;background-color:#F0F0F0;width:150px;margin-left:12px;"></asp:TextBox> 
+                                <asp:TextBox runat="server" ID="txtBloodGroup" type="text" placeholder="Enter Patient Blood Group" CssClass="form-control" style="font-size:12px;background-color:#F0F0F0;width:200px;margin-left:12px;"></asp:TextBox> 
                             </div>
                         </div>
                             <div class="form-group">
                                 <asp:Label runat="server" ID="lblDesease" style="font-weight:bold;font-size:12px;color:blue;float:left">Disease:</asp:Label>
                             <div class="col-md-4">
-                                <asp:TextBox runat="server" ID="txtDesease" type="text" placeholder="Registration Date" CssClass="form-control" style="font-size:12px;background-color:#F0F0F0;width:150px;margin-left:12px;" ></asp:TextBox>
+                                <asp:TextBox runat="server" ID="txtDesease" type="text" placeholder="Registration Date" CssClass="form-control" style="font-size:12px;background-color:#F0F0F0;width:200px;margin-left:12px;" ></asp:TextBox>
                             </div>
                         </div>
                                 <div class="form-group">
                                     <asp:Label runat="server" ID="LlblFamilyDesease" style="font-weight:bold;font-size:12px;color:blue;float:left">Family Dsc:</asp:Label>
                                      <div class="col-md-4">
-                                    <asp:TextBox runat="server" ID="txtFamilyDesease" type="text" placeholder="Family Desease" CssClass="form-control"  style="font-size:12px;background-color:#F0F0F0;width:150px;margin-left:20px;"></asp:TextBox>
+                                    <asp:TextBox runat="server" ID="txtFamilyDesease" type="text" placeholder="Family Desease" CssClass="form-control"  style="font-size:12px;background-color:#F0F0F0;width:200px;margin-left:20px;"></asp:TextBox>
                                      
                                     <asp:Label runat="server" CssClass="hideCol" ID="lblSrNo"></asp:Label>
                                 </div>
@@ -405,7 +442,7 @@
                                 <div class="form-group">
                                     <asp:Label runat="server" ID="lblRespirateryRate" style="font-weight:bold;font-size:12px;color:blue;float:left">Resp Rate:</asp:Label>
                                 <div class="col-md-4">
-                                    <asp:TextBox runat="server" ID="txtRespirateryRate" type="text" placeholder="Respiratery Rate" CssClass="form-control"  style="font-size:12px;background-color:#F0F0F0;width:150px;margin-left:8px;"></asp:TextBox>
+                                    <asp:TextBox runat="server" ID="txtRespirateryRate" type="text" placeholder="Respiratery Rate" CssClass="form-control"  style="font-size:12px;background-color:#F0F0F0;width:200px;margin-left:8px;"></asp:TextBox>
                                      
                                     <asp:Label runat="server" CssClass="hideCol" ID="Label3"></asp:Label>
                                 </div>

@@ -14,7 +14,9 @@ using System.Data.SqlClient;
 using System.Collections.Generic;
 using KT_Classes;
 using System.Drawing;
-using ZMTClinics.Class; 
+using ZMTClinics.Class;
+using System.IO;
+using System.Web.Services;
 
 namespace ZMTClinics
 {
@@ -33,83 +35,129 @@ namespace ZMTClinics
         string constr = ConfigurationManager.ConnectionStrings["KTConnectionString"].ConnectionString;
         string sysTicketMasterNo;
 
-        #region LOAD MENU
-        private void LoadMenu()
-        {
+        //#region LOAD MENU
+        //private void LoadMenu()
+        //{
             
-            SqlConnection con = new SqlConnection(constr);
-            string userCode;
-            userCode = (Session["User_Code"].ToString());
-            SqlDataAdapter da = new SqlDataAdapter("Select Menu_Code, MenuText, MenuPath,MenuParent from SEC_Menu where MenuType = 6 AND MenuParent=0", con);
-            //  SqlDataAdapter da = new SqlDataAdapter("SEC_GetUserMenu 8,4", con);
-            DataTable dttc = new DataTable();
-            da.Fill(dttc);
-            HtmlGenericControl main = UList("main-menu", "main-menu");
-            foreach (DataRow row in dttc.Rows)
-            {
-                da = new SqlDataAdapter("select Menu_Code,MenuText,MenuPath,MenuParent from SEC_Menu where MenuParent=" + row["Menu_Code"].ToString() + " order by ISNULL(sortorder,0)", con);
-                // da = new SqlDataAdapter("SELECT  Case MP.Menu_Code WHEN 0 THEN NULL ELSE MP.Menu_Code END AS ParentCode , MP.MenuText AS ParentMenu , M.MenuText , M.Menu_Code , M.MenuType, M.MenuPath, M.MenuDirPath FROM SEC_Menu M INNER JOIN SEC_RoleDetail RD ON RD.Menu_Code = M.Menu_Code INNER JOIN SEC_Role R ON RD.Role_Code = R.Role_Code INNER JOIN SEC_GroupDetail GD ON GD.Role_Code = RD.Role_Code INNER JOIN SEC_Group G ON GD.Group_Code = G.Group_Code INNER JOIN SEC_User U ON U.Group_Code = G.Group_Code INNER JOIN SEC_Menu MP ON MP.Menu_Code = M.MenuParent  WHERE 	U.User_Code  = '8' AND M.Menu_Code NOT IN (SELECT Menu_Code FROM SEC_UserRights WHERE User_Code  = '8')and M.MenuType='4' and MP.Menu_Code <>0 UNION SELECT   Case MP.Menu_Code WHEN 0 THEN NULL ELSE MP.Menu_Code END AS ParentCode , MP.MenuText AS ParentMenu , M.MenuText , M.Menu_Code ,M.MenuType    , M.MenuPath, M.MenuDirPath FROM SEC_Menu M  INNER JOIN SEC_UserRights UR ON UR.Menu_Code = M.Menu_Code INNER JOIN SEC_Menu MP ON MP.Menu_Code = M.MenuParent WHERE User_Code  = '8'and M.MenuType='4' and m.Menu_Code <>0", con);
-                DataTable dtDist = new DataTable();
-                da.Fill(dtDist);
-                if (dtDist.Rows.Count > 0)
-                {
-                    HtmlGenericControl sub_menu = LIList(row["MenuText"].ToString(), row["Menu_Code"].ToString(), row["MenuPath"].ToString());
-                    HtmlGenericControl ul = new HtmlGenericControl("ul");
-                    foreach (DataRow r in dtDist.Rows)
-                    {
-                        ul.Controls.Add(LIList(r["MenuText"].ToString(), r["MenuParent"].ToString(), r["MenuPath"].ToString()));
-                    }
-                    sub_menu.Controls.Add(ul);
-                    main.Controls.Add(sub_menu);
-                }
-                else
-                {
-                    main.Controls.Add(LIList(row["MenuText"].ToString(), row["Menu_Code"].ToString(), row["MenuPath"].ToString()));
-                }
-            }
+        //    SqlConnection con = new SqlConnection(constr);
+        //    string userCode;
+        //    userCode = (Session["User_Code"].ToString());
+        //    SqlDataAdapter da = new SqlDataAdapter("Select Menu_Code, MenuText, MenuPath,MenuParent from SEC_Menu where MenuType = 6 AND MenuParent=0", con);
+        //    //  SqlDataAdapter da = new SqlDataAdapter("SEC_GetUserMenu 8,4", con);
+        //    DataTable dttc = new DataTable();
+        //    da.Fill(dttc);
+        //    HtmlGenericControl main = UList("main-menu", "main-menu");
+        //    foreach (DataRow row in dttc.Rows)
+        //    {
+        //        da = new SqlDataAdapter("select Menu_Code,MenuText,MenuPath,MenuParent from SEC_Menu where MenuParent=" + row["Menu_Code"].ToString() + " order by ISNULL(sortorder,0)", con);
+        //        // da = new SqlDataAdapter("SELECT  Case MP.Menu_Code WHEN 0 THEN NULL ELSE MP.Menu_Code END AS ParentCode , MP.MenuText AS ParentMenu , M.MenuText , M.Menu_Code , M.MenuType, M.MenuPath, M.MenuDirPath FROM SEC_Menu M INNER JOIN SEC_RoleDetail RD ON RD.Menu_Code = M.Menu_Code INNER JOIN SEC_Role R ON RD.Role_Code = R.Role_Code INNER JOIN SEC_GroupDetail GD ON GD.Role_Code = RD.Role_Code INNER JOIN SEC_Group G ON GD.Group_Code = G.Group_Code INNER JOIN SEC_User U ON U.Group_Code = G.Group_Code INNER JOIN SEC_Menu MP ON MP.Menu_Code = M.MenuParent  WHERE 	U.User_Code  = '8' AND M.Menu_Code NOT IN (SELECT Menu_Code FROM SEC_UserRights WHERE User_Code  = '8')and M.MenuType='4' and MP.Menu_Code <>0 UNION SELECT   Case MP.Menu_Code WHEN 0 THEN NULL ELSE MP.Menu_Code END AS ParentCode , MP.MenuText AS ParentMenu , M.MenuText , M.Menu_Code ,M.MenuType    , M.MenuPath, M.MenuDirPath FROM SEC_Menu M  INNER JOIN SEC_UserRights UR ON UR.Menu_Code = M.Menu_Code INNER JOIN SEC_Menu MP ON MP.Menu_Code = M.MenuParent WHERE User_Code  = '8'and M.MenuType='4' and m.Menu_Code <>0", con);
+        //        DataTable dtDist = new DataTable();
+        //        da.Fill(dtDist);
+        //        if (dtDist.Rows.Count > 0)
+        //        {
+        //            HtmlGenericControl sub_menu = LIList(row["MenuText"].ToString(), row["Menu_Code"].ToString(), row["MenuPath"].ToString());
+        //            HtmlGenericControl ul = new HtmlGenericControl("ul");
+        //            foreach (DataRow r in dtDist.Rows)
+        //            {
+        //                ul.Controls.Add(LIList(r["MenuText"].ToString(), r["MenuParent"].ToString(), r["MenuPath"].ToString()));
+        //            }
+        //            sub_menu.Controls.Add(ul);
+        //            main.Controls.Add(sub_menu);
+        //        }
+        //        else
+        //        {
+        //            main.Controls.Add(LIList(row["MenuText"].ToString(), row["Menu_Code"].ToString(), row["MenuPath"].ToString()));
+        //        }
+        //    }
 
-            Panel1.Controls.Add(main);
+        //    Panel1.Controls.Add(main);
 
-        }
-        private HtmlGenericControl UList(string id, string cssClass)
-        {
-            HtmlGenericControl ul = new HtmlGenericControl("ul");
-            ul.ID = id;
-            ul.Attributes.Add("class", cssClass);
-            return ul;
-        }
-        private HtmlGenericControl LIList(string innerHtml, string rel, string url)
-        {
-            HtmlGenericControl li = new HtmlGenericControl("li");
-            li.Attributes.Add("rel", rel);
-            //  li.InnerHtml = "<a href=" + string.Format("http://{0}", url) + ">" + innerHtml + "</a>";
-            li.InnerHtml = "<a href=" + string.Format("{0}", url) + ">" + innerHtml + "</a>";
-            return li;
-        }
+        //}
+        //private HtmlGenericControl UList(string id, string cssClass)
+        //{
+        //    HtmlGenericControl ul = new HtmlGenericControl("ul");
+        //    ul.ID = id;
+        //    ul.Attributes.Add("class", cssClass);
+        //    return ul;
+        //}
+        //private HtmlGenericControl LIList(string innerHtml, string rel, string url)
+        //{
+        //    HtmlGenericControl li = new HtmlGenericControl("li");
+        //    li.Attributes.Add("rel", rel);
+        //    //  li.InnerHtml = "<a href=" + string.Format("http://{0}", url) + ">" + innerHtml + "</a>";
+        //    li.InnerHtml = "<a href=" + string.Format("{0}", url) + ">" + innerHtml + "</a>";
+        //    return li;
+        //}
 
 
-        #endregion
+        //#endregion
         protected void Page_Load(object sender, EventArgs e)
         {
-            this.LoadMenu();
+            this.MaintainScrollPositionOnPostBack = true;
+           // this.EnableControl();
+           // this.LoadMenu();
             DateTime localDate = DateTime.Now;
             // this.EnableControl();
             if (!IsPostBack)
             {
+                DataTable dt = this.GetData(0);
+                PopulateMenu(dt, 0, null);
                 this.CreateTable(); // Grid Temp Table
-                this.PopulateMedicine();
+               // this.PopulateMedicine();
                 this.PopulateClinic();
                 this.PopulateDosage();
                 this.PopulateUnit();
-                // this.getUserImage();
-                //this.getUsername();
-                // this.GenerateToken();
                 this.GetPatientServices();
-                // PopulateReligion();
-                //  ServiceAdded.Visible = false;
+                
                 btn_Submit.Text = SAVE_BUTTON;
-                //  btnAdd.Enabled = false;
 
+            }
+        }
+        private DataTable GetData(int parentMenuId)
+        {
+
+            // string query = "SELECT [MenuId], [Title], [Description], [Url] FROM [Menus] WHERE ParentMenuId = @ParentMenuId";
+            string query = "SELECT Menu_Code, MenuText, MenuPath,MenuParent from SEC_Menu where MenuType = 6 AND MenuParent=@ParentMenuId";
+            using (SqlConnection con = new SqlConnection(constr))
+            {
+                DataTable dt = new DataTable();
+                using (SqlCommand cmd = new SqlCommand(query))
+                {
+                    using (SqlDataAdapter sda = new SqlDataAdapter())
+                    {
+                        cmd.Parameters.AddWithValue("@ParentMenuId", parentMenuId);
+                        cmd.CommandType = CommandType.Text;
+                        cmd.Connection = con;
+                        sda.SelectCommand = cmd;
+                        sda.Fill(dt);
+                    }
+                }
+                return dt;
+            }
+        }
+
+        private void PopulateMenu(DataTable dt, int parentMenuId, MenuItem parentMenuItem)
+        {
+            string currentPage = Path.GetFileName(Request.Url.AbsolutePath);
+            foreach (DataRow row in dt.Rows)
+            {
+                MenuItem menuItem = new MenuItem
+                {
+                    Value = row["Menu_Code"].ToString(),
+                    Text = row["MenuText"].ToString(),
+                    NavigateUrl = row["MenuPath"].ToString(),
+                    Selected = row["MenuPath"].ToString().EndsWith(currentPage, StringComparison.CurrentCultureIgnoreCase)
+                };
+                if (parentMenuId == 0)
+                {
+                    Menu1.Items.Add(menuItem);
+                    DataTable dtChild = this.GetData(int.Parse(menuItem.Value));
+                    PopulateMenu(dtChild, int.Parse(menuItem.Value), menuItem);
+                }
+                else
+                {
+                    parentMenuItem.ChildItems.Add(menuItem);
+                }
             }
         }
         protected void btn_Submit_Click(object sender, EventArgs e)
@@ -229,7 +277,7 @@ namespace ZMTClinics
 
                 userCode = (Session["User_Code"].ToString());
                 oConn = new ConNew();
-                string _sql = "Select sysClinicSno,Clinic_Name,Dept_Code,sysGodownLocation_Code from MED_ClinicRegistration WHERE UserCode = '" + userCode + "' Order by Clinic_Name";
+                string _sql = "Select sysClinicSno,Clinic_Name,Dept_Code,sysGodownLocation_Code from MED_ClinicRegistration WHERE User_Code = '" + userCode + "' Order by Clinic_Name";
                 _datatable = oConn.GetDataTable(_sql);
                 ddClinic.DataSource = _datatable;
                 ddClinic.DataTextField = "Clinic_Name";
@@ -263,20 +311,20 @@ namespace ZMTClinics
         {
             ClientScript.RegisterStartupScript(this.GetType(), "Popup", "Confirm();", true);
         }
-        private void PopulateMedicine()
-        {
-            SqlConnection con = new SqlConnection(constr);
-            SqlCommand cmd = new SqlCommand("Select sysItemCodeSno,Item_Code,Item_Name from STR_ItemSetup ORDER BY Item_Name", con);
-            cmd.CommandType = CommandType.Text;
-            cmd.Connection = con;
-            con.Open();
-            ddlMedicine.DataSource = cmd.ExecuteReader();
-            ddlMedicine.DataTextField = "Item_Name";
-            ddlMedicine.DataValueField = "sysItemCodeSno";
-            ddlMedicine.DataBind();
-            con.Close();
+        //private void PopulateMedicine()
+        //{
+        //    SqlConnection con = new SqlConnection(constr);
+        //    SqlCommand cmd = new SqlCommand("Select sysItemCodeSno,Item_Code,Item_Name from STR_ItemSetup ORDER BY Item_Name", con);
+        //    cmd.CommandType = CommandType.Text;
+        //    cmd.Connection = con;
+        //    con.Open();
+        //    ddlMedicine.DataSource = cmd.ExecuteReader();
+        //    ddlMedicine.DataTextField = "Item_Name";
+        //    ddlMedicine.DataValueField = "sysItemCodeSno";
+        //    ddlMedicine.DataBind();
+        //    con.Close();
 
-        }
+        //}
         private void PopulateDosage()
         {
             SqlConnection con = new SqlConnection(constr);
@@ -300,7 +348,7 @@ namespace ZMTClinics
             {
                 byte[] bytes = (byte[])img;
                 string base64String = Convert.ToBase64String(bytes, 0, bytes.Length);
-                ImgUser.ImageUrl = "data:image/png;base64," + base64String;
+              //  ImgUser.ImageUrl = "data:image/png;base64," + base64String;
             }
         }
         private DataTable getUsername()
@@ -380,19 +428,19 @@ namespace ZMTClinics
             string MaritialStatus;
             if (DT.Rows[0]["Maritial_Status"].ToString() == "1")
             {
-                MaritialStatus = "Married";
+                MaritialStatus = "Single";
             }
             else
             {
-                MaritialStatus = "Single";
+                MaritialStatus = "Married";
             }
             lblPatientMaritialStatus.Text = MaritialStatus;
             string ReligionStatus;
-            if (DT.Rows[0]["Religion_Code"].ToString() == "1")
+            if (DT.Rows[0]["Religion_Code"].ToString() == "5")
             {
                 ReligionStatus = "Islam";
             }
-            else if (DT.Rows[0]["Religion_Code"].ToString() == "2")
+            else if (DT.Rows[0]["Religion_Code"].ToString() == "6")
             {
                 ReligionStatus = "Chiristianity";
             }
@@ -438,11 +486,11 @@ namespace ZMTClinics
             string MaritialStatus;
             if (DT.Rows[0]["Maritial_Status"].ToString() == "1")
             {
-                MaritialStatus = "Married";
+                MaritialStatus = "Single";
             }
             else
             {
-                MaritialStatus = "Single";
+                MaritialStatus = "Married";
             }
             lblPatientMaritialStatus.Text = MaritialStatus;
             string ReligionStatus;
@@ -531,6 +579,7 @@ namespace ZMTClinics
                 }
             }
         }
+
         public void ShowMessage(string msg)
         {
             ClientScript.RegisterStartupScript(Page.GetType(), "validation", "<script  language='javascript'>alert('" + msg + "');</script>");
@@ -608,9 +657,12 @@ namespace ZMTClinics
             I_Count = Convert.ToInt32(ViewState["I_COUNT"]) + 1;
             Int16 i = default(Int16);
             
-            T_Detail.Rows.InsertAt(AddRow(I_Count.ToString(), ddlMedicine.SelectedValue.ToString(),ddlMedicine.SelectedItem.Text.ToString(),ddDosage.SelectedValue,ddDosage.SelectedItem.ToString(),txtQuantity.Text , ddUnit.SelectedValue.ToString(), ddUnit.SelectedItem.Text.ToString(),ddDays.SelectedItem.Text.ToString()), gvServiceDetail.Rows.Count + 1);
+            //T_Detail.Rows.InsertAt( AddRow( I_Count.ToString(), ddlMedicine.SelectedValue.ToString(),ddlMedicine.SelectedItem.Text.ToString(),ddDosage.SelectedValue,ddDosage.SelectedItem.ToString(),txtQuantity.Text , ddUnit.SelectedValue.ToString(), ddUnit.SelectedItem.Text.ToString(),ddDays.SelectedItem.Text.ToString()), gvServiceDetail.Rows.Count + 1);
+            T_Detail.Rows.InsertAt(AddRow(I_Count.ToString(), hfMedicine.Text, txtMedicine.Text, ddDosage.SelectedValue, ddDosage.SelectedItem.ToString(), txtQuantity.Text, ddUnit.SelectedValue.ToString(), ddUnit.SelectedItem.Text.ToString(), ddDays.SelectedItem.Text.ToString()), gvServiceDetail.Rows.Count + 1);
             ViewState["I_COUNT"] = Convert.ToInt16(I_Count + i).ToString();
             this.ReFreshGrid();
+            txtMedicine.Text = "";
+            txtMedicine.Focus();
         
         }
         private void ReFreshGrid() {
@@ -672,14 +724,14 @@ namespace ZMTClinics
             else if (e.Row.RowType == DataControlRowType.Footer)
             {
                 this.ViewState["viewCount_daysSum"] = viewCount_Days;
-                e.Row.Cells[4].Text = this.ViewState["viewCount_daysSum"].ToString() + " Days";
+              //  e.Row.Cells[4].Text = this.ViewState["viewCount_daysSum"].ToString() + " Days";
                 //e.Row.Cells[5].Text = "Total Qty.";
             }
         }
         protected void gvPatientService_SelectedIndexChanged(object sender, EventArgs e)
         {
             // populate Patient Tab Only 
-            this.SetPatientDetailView(gvPatientService.SelectedRow.Cells[1].Text);
+            this.SetPatientDetailView(gvPatientService.SelectedRow.Cells[0].Text);
             // populate ticket detail for patient
            // this.GetTicketDetail(gvPatientService.SelectedRow.Cells[2].Text);
             // setting Status For Update
@@ -687,22 +739,97 @@ namespace ZMTClinics
             //ViewState.Add("sysTicketMasterNo", gvPatientService.SelectedRow.Cells[2].Text);
 
         }
-     private void EnableControl()
+        protected void OnRowDataBound(object sender, System.Web.UI.WebControls.GridViewRowEventArgs e)
         {
-         if(ddlMedicine.SelectedItem.ToString() != "Select Services")
-         {
-             btnAdd.Enabled = true;
-         }
-         else
-         {
-             btnAdd.Enabled = false;
-             
-         }
+            if (e.Row.RowType == DataControlRowType.DataRow)
+            {
+                e.Row.Attributes["onclick"] = Page.ClientScript.GetPostBackClientHyperlink(gvPatientService, "Select$" + e.Row.RowIndex);
+                e.Row.ToolTip = "Click to select this row.";
+            }
+        }
+        protected void gvPatientService_OnSelectedIndexChanged(object sender, EventArgs e)
+        {
+            foreach (GridViewRow row in gvPatientService.Rows)
+            {
+                if (row.RowIndex == gvPatientService.SelectedIndex)
+                {
+                    row.BackColor = ColorTranslator.FromHtml("#A1DCF2");
+                    row.ToolTip = string.Empty;
+                }
+                else
+                {
+                    row.BackColor = ColorTranslator.FromHtml("#FFFFFF");
+                    row.ToolTip = "Click to select this row.";
+                }
+            }
+        }
+        private void EnableControl()
+        {
+            if (!txtMedicine.Text.Length.Equals(0))
+            {
+                btnAdd.Enabled = true;
+                ltrMedicine.Visible = false;
+            }
+            else
+            {
+                btnAdd.Enabled = false;
+                ltrMedicine.Visible = true;
+                ltrMedicine.Text = "Select Medicine Name to enable button";
+
+            }
         }
 
+     [WebMethod]
+     public static string[] GetMedicines(string prefix)
+     {
+         List<string> customers = new List<string>();
+         using (SqlConnection conn = new SqlConnection())
+         {
+             conn.ConnectionString = ConfigurationManager.ConnectionStrings["KTConnectionString"].ConnectionString;
+             using (SqlCommand cmd = new SqlCommand())
+             {
+                 cmd.CommandText = "Select sysItemCodeSno,Item_Code,Item_Name from STR_ItemSetup where Item_Name like+ '%' + @SearchText + '%'";
+                 cmd.Parameters.AddWithValue("@SearchText", prefix);
+                 cmd.Connection = conn;
+                 conn.Open();
+                 using (SqlDataReader sdr = cmd.ExecuteReader())
+                 {
+                     while (sdr.Read())
+                     {
+                         customers.Add(string.Format("{0}~{1}", sdr["Item_Name"], sdr["sysItemCodeSno"]));
+                     }
+                 }
+                 conn.Close();
+             }
+         }
+         return customers.ToArray();
+     }
 
+     protected void gvPatientService_RowCommand(object sender, GridViewCommandEventArgs e)
+     {
+         // Add Button For Refund 
 
+     }
 
+     protected void ChangeStatus(object sender, EventArgs e)
+     {
+         string constr = ConfigurationManager.ConnectionStrings["KTConnectionString"].ConnectionString;
+         Button btn = sender as Button;
+         GridViewRow row = btn.NamingContainer as GridViewRow;
+         int sysTicketMasterNo = Convert.ToInt32(this.gvPatientService.DataKeys[row.RowIndex].Value);
+         using (SqlConnection con = new SqlConnection(constr))
+         {
+             using (SqlCommand cmd = new SqlCommand("UPDATE MED_TicketMaster SET Amount_Return = @Amount_Return WHERE sysTicketMasterNo = @sysTicketMasterNo", con))
+             {
+                 cmd.Parameters.AddWithValue("@Amount_Return", btn.Text == "Amount Return" ? 1 : 0);
+                 cmd.Parameters.AddWithValue("@sysTicketMasterNo", sysTicketMasterNo);
+                 con.Open();
+                 cmd.ExecuteNonQuery();
+                 con.Close();
+                 Response.Redirect(Request.Url.AbsoluteUri);
+             }
+         }
+     }
 
     }
 }

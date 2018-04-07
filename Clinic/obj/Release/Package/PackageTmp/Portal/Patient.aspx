@@ -10,6 +10,7 @@
 	<link rel="stylesheet" href="../assets/css/neon-core.css"/>
 	<link rel="stylesheet" href="../assets/css/neon-theme.css"/>
 	<link rel="stylesheet" href="../assets/css/neon-forms.css"/>
+    <link rel="stylesheet" href="../style/grid.css" />
 	<link rel="stylesheet" href="../assets/css/custom.css"/>
     <link rel="stylesheet" href="../assets/form.css" />
      <link rel="stylesheet" href="../Content/forms.css" />
@@ -20,51 +21,15 @@
     <script src="http://code.jquery.com/ui/1.10.4/jquery-ui.js" type="text/javascript"></script>
     <script src="../assets/calendar-en.min.js"></script>
     <link href="../assets/calendar-blue.css" rel="stylesheet" />
-    <link href="../gridcss/grid.css" rel="stylesheet" />
+<%--    <link href="../gridcss/grid.css" rel="stylesheet" />
     <link href="../gridcss/table.css" rel="stylesheet" />
-    <link href="../gridcss/footable.css" rel="stylesheet" />
+    <link href="../gridcss/footable.css" rel="stylesheet" />--%>
 	<!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
 	<!--[if lt IE 9]>
 		<script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
 		<script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
 	<![endif]-->   
 <script type="text/javascript">
-    //$(document).ready(function() {
-    //    SearchText();
-    //});
-    //function SearchText() {
-    //    $(".autosuggest").autocomplete({
-    //        source: function(request, response) {
-    //            $.ajax({
-    //                type: "POST",
-    //                contentType: "application/json; charset=utf-8",
-    //                url: "../Patient.asmx/GetPatientlist",
-    //                data: "{'pSearchText':'" + document.getElementById('txtPatientSearch').value + "'}",
-    //                //"{'Id1':'2','Id2':'2'}"
-    //                dataType: "json",
-    //                success: function(data) {
-    //                    response($.map(data.d, function(item) {
-    //                        return {
-    //                            label: item.split('~')[0],
-    //                            val: item.split('~')[1]
-    //                        }
-    //                    }));
-    //                },
-    //                error: function(result) {
-    //                    alert("Error");
-    //                }
-    //            });
-    //        },
-    //        select: function(event, ui) {
-    //            alert(ui.item.val);
-    //            alert(ui.item.label);
-
-    //            //$("#txtID").val(ui.item.val);
-    //            //$("#txtValue").val(ui.item.label);
-
-    //        }
-    //    });
-    //}
     function patientValid() {
         var suffix, fname, guardian, FatherName, Gender, Religion, Maritial, City, Area, Province, Country,ageinYear,ageinMonths;
         Suffix = document.getElementById("ddSuffix").value;
@@ -123,33 +88,7 @@
           display:none;
             }
     </style>
-            <style>
 
-
-.table > tbody > tr > .no-line {
-    border-top: none;
-}
-.table > th > .text-center {
-    text-align:center;
-}
-.table > th > .text-left {
-    text-align:left;
-}
-.table > thead > tr > .no-line {
-    border-bottom: none;
-}
-
-.table > tbody > tr > .thick-line {
-    border-top: 2px solid;
-}
-.table > tbody > tr > td .{
-    color:black;
-    font-weight:900;
-}
-.table>tbody > tr:hover{
-    background-color:burlywood;
-}
-    </style>
  <script>
      $(document).ready(function () {
          $("#txtContactNo").inputmask();
@@ -161,6 +100,13 @@
         }
 
 
+    </script>
+    <script>
+        $(function () {
+            $('#btnSearch').click(function () {
+            $('.search').css("display", "block");
+        });
+       })
     </script>
     <script type = "text/javascript">
         function Confirm() {
@@ -230,57 +176,31 @@
 
         });
     </script>
-
-
-<%--    <script type="text/javascript">
-        $(function () {
-            $("#dialog-confirm").hide();
-            $("#btn_Submit").click(function () {
-                $("#dialog-confirm").dialog({
-                    resizable: false,
-                    height: 250,
-                    width: 500,
-                    modal: true,
-                    buttons: {
-                        "Do You Want to Print Report": function () {
-                            $("#content").show();
-                            $(this).dialog("close");
-                        },
-                            $(this).dialog("close");
-                        Cancel: function () {
-                        }
-                    }
-                });
-            });
-        });
-  </script>--%>
-  <%--<script type="text/javascript">
-      $(document).ready(function () {
-          setTimeout(function () {
-              $('#search').fadeOut('fast');
-          }, 50000); // <-- time in milliseconds
-      });
-  </script>--%>
-
     <script>
-        
+        $(document).ready(function () {
+            alert("ready");
+        });
     </script>
-     <%-- <script language="javascript" type="text/javascript">
-          var oldgridSelectedColor;
+     <script type="text/javascript">
+         //Disable the default MouseOver functionality of ASP.Net Menu control.
+         Sys.WebForms.Menu._elementObjectMapper.getMappedObject = function () {
+             return false;
+         };
+         $(function () {
+             //Remove the style attributes.
+             $(".navbar-nav li, .navbar-nav a, .navbar-nav ul").removeAttr('style');
 
-          function setMouseOverColor(element) {
-              oldgridSelectedColor = element.style.backgroundColor;
-              element.style.backgroundColor = 'LightBlue';
-              element.style.cursor = 'hand';
-              //   element.style.textDecoration = 'underline';
-          }
+             //Apply the Bootstrap class to the Submenu.
+             $(".dropdown-menu").closest("li").removeClass().addClass("dropdown-toggle");
 
-          function setMouseOutColor(element) {
-              element.style.backgroundColor = oldgridSelectedColor;
-              element.style.textDecoration = 'none';
-          }
-    </script>--%>
+             //Apply the Bootstrap properties to the Submenu.
+             $(".dropdown-toggle").find("a").eq(0).attr("data-toggle", "dropdown").attr("aria-haspopup", "true").attr("aria-expanded", "false").append("<span class='caret'></span>");
 
+             //Apply the Bootstrap "active" class to the selected Menu item.
+             $("a.selected").closest("li").addClass("active");
+             $("a.selected").closest(".dropdown-toggle").addClass("active");
+         });
+</script>
 
     <link href="../style/interface.css" rel="stylesheet" type="text/css" />
     <link href="../style/calendar-win2k-1.css" type="text/css" rel="stylesheet" />
@@ -293,8 +213,38 @@
 </head>
 <body class="page-body">
     <form id="form1" runat="server">
+                   <div class="navbar navbar-default">
+                <div class="container-fluid">
+                 <div class="row">
+                 <div class="col-md-2">
+                     <asp:Image ID="ImgUser" runat="server"/>
+                 </div>
+                 <div class="col-md-2">
+                     <asp:Label runat="server" ID="lblUserName"></asp:Label>
+                 </div>
+                 <div class="col-md-10 col-sm-offset-2">
+                     <asp:DropDownList ID="ddClinic" runat="server" class="form-control" width="15%" style="margin-left:85%;"  AutoPostBack="true" disabled="disabled"></asp:DropDownList>
+                 </div>
+                 </div>
+                    <div class="navbar-header">
+                        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1"
+                                        aria-expanded="false">
+                        <span class="sr-only">Toggle navigation</span> <span class="icon-bar"></span><span
+                                        class="icon-bar"></span><span class="icon-bar"></span>
+                        </button>
+                    <a class="navbar-brand" href="grid.aspx">ZMT Clinics</a>
+                    </div>
+                    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                        <asp:Menu ID="Menu1" runat="server" Orientation="Horizontal" RenderingMode="List"
+                                IncludeStyleBlock="false" StaticMenuStyle-CssClass="nav navbar-nav" DynamicMenuStyle-CssClass="dropdown-menu" style="background-color:aqua">
+                            
+                        </asp:Menu>
+                        
+                   </div>
+              </div>
+        </div>
     <div class="page-container">
-       <div class="sidebar-menu">
+      <%-- <div class="sidebar-menu">
         <div class ="sidebar-menu-inner">
         <header class="logo-env">
 
@@ -327,13 +277,12 @@
         </asp:Panel>
                 
         </div>
-    </div>
+    </div>--%>
         <div class="main-content">
             <div class="row">
 		
 			<!-- Profile Info and Notifications -->
 			<div class="col-md-6 col-sm-8 clearfix">
-		
 				<ul class="user-info pull-left pull-none-xsm">
 		
 					<!-- Profile Info -->
@@ -341,8 +290,7 @@
 		
 						<a href="#" class="dropdown-toggle" data-toggle="dropdown">
 							<%--<img src="assets/images/thumb-1@2x.png" alt="" class="img-circle" width="44" />--%>
-                            <asp:Image ID="ImgUser" runat="server"  Width="50" CssClass="img-circle"  />
-							<asp:Label runat="server" ID="lblUserName"></asp:Label>
+                            
 						</a>           
 					</li>
 		
@@ -352,16 +300,12 @@
 		
 		
 			<!-- Raw Links -->
-			<div class="col-md-6 col-sm-4 clearfix hidden-xs" >
-		
-				<ul class="list-inline links-list pull-right">
-                            <strong>ZMT Clinic</strong><br />
-		                    <asp:DropDownList ID="ddClinic" runat="server" class="form-control"  AutoPostBack="true" disabled="disabled"></asp:DropDownList><br /><br />
-                    <div class="ui-widget">
-                            <asp:TextBox runat="server" CssClass="form-control autosuggest" ID="txtPatientSearch" ></asp:TextBox>
-                        </div><br />
-                            <asp:Button runat="server" ID="btnSearch" Text="Search" CssClass="btn btn-blue btn-block" OnClick="Unnamed1_Click"  /><br /><br />
-					
+			<div class="col-md-12" style="margin-top:0px;">
+				<ul class="col-md-12">
+                           <div class="ui-widget">
+                            <asp:TextBox runat="server" CssClass="form-control" style="float:left;width:55%;" ID="txtPatientSearch" placeholder="Enter patient name for search" ></asp:TextBox>
+                        </div>
+                            <asp:Button runat="server" id="btnSearch" Text="Search" CssClass="btn btn-blue btn-block" style="width:45%" OnClick="Unnamed1_Click"/>
 						</ul>
 		
 					</li>
@@ -370,41 +314,82 @@
 				</ul>
 		
 			</div>
-                <div class="col-md-10 col-md-offset-1" id="search">
-                        <asp:GridView ID="gvPatients" runat="server" CssClass="footable large-only" style="font-size:12px;color:white;"  DataKeyNames="Registration_No" OnSelectedIndexChanged="gvPatients_SelectedIndexChanged"  AutoGenerateColumns="false" EmptyDataText="No Record(s) Found" AutoGenerateSelectButton="True" ForeColor="White">
+               <%-- <div class="col-md-10 col-md-offset-1" >
+                     <table  Class="mydatagrid header " style="width:90%;"  >
+                        <tr>
+                            <td style="width:150px;text-align:left;padding-left:1%;">Select</td>
+                            <td style="width:200px;text-align:center">MrNo</td>
+                            <td style="width:250px;text-align:right;margin-left:2%;padding-left:4%;">Registration Date</td>
+                            <td style="width:250px;text-align:right;padding-left:2%;">First Name</td>
+                            <td style="width:150px;text-align:center;padding-left:4%;">Guardian	</td>
+                            <td style="width:200px;text-align:center;padding-left:4%;">Father Name</td>
+                            <td style="width:150px;text-align:center">Age	</td>
+                            <td style="width:150px;text-align:center">Present Area</td>
+                            <td style="width:150px;text-align:center">Mobile#1</td>
+                            
+                        </tr>
+                    </table>
+                </div>--%>
+                
+                <div class="col-md-12 search" id="search" style="height:300px;overflow:auto;">
+                    
+                        <asp:GridView ID="gvPatients" runat="server" 
+                            CssClass="mydatagrid" PagerStyle-CssClass="pager" HeaderStyle-CssClass="header" 
+                            RowStyle-CssClass="rows"  DataKeyNames="Registration_No" 
+                            OnSelectedIndexChanged="gvPatients_SelectedIndexChanged"  AutoGenerateColumns="False" 
+                            EmptyDataText="No Record(s) Found" AutoGenerateSelectButton="True" ForeColor="Black" ShowHeader="true">
                             <Columns>
-                                
-                                <asp:BoundField DataField ="Registration_No" HeaderText="MrNo" HeaderStyle-CssClass="align-left" HeaderStyle-BackColor="#fd8d68" >
-                                    <ItemStyle HorizontalAlign="Left" />
+                                <asp:BoundField DataField ="Registration_No" HeaderText="MrNo" HeaderStyle-CssClass="align-right"  >
+                                    <HeaderStyle CssClass="header" />
+                                    <ItemStyle HorizontalAlign="left" CssClass="row" />
                                 </asp:BoundField>
-                                <asp:BoundField DataField="Registration_Date" HeaderText="Registration Date" HeaderStyle-CssClass="align-center" HeaderStyle-BackColor="#fd8d68"  ControlStyle-BackColor="Violet">
-                                    <ItemStyle HorizontalAlign ="Center" />
+                                <asp:BoundField DataField="Registration_Date" HeaderText=" Registration Date" HeaderStyle-CssClass="align-left" DataFormatString="{0:dd-MMM-yyyy}" HtmlEncode="False">
+                                    <HeaderStyle CssClass="header" /> 
+                                    <ItemStyle HorizontalAlign ="left" CssClass="row" />
                                 </asp:BoundField>
-                                <asp:BoundField DataField="First_Name" HeaderText="First Name" HeaderStyle-CssClass="align-left" HeaderStyle-BackColor="#fd8d68">
-                                    <ItemStyle HorizontalAlign ="Left" />
+                                <asp:BoundField DataField="First_Name" HeaderText="First Name" HeaderStyle-CssClass="align-left" >
+                                    <HeaderStyle CssClass="header" />
+                                    <ItemStyle HorizontalAlign ="left" CssClass="row" />
                                 </asp:BoundField>
-                                <asp:BoundField DataField="Father_Name" HeaderText="Father Name" HeaderStyle-CssClass="align-left" HeaderStyle-BackColor="#fd8d68">
-                                    <ItemStyle HorizontalAlign ="Left" />
+                                <asp:BoundField DataField="PatientOf_Name" HeaderText="Guardian" HeaderStyle-CssClass="align-left" >
+                                    <HeaderStyle CssClass="header" />
+                                    <ItemStyle HorizontalAlign ="Left" CssClass="row" />
                                 </asp:BoundField>
-                                <asp:BoundField DataField="CNIC_No" HeaderText="CNIC Number" HeaderStyle-CssClass="align-right" HeaderStyle-BackColor="#fd8d68">
-                                    <ItemStyle HorizontalAlign ="Right" />
+                                <asp:BoundField DataField="Father_Name" HeaderText="Guardian Name" HeaderStyle-CssClass="align-left" >
+                                    <HeaderStyle CssClass="header" />
+                                    <ItemStyle HorizontalAlign ="left" CssClass="row" />
                                 </asp:BoundField>
-                                <asp:BoundField DataField="Age" HeaderText="Age" HeaderStyle-CssClass="align-left" HeaderStyle-BackColor="#fd8d68">
-                                    <ItemStyle HorizontalAlign ="Left" />
+                                <asp:BoundField DataField="Age" HeaderText="Age" HeaderStyle-CssClass="align-left" >
+                                    <HeaderStyle CssClass="header" />
+                                    <ItemStyle HorizontalAlign ="left" CssClass="row" />
                                 </asp:BoundField>
-                                <asp:BoundField DataField="Mobile_1" HeaderText="Mobile#1" HeaderStyle-CssClass="align-left" HeaderStyle-BackColor="#fd8d68">
-                                    <ItemStyle HorizontalAlign ="Left" />
+                                <asp:BoundField DataField="Present_Area_Name" HeaderText="Present Area" HeaderStyle-CssClass="align-left" >
+                                    <HeaderStyle CssClass="header" />
+                                    <ItemStyle HorizontalAlign ="Left" CssClass="row" />
+                                </asp:BoundField>
+                                <asp:BoundField DataField="Mobile_1" HeaderText="Mobile#1" HeaderStyle-CssClass="align-left">
+                                    <HeaderStyle CssClass="header" />
+                                    <ItemStyle HorizontalAlign ="Center" CssClass="row" />
                                 </asp:BoundField>
                             </Columns>
+
+                            <HeaderStyle CssClass="header"></HeaderStyle>
+
+                            <PagerStyle CssClass="pager"></PagerStyle>
+
+                            <RowStyle CssClass="rows"></RowStyle>
                             </asp:GridView>
                     </div>
 		
 		</div>
-		
 		<hr />			
-		<h2>Patient Registration<asp:SqlDataSource ID="SqlDataSource1" runat="server" ConnectionString="<%$ ConnectionStrings:KTConnectionString %>" SelectCommand="SELECT * FROM [STR_ItemSetup]"></asp:SqlDataSource>
-            </h2>
-		<br />
+            <Table border="0" width="100%">
+                <td>
+                    <td><h2>Patient Registration</h2></td>
+                    <td><asp:Button runat="server" ID="btn_Clear"  CssClass="btn btn-blue" style="width:100%;" Text="Clear" ValidationGroup="PatientRegistration" OnClick="btn_Clear_Click1" /></td>
+                </td>
+            </Table>
+		<br/>
         <div class="row">
             <section id="contact">
             <div class="col-md-12">
@@ -425,21 +410,21 @@
                                 <asp:Label runat="server" ID="lblMrNo" style="font-weight:bold;font-size:12px;color:red;float:left">MR Number:</asp:Label>
                                 <div class ="col-md-4  ">
                                 <%--<asp:TextBox runat="server" ID="txtMrNo" type="text" placeholder="MR Number" style="font-size:12px;" CssClass="form-control"></asp:TextBox>--%>
-                                <asp:Label runat ="server" ID="lblPatientMrNo" style="font-size:12px;background-color:#F0F0F0;width:150px;margin-left:1px;" CssClass="form-control" ></asp:Label>
+                                <asp:Label runat ="server" ID="lblPatientMrNo" style="font-size:12px;background-color:#F0F0F0;width:200px;margin-left:1px;font-weight:bold" CssClass="form-control" ></asp:Label>
                             </div>
                         </div>
                             <div class="form-group">
                                 <asp:Label runat="server" ID="Label2" style="font-weight:bold;font-size:12px;color:red;float:left;">Token #:</asp:Label>
                                <div class ="col-md-4  ">
                                 <%--<asp:TextBox runat="server" ID="txtToken" type="text" placeholder="Token Number" style="font-size:12px;" CssClass="form-control"></asp:TextBox>--%>
-                                <asp:Label runat="server" ID="lblPatientToken" style="font-size:12px;background-color:#F0F0F0;width:150px;margin-left:10px;" CssClass="form-control"></asp:Label>
+                                <asp:Label runat="server" ID="lblPatientToken" style="font-size:12px;background-color:#F0F0F0;width:200px;margin-left:10px;font-weight:bold" CssClass="form-control"></asp:Label>
                             </div>
                         </div>
                             <div class="form-group">
                                 <asp:Label runat="server" ID="lblRegistrationDate" style="font-weight:bold;font-size:12px;color:red;float:left;">Regd Date:</asp:Label>
                                  <div class="col-md-4">
                                 <%--<asp:TextBox runat="server" ID="txtRegtDate" type="text" placeholder="Registration Date" CssClass="form-control" style="font-size:12px;"></asp:TextBox>--%>
-                                <asp:Label runat="server" ID="lblPatientRegistrationDate" style="font-size:12px;background-color:#F0F0F0;width:150px;margin-left:20px;" CssClass="form-control"></asp:Label>
+                                <asp:Label runat="server" ID="lblPatientRegistrationDate" style="font-size:12px;background-color:#F0F0F0;width:200px;margin-left:20px;font-weight:bold" CssClass="form-control"></asp:Label>
                             </div>
                         </div>
                      </div>
@@ -489,6 +474,15 @@
                                   </div>  
                             </div>
                         </div>
+                         <div class="form-group">
+                                    <asp:label runat="server" for="field-2" ID="Label9" style="font-weight:bold;font-size:12px;color:red;float:left;">Guardian</asp:label>
+                                    <div class="col-md-3">
+                                    <asp:DropDownList ID="ddGurdian" runat="server" class="form-control" Width="100%" Height="100%" style="font-size:12px;background-color:#F0F0F0;width:150px;" AppendDataBoundItems="true">
+                                        <asp:ListItem Text="Select Guardian" Value="0">Select Guardian</asp:ListItem>
+								    </asp:DropDownList>
+                                </div>
+                                </div>
+                                
                      </div>
                          <!-- <div class="form-inline">
                             <div class="form-group">
@@ -499,24 +493,26 @@
                             </div>
                             </div>-->
                             <div class="form-inline">
+                                    
                                     <div class="form-group">
-                                    <asp:label runat="server" for="field-2" ID="Label9" style="font-weight:bold;font-size:12px;color:red;float:left;">Guardian</asp:label>
-                                    <div class="col-md-3">
-                                    <asp:DropDownList ID="ddGurdian" runat="server" class="form-control" Width="100%" Height="100%" style="font-size:12px;background-color:#F0F0F0;width:150px;" AppendDataBoundItems="true">
-                                        <asp:ListItem Text="Select Guardian" Value="0">Select Guardian</asp:ListItem>
-								    </asp:DropDownList>
-                                </div>
-                                </div>
-                                
-                                    <div class="form-group">
-                                        <asp:Label runat="server" ID="lblFatherName" style="font-weight:bold;font-size:12px;color:red;float:left">Father/Hus</asp:Label>
+                                        <asp:Label runat="server" ID="lblFatherName" style="font-weight:bold;font-size:12px;color:red;float:left">Fthr/Hus:</asp:Label>
                                         <div class="col-md-3 inputGroupContainer">
                                             <div class="input-group">
                                                  <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
-                                                <asp:TextBox runat="server" type="text" CssClass="form-control" ID="txtFatherName" placeholder="Father Name" Height="100%" style="font-size:12px;background-color:#F0F0F0;width:150px;"></asp:TextBox>
+                                                <asp:TextBox runat="server" type="text" CssClass="form-control" ID="txtFatherName" placeholder="Father Name" Height="100%" style="font-size:12px;background-color:#F0F0F0;width:112px;"></asp:TextBox>
                                             </div>  
                                         </div>
-                                        </div>  
+                                        </div> 
+                                <div class="form-group">
+                                    <asp:label runat="server" for="field-2" ID="lblReligion" style="font-weight:bold;font-size:12px;color:red;float:left;">Religion:</asp:label>
+                                    <div class="col-md-3">
+                                    <asp:DropDownList ID="ddReligion" runat="server" class="form-control" Width="100%" Height="100%" style="font-size:12px;background-color:#F0F0F0;width:188px;margin-left:12px;" AppendDataBoundItems="true">
+                                            <asp:ListItem Text="Select Religion" Value="0"></asp:ListItem>
+                                           
+								</asp:DropDownList>
+                                
+                                </div>
+                                </div> 
                                     <div class="form-group">
                                          <asp:Label runat="server" ID="lblGender" class="control-label " style="width: 83px; font-weight:bold;font-size:12px;color:red;float:left">Gender:</asp:Label>
                                          <div style="float:left;">
@@ -531,41 +527,10 @@
                                             
                                         </div>
                                     </div>
-                                    </div>
-                               </div>
-                               <div class="form-inline">
-                                  <div class="form-group">
-                                        <asp:Label runat="server" ID="lblCNICNo" style="font-weight:bold;font-size:12px;color:blue;float:left;" >CNIC No:</asp:Label>
+                                <div class="form-group">
+                                        <asp:label runat="server" for="field-2" ID="lblMaritialStatus" style="font-weight:bold;font-size:12px;color:red;float:left;;margin-left:40px;">Maritial St:</asp:label>
                                         <div class="col-md-3">
-                                       <asp:TextBox runat="server" ID="txtCNICNO" type="text" MaxLength="15" CssClass="form-control" placeholder="CNIC Number Here" Height="100%" style="font-size:12px;background-color:#F0F0F0;width:150px;" onKeyUp="CheckTextLength(this,15)" onChange="CheckTextLength(this,15)"></asp:TextBox>
-                                          <span id="error" style="color: Red; display: none">* Input digits (0 - 9)</span>
-                                        <script type="text/javascript">
-                                            function CheckTextLength(text, long) {
-                                                var maxlength = new Number(long); // Change number to your max length.
-                                                if (text.value.length > maxlength) {
-                                                    text.value = text.value.substring(0, maxlength);
-                                                    alert(" Only " + long + " characters allowed");
-                                                }
-                                            }
-                                     </script>
-                                    </div>
-                                </div>
-                                   <div class="form-group">
-                                    <asp:label runat="server" for="field-2" ID="lblReligion" style="font-weight:bold;font-size:12px;color:red;float:left;">Religion:</asp:label>
-                                    <div class="col-md-3">
-                                    <asp:DropDownList ID="ddReligion" runat="server" class="form-control" Width="100%" Height="100%" style="font-size:12px;background-color:#F0F0F0;width:185px;margin-left:12px;" AppendDataBoundItems="true">
-                                            <asp:ListItem Text="Select Religion" Value="0"></asp:ListItem>
-<%--                                             <asp:ListItem Text="Islam" Value="1"></asp:ListItem>
-                                            <asp:ListItem Text="Chiristianity" Value="2"></asp:ListItem>
-                                           <asp:ListItem Text="Hinduism" Value="3"></asp:ListItem>--%>
-								</asp:DropDownList>
-                                
-                                </div>
-                                </div>
-                                    <div class="form-group">
-                                        <asp:label runat="server" for="field-2" ID="lblMaritialStatus" style="font-weight:bold;font-size:12px;color:red;float:left;">Maritial St:</asp:label>
-                                        <div class="col-md-3">
-                                    <asp:DropDownList ID="ddMaritialStatus" runat="server" class="form-control" Width="100%" Height="100%" style="font-size:12px;background-color:#F0F0F0;width:160px;" AppendDataBoundItems="true" >
+                                    <asp:DropDownList ID="ddMaritialStatus" runat="server" class="form-control" Width="100%" Height="100%" style="font-size:12px;background-color:#F0F0F0;width:150px;margin-left:8px;" AppendDataBoundItems="true" >
                                             <asp:ListItem Text="Select Maritial Status" Value="0"></asp:ListItem>
                                              <asp:ListItem Text="Single" Value="1"></asp:ListItem>
                                             <asp:ListItem Text="Married" Value="2"></asp:ListItem>
@@ -577,12 +542,17 @@
                                          
                                     </div>
                                 </div>
+                                    </div>
+                               </div>
+                               <div class="form-inline">
+                                  
+                                    
                             </div>
                             <div class="form-inline">
                                  
                                     <div class="form-group">
                                     <asp:Label runat="server" ID="lblAge" style="font-weight:bold;font-size:12px;color:red;float:left;">Age:</asp:Label>
-                                     <div style="   width: 207px;  float: left; padding-left: 40px;">
+                                     <div style="   width: 207px;  float: left; padding-left: 19px;">
                                        <asp:TextBox runat="server" ID="txtAge" type="text" CssClass="form-control" placeholder="Year" Height="100%" style="width: 80px;font-size:12px;background-color:#F0F0F0;" onKeyUp="CalculateAge(this)">0</asp:TextBox>   
                                      <asp:TextBox runat="server" ID="txtAgeMonth" type="text" CssClass="form-control" placeholder="Month" Height="100%" style="    width: 67px;font-size:12px;background-color:#F0F0F0;">0</asp:TextBox>
                                      </div>
@@ -602,8 +572,8 @@
                                                 ID="txtDOB" 
                                                 type="text"  
                                                 Height="100%" 
-                                                style="font-size:12px;margin-left:30px;"
-                                                Width="140px"
+                                                style="font-size:12px;margin-left:15px;"
+                                                Width="159px"
                                                 CssClass="form-control"
                                                 onChange="CalculateDOB(this)">
                                         </asp:TextBox>
@@ -629,6 +599,23 @@
                                          
                                     </div>
                             </div>
+                                <div class="form-group">
+                                        <asp:Label runat="server" ID="lblCNICNo" style="font-weight:bold;font-size:12px;color:blue;float:left;margin-left:20px;" >CNIC No:</asp:Label>
+                                        <div class="col-md-3">
+                                       <asp:TextBox runat="server" ID="txtCNICNO" type="text" MaxLength="15" CssClass="form-control" placeholder="CNIC Number Here" Height="100%" style="font-size:12px;background-color:#F0F0F0;width:160px;margin-left:12px;" onKeyUp="CheckTextLength(this,15)" onChange="CheckTextLength(this,15)"></asp:TextBox>
+                                          <span id="error" style="color: Red; display: none">* Input digits (0 - 9)</span>
+                                        <script type="text/javascript">
+                                            function CheckTextLength(text, long) {
+                                                var maxlength = new Number(long); // Change number to your max length.
+                                                if (text.value.length > maxlength) {
+                                                    text.value = text.value.substring(0, maxlength);
+                                                    alert(" Only " + long + " characters allowed");
+                                                }
+                                            }
+                                     </script>
+                                    </div>
+                                </div>
+                                   
                                
                             </div>
                         </div>
@@ -646,13 +633,18 @@
                       </div>
                     
                         <div class="panel-body">
-                        
+                                 <div>
+                                    <span id="errorMobileNo" style="color: Red; display: none">* Input digits (0 - 9)</span>
+                                    <span id="errorContactNo" style="color: Red; display: none">* Input digits (0 - 9)</span>
+                                    <span id="errorMobileNoTwo" style="color: Red; display: none">* Input digits (0 - 9)</span>
+                                     <span id="errorRegisterByContactNo" style="color: Red; display: none">* Input digits (0 - 9)</span>
+                                </div>
                         <div class="form-inline">
                                 <div class="form-group">
                                      <asp:label runat="server" for="field-2"  ID="lblContactNo" style="font-weight:bold;font-size:12px;color:blue;float:left;">Contact No:</asp:label>
                                     <div class="col-md-4">
                                 <asp:TextBox runat="server" type="tel" MaxLength="13" size="11" CssClass="form-control" ID="txtContactNo" placeholder="Contact Number" Height="100%" style="font-size:12px;background-color:#F0F0F0;width:150px;margin-left:10px;" onkeypress="return IsNumericContactNo(event);" ondrop="return false;" onpaste="return false;"></asp:TextBox>
-                                <span id="errorContactNo" style="color: Red; display: none">* Input digits (0 - 9)</span>
+                                
                                         <script type="text/javascript">
                                             var specialKeys = new Array();
                                             specialKeys.push(8); //Backspace
@@ -670,7 +662,7 @@
                                 <div class="col-md-4">
                                 <asp:TextBox runat="server" type="tel" size="11" MaxLength="12" CssClass="form-control" ID="txtMobile1" placeholder="Mobile Number" Height="100%" style="font-size:12px;background-color:#F0F0F0;width:150px;margin-left:20px;" onkeypress="return IsNumericMobileNo(event);" ondrop="return false;" onpaste="return false;"></asp:TextBox>
                                      
-                                    <span id="errorMobileNo" style="color: Red; display: none">* Input digits (0 - 9)</span>
+                                    
                                         <script type="text/javascript">
                                             var specialKeys = new Array();
                                             specialKeys.push(8); //Backspace
@@ -687,7 +679,7 @@
                                 <asp:label runat="server" for="field-2"  ID="Label3" style="font-weight:bold;font-size:12px;color:blue;float:left;">Mobile #2:</asp:label>
                                     <div class="col-md-4">
                                <asp:TextBox runat="server" type="tel" size="11" MaxLength="12" CssClass="form-control" ID="txtMobile2" placeholder="Mobile Number" Height="100%" style="font-size:12px;background-color:#F0F0F0;width:150px;margin-left:10px;" onkeypress="return IsNumericMobileNoTwo(event);" ondrop="return false;" onpaste="return false;"></asp:TextBox>
-                               <span id="errorMobileNoTwo" style="color: Red; display: none">* Input digits (0 - 9)</span>
+                               
                                         <script type="text/javascript">
                                             var specialKeys = new Array();
                                             specialKeys.push(8); //Backspace
@@ -700,17 +692,18 @@
                                      </script>
                                 </div>
                             </div>
-                        </div>
-                            <div class="form-inline">
-                                
-                                    <div class="form-group">
+                            <div class="form-group">
                                         <asp:Label runat="server" ID="lblRegisterRelation" style="font-weight:bold;font-size:12px;color:blue;float:left;">Attdant Rel:</asp:Label>
                                         <div class="col-md-3">
-                                         <asp:DropDownList  runat="server" ID="ddRegisterRelation" class="form-control" Width="100%" Height="100%" style="font-size:12px;background-color:#F0F0F0;width:150px;margin-left:8px;" AppendDataBoundItems="true"  AutoPostBack="true">   
+                                         <asp:DropDownList  runat="server" ID="ddRegisterRelation" class="form-control" Width="100%" Height="100%" style="font-size:12px;background-color:#F0F0F0;width:130px;" AppendDataBoundItems="true"  AutoPostBack="true">   
 								</asp:DropDownList>
                                          
                                     </div>
                                 </div>
+                        </div>
+                            <div class="form-inline">
+                                
+                                    
                                 
                                     <div class="form-group">
                                     <asp:Label runat="server" ID="lblRegisterBy" style="font-weight:bold;font-size:12px;color:blue;float:left;">Attdant By:</asp:Label>
@@ -723,8 +716,8 @@
                                     <div class="form-group">
                                        <asp:Label runat="server" ID="Label7" style="font-weight:bold;font-size:12px;color:blue;float:left;" >Attdant No:</asp:Label>
                                         <div class="col-md-4">
-                                       <asp:TextBox runat="server" ID="txtRegisterByContactNo" MaxLength="12" type="text" CssClass="form-control" placeholder="Register By Person Contact Number" Height="100%" style="font-size:12px;background-color:#F0F0F0;width:150px;" onkeypress="return IsNumericRegisterByContactNo(event);" ondrop="return false;" onpaste="return false;"></asp:TextBox>
-                                        <span id="errorRegisterByContactNo" style="color: Red; display: none">* Input digits (0 - 9)</span>
+                                       <asp:TextBox runat="server" ID="txtRegisterByContactNo" MaxLength="12" type="text" CssClass="form-control" placeholder="Register By Person Contact Number" Height="100%" style="font-size:12px;background-color:#F0F0F0;width:150px;margin-left:12px;" onkeypress="return IsNumericRegisterByContactNo(event);" ondrop="return false;" onpaste="return false;"></asp:TextBox>
+                                        
                                         <script type="text/javascript">
                                             var specialKeys = new Array();
                                             specialKeys.push(8); //Backspace
@@ -794,23 +787,24 @@
 								</asp:DropDownList>
                                     </div>
                                         </div>
-                            </div>
-                                       <div class ="form-inline">
-                                           
-                                               <div class="form-group">
-                                                    <asp:Label runat="server" ID="Label8" style="font-weight:bold;font-size:12px;color:red;float:left;">Area:</asp:Label>
+                             <div class="form-group">
+                                                    <asp:Label runat="server" ID="Label8" style="font-weight:bold;font-size:12px;color:red;float:left;margin-left:21px;">Area:</asp:Label>
                                                    <div class="col-md-4">
-                                                    <asp:DropDownList ID="ddlArea" runat="server" class="form-control" Width="100%" Height="100%" style="font-size:12px;background-color:#F0F0F0;width:150px;margin-left:50px;margin-left:45px;" AppendDataBoundItems="true">
+                                                    <asp:DropDownList ID="ddlArea" runat="server" class="form-control" Width="100%" Height="100%" style="font-size:12px;background-color:#F0F0F0;width:150px;margin-left:30px;" AppendDataBoundItems="true">
                                                      <asp:ListItem Text="Select Area" Value="0"></asp:ListItem>
 								                    </asp:DropDownList>
                                                </div>
                                            </div>
                                           
+                            </div>
+                                       <div class ="form-inline">
+                                           
+                                              
                                                <div class="form-group">
                                                     
                                                    <asp:Label runat="server" ID="lblAddress" style="font-weight:bold;font-size:12px;color:blue;float:left;">Address:</asp:Label>
                                                    <div class="col-md-6">
-                                                   <asp:TextBox runat="server" ID="txtAddress" CssClass="form-control"  style="font-size:12px;background-color:#F0F0F0;width:150px;margin-left:10px;" placeholder="Adress"></asp:TextBox>
+                                                   <asp:TextBox runat="server" ID="txtAddress" CssClass="form-control"  style="font-size:12px;background-color:#F0F0F0;width:150px;margin-left:25px;" placeholder="Adress"></asp:TextBox>
                                                </div>
                                           </div>
                                        </div>
@@ -874,32 +868,26 @@
                                         </asp:DropDownList>
                                     </div>
                                         </div>
-                                        </div>
-                                       <div class="form-inline">
-                                           
-                                               <div class="form-group">
-                                                   <asp:Label runat="server" ID="lblPermanentAddress" style="font-weight:bold;font-size:12px;color:blue;float:left;">Area:</asp:Label>
+                                           <div class="form-group">
+                                                   <asp:Label runat="server" ID="lblPermanentAddress" style="font-weight:bold;font-size:12px;color:blue;float:left;margin-left:21px;">Area:</asp:Label>
                                                    <div class="col-md-4">
-                                                    <asp:DropDownList ID="ddPermanentArea" runat="server" class="form-control" Width="100%" Height="100%" style="font-size:12px;background-color:#F0F0F0;width:150px;margin-left:50px;margin-left:45px;" AppendDataBoundItems="true">
+                                                    <asp:DropDownList ID="ddPermanentArea" runat="server" class="form-control" Width="100%" Height="100%" style="font-size:12px;background-color:#F0F0F0;width:150px;margin-left:50px;margin-left:30px;" AppendDataBoundItems="true">
                                                     <asp:ListItem Text="Select Area" Value="0"></asp:ListItem>
 								                    </asp:DropDownList>
                                                </div>
                                            </div>
+                                        </div>
+                                       <div class="form-inline">
+                                           
+                                               
                                            
                                                <div class="form-group">
                                                     <asp:Label runat="server" ID="lblPermanentBlock" style="font-weight:bold;font-size:12px;color:blue;float:left;">Address:</asp:Label>
                                                    <div class="col-md-4">
-                                                   <asp:TextBox runat="server" ID="txtPermanentBlock" CssClass="form-control"  style="font-size:12px;background-color:#F0F0F0;width:150px;margin-left:10px;" placeholder="Address"></asp:TextBox>
+                                                   <asp:TextBox runat="server" ID="txtPermanentBlock" CssClass="form-control"  style="font-size:12px;background-color:#F0F0F0;width:150px;margin-left:25px;" placeholder="Address"></asp:TextBox>
                                                </div>
                                            </div>
-                                           <div class="form-group">
-                                        <asp:Label runat="server" ID="lblStatus" style="font-weight:bold;font-size:12px;color:blue;float:left;">Status</asp:Label>
-                                         <div class="col-md-6">
-                                        <asp:DropDownList runat="server" ID="ddPatientPayingStatus" CssClass="form-control" Width="100%" Height="100%" style="font-size:12px;background-color:#F0F0F0;width:150px;margin-left:23px;" AutoPostBack="true" OnSelectedIndexChanged="ddPatientPayingStatus_SelectedIndexChanged">
-                                            <asp:ListItem Text="Select Paying Status" Value="0"></asp:ListItem>
-                                        </asp:DropDownList>
-                                    </div>
-                                </div>
+                                           
                                        </div>
                 </div>
                     </div>
@@ -922,30 +910,37 @@
                             <div class="form-group">
                                 <asp:Label runat="server" ID="lblServices" style="font-weight:bold;font-size:12px;color:blue;float:left;">Services:</asp:Label>
                                 <div class ="col-md-4">
-                                <asp:DropDownList ID="ddlServices" runat="server" class="form-control" Width="100%" Height="100%" style="font-size:12px;background-color:#F0F0F0;width:150px;margin-left:32px;" AutoPostBack="true" OnSelectedIndexChanged="ddlServices_SelectedIndexChanged" AppendDataBoundItems="true" ViewStateMode="Enabled" >
+                                <asp:DropDownList ID="ddlServices" runat="server" class="form-control" Width="100%" Height="100%" style="font-size:12px;background-color:#F0F0F0;width:200px;" AutoPostBack="true" OnSelectedIndexChanged="ddlServices_SelectedIndexChanged" AppendDataBoundItems="true" ViewStateMode="Enabled" >
                                             <asp:ListItem Text="Select Services" Value="0"></asp:ListItem>
 								</asp:DropDownList>
                             </div>
                         </div>
                         
                             <div class="form-group">
-                                <asp:Label runat="server" ID="Label5" style="font-weight:bold;font-size:12px;color:blue;float:left;">Details:</asp:Label>
+                                <asp:Label runat="server" ID="Label5" style="font-weight:bold;font-size:12px;color:blue;float:left;margin-left:1px;">Details:</asp:Label>
                                 <div class="col-md-6">
-                                <asp:DropDownList ID="ddServicesDetail" runat="server" class="form-control" Width="100%" Height="100%" style="font-size:12px;background-color:#F0F0F0;width:150px;margin-left:50px;margin-left:25px;" AutoPostBack="true" OnSelectedIndexChanged="ddServicesDetail_SelectedIndexChanged" >
+                                <asp:DropDownList ID="ddServicesDetail" runat="server" class="form-control" Width="100%" Height="100%" style="font-size:12px;background-color:#F0F0F0;width:200px;" AutoPostBack="true" OnSelectedIndexChanged="ddServicesDetail_SelectedIndexChanged" >
                                             <asp:ListItem Text="Select Details" Value="0"></asp:ListItem>
 								</asp:DropDownList>
 
                             </div>
                         </div>
-                           
+                           <div class="form-group">
+                                        <asp:Label runat="server" ID="lblStatus" style="font-weight:bold;font-size:12px;color:blue;float:left;">Status:</asp:Label>
+                                         <div class="col-md-6">
+                                        <asp:DropDownList runat="server" ID="ddPatientPayingStatus" CssClass="form-control" Width="100%" Height="100%" style="font-size:12px;background-color:#F0F0F0;width:100px;" AutoPostBack="true" OnSelectedIndexChanged="ddPatientPayingStatus_SelectedIndexChanged">
+                                            <asp:ListItem Text="Select Paying Status" Value="0"></asp:ListItem>
+                                        </asp:DropDownList>
+                                    </div>
+                                </div>
                                                          
                                 <div class="form-group">
-                                    <asp:Label runat="server" ID="Label15" style="font-weight:bold;font-size:12px;color:blue;float:left;">Charges</asp:Label>
+                                    <asp:Label runat="server" ID="Label15" style="font-weight:bold;font-size:12px;color:blue;float:left;">Charges:</asp:Label>
                                     <div class="col-md-3">
-                                    <asp:Label runat="server" ID="lblServiceCharges" CssClass="form-control" style="font-size:12px;background-color:#F0F0F0;width:80px;"></asp:Label>
+                                    <asp:Label runat="server" ID="lblServiceCharges" CssClass="form-control" style="font-size:12px;background-color:#F0F0F0;width:65px;"></asp:Label>
                                 </div>
                                 <div class="col-md-3">
-                                    <asp:Button runat="server" ID="btnAdd"  style="width:55px;margin-left:10px;" Text="Add " OnClick="btnAdd_Click"  CssClass="btn btn-block" />
+                                    <asp:Button runat="server" ID="btnAdd"  style="width:55px;margin-left:15px;" Text="Add " OnClick="btnAdd_Click"  CssClass="btn btn-block" />
                                 </div>
                             </div>      
                             </div>
@@ -1002,6 +997,7 @@
                                 
                                 
                             </div>
+                        <span style="color:red;font-size:15px;margin-left:50%"><asp:Literal runat="server" ID="lblErrMsg"></asp:Literal></span>
                         </div>
                              <br />                  
                         <div class="row">
@@ -1023,6 +1019,7 @@
                             <div class="col-md-4 col-md-offset-4"">
                                 <asp:Button runat="server" ID="btn_Cancel" CssClass="btn btn-blue" style="width:100%;" Text="Cancel" ValidationGroup="PatientRegistration" />
                                 <asp:Label runat="server" ID="lblstn" CssClass="hideCol"></asp:Label>
+                                <asp:Label runat="server" ID="lblTicketDate" CssClass="hideCol"></asp:Label>
                             </div>
                         </div>
                     
