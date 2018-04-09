@@ -9,13 +9,12 @@
 	<link rel="stylesheet" href="../assets/css/font-icons/entypo/css/entypo.css"/>
 	<link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Noto+Sans:400,700,400italic"/>
 	<link rel="stylesheet" href="../assets/css/bootstrap.css"/>
-	<link rel="stylesheet" href="../assets/css/neon-core.css"/>
-	<link rel="stylesheet" href="../assets/css/neon-theme.css"/>
-	<link rel="stylesheet" href="../assets/css/neon-forms.css"/>
-    <link rel="stylesheet" href="../style/grid.css" />
-	<link rel="stylesheet" href="../assets/css/custom.css"/>
-    <link rel="stylesheet" href="../assets/form.css" />
-     <link rel="stylesheet" href="../Content/forms.css" />
+	<%--<link rel="stylesheet" href="../assets/css/neon-core.css"/>
+	<link rel="stylesheet" href="../assets/css/neon-theme.css"/>--%>
+	<%--<link rel="stylesheet" href="../assets/css/neon-forms.css"/>--%>
+	<%--<link rel="stylesheet" href="../assets/css/custom.css"/>--%>
+    <%--<link rel="stylesheet" href="../assets/form.css" />--%>
+     <%--<link rel="stylesheet" href="../Content/forms.css" />--%>
    <script src="../assets/js/jquery-1.11.0.min.js"></script>
     <link rel="stylesheet" href="http://code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css">
     <script src="http://code.jquery.com/ui/1.10.4/jquery-ui.js" type="text/javascript"></script>
