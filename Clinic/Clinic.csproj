@@ -1759,6 +1759,7 @@
     <None Include="Properties\PublishProfiles\ZMT.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Portal\calendar.gif" />
+    <Content Include="ChekingTester.html" />
     <Content Include="Portal\Clinic.aspx" />
     <Content Include="Portal\Design.aspx" />
     <Content Include="Portal\grid.aspx" />
